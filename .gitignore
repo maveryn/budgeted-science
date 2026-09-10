@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Budgeted Science: local evidence, model artifacts, and experiment outputs
+/demos/*/data/
+/demos/*/artifacts/
+/demos/*/runs/
+/demos/*/tmp/
+/tmp/
+
+# Local credential variants; a sanitized example may be committed explicitly
+.env.*
+!.env.example
