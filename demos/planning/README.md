@@ -1,8 +1,41 @@
 # Resource-rational scientific project planning
 
-**Status:** CPU-only classical baseline pilot implemented. No LLM runs yet.
+**Status:** the CPU allocation pilot is preserved. The shared Burgers foundation
+now also provides a planning tool contract and a scripted end-to-end check.
+No LLM runs or Burgers policy comparisons have been performed.
 
-## Current pilot
+## Shared Burgers planning contract
+
+Infer a fixed target's viscosity from paid calibration records, then submit a
+16-value forecast profile for a different initial amplitude. Evidence acquisition,
+calibration fits, and forecasting draw from the configured ledger. Adjustable
+32/64/128-point simulations provide candidate predictions; all underlying solves
+used by fitting are metered. The submitted profile itself is scored, so accurate
+parameter estimation does not automatically remove numerical prediction error.
+
+The implemented facade is `budgeted_science.burgers.tools.PlanningTools`, with
+`observe`, `record`, `budget`, `simulate`, `fit`, and `submit` actions. It shares
+physical machinery with inference, not an episode or an objective. See the
+[shared contract](../../shared/README.md) for defaults, pricing, and API details.
+
+After `python -m pip install -e .` from the root in a virtual environment:
+
+```powershell
+python -m unittest discover -s tests -p test_burgers.py -v
+python -m budgeted_science.burgers.validate
+```
+
+The validator exercises one fixed acquisition/fit/forecast script with a shared
+50-credit budget. This checks the wiring, not a good allocation strategy or a
+recommended budget. Numerical tables and the trace are written to ignored
+`tmp/burgers_foundation/`; see the [foundation results](../../docs/burgers_foundation_results.md).
+
+Next work includes selecting useful budget/price regimes, matched classical
+policies, stopping/allocation diagnostics, and agents. No result currently
+establishes that adaptive allocation helps in this restricted system, which also
+permits fast Cole-Hopf computation. The foundation is not a finalized benchmark.
+
+## Preserved allocation pilot
 
 The initial executable toy is deliberately simpler than the transport-pulse idea
 below: estimate three curve integrals under a shared computation budget. It has
@@ -52,7 +85,8 @@ peak search, integration, and uncertainty tools.
 - `tests/`: analytic checks, resource enforcement, scoring, and leakage tests.
 - `runs/`: generated local records and summaries; ignored by Git.
 
-The baseline-only allocation pilot is complete. A structured-action agent
-interface, randomized scientific instances, and a broader numerical-baseline suite
-remain future work. This demo works without the inference or surrogate-development
-demos. The pilot is not a finalized benchmark specification.
+The baseline-only allocation pilot is complete and unchanged. The Burgers
+structured-tool facade is implemented in the shared package; agent integration,
+randomized experiment suites, and numerical policy comparisons remain future
+work. Neither implementation requires running the inference or
+surrogate-development demos.

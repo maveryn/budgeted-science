@@ -225,5 +225,6 @@ __marimo__/
 /tmp/
 
 # Local credential variants; a sanitized example may be committed explicitly
+/openaiapi.txt
 .env.*
 !.env.example

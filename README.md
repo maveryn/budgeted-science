@@ -5,16 +5,20 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
-**Status:** a CPU-only classical allocation pilot is runnable in the planning
-demo. The other demos remain scaffolds. No agent experiments have been run.
-See the [OCBA pilot results](docs/ocba_pilot_results.md) and
-[reproduction protocol](docs/ocba_pilot_protocol.md).
+**Status:** the CPU allocation pilot is preserved, and a shared viscous-Burgers
+foundation now provides numerical tools, observations, budgets, fitting, and
+separate planning/inference scoring contracts. Its numerical validation and
+scripted contract checks are runnable. No agent experiments or trained
+imperfect-model banks have been run or built.
+See the [Burgers foundation results](docs/burgers_foundation_results.md),
+[OCBA pilot results](docs/ocba_pilot_results.md), and
+[pilot reproduction protocol](docs/ocba_pilot_protocol.md).
 
 ## Three independent demos
 
 | Demo | Scientific decision | Final evaluation |
 | --- | --- | --- |
-| [Project planning](demos/planning/README.md) | Allocate a shared budget across scientific studies and adapt computation. | Current pilot: integral-estimation error; separate selection variant: correct-selection rate and regret. |
+| [Project planning](demos/planning/README.md) | Allocate a shared budget between target observations, parameter fitting, and forecast computation. | Burgers foundation: error of the actual submitted forecast profile. The preserved allocation pilot has its own integral/selection scores. |
 | [Imperfect-model inference](demos/imperfect_model_inference/README.md) | Use fixed approximate models and paid observations to infer a hidden target's parameters. | Held-out reference-response error from the submitted parameters. |
 | [Surrogate development](demos/surrogate_development/README.md) | Acquire data and develop a predictor under acquisition, development-compute, and inference-cost limits. | Held-out predictive error and compliance with all three limits. |
 
@@ -22,17 +26,41 @@ See the [OCBA pilot results](docs/ocba_pilot_results.md) and
 
 ```text
 demos/
-  planning/                   # Three-curve allocation pilot; later scientific tasks
-  imperfect_model_inference/  # Fixed models of a diffusion-decay system
-  surrogate_development/     # CPU surrogate construction for that family
-shared/                      # Small reusable utilities, when needed
+  planning/                   # Preserved allocation pilot; Burgers planning contract
+  imperfect_model_inference/  # Burgers fixed-predictor contract; model banks are future work
+  surrogate_development/     # Planned CPU surrogate construction demo
+shared/budgeted_science/     # Installable shared package, including burgers/
+tests/                       # Shared numerical and tool-contract tests
 docs/                        # Protocol notes and proposal-appendix material
+tmp/burgers_foundation/      # Ignored validation outputs and backend cache
 ```
 
-Each demo has its own `README.md`, `src/`, `configs/`, and `tests/`. Its eventual
-entry point, dependencies, scientific environment, tools, baselines, and evaluator
-belong to that demo. Running one must not require installing or running the other
-two. No demo imports another demo; common helpers may live in `shared/`.
+Each demo has its own `README.md`, `src/`, `configs/`, and `tests/`. No demo imports
+another demo. The two Burgers facades currently live in the shared package and
+are tested independently; neither requires the other demo or surrogate training.
+
+## Install and validate the shared foundation
+
+Python 3.10+ and NumPy/SciPy are required. From the repository root, on Windows:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -m unittest discover -s demos/planning/tests -v
+.\.venv\Scripts\python.exe -m budgeted_science.burgers.validate
+```
+
+On POSIX use `.venv/bin/python` instead. After activating the environment,
+`python -m budgeted_science.burgers.validate` is the same entry point. No Docker,
+GPU, API key, or paid model call is needed. The older allocation pilot still runs
+without NumPy/SciPy; see its own README.
+
+Validation writes error/work tables, recoverability diagnostics, two scripted
+interaction traces, configuration, software versions, and source hashes under
+`tmp/burgers_foundation/`. Those files include private evaluator information and
+are not agent inputs. See [shared interfaces and accounting](shared/README.md)
+for the scientific contract and limitations.
 
 ## Initial implementation principles
 
@@ -46,9 +74,11 @@ two. No demo imports another demo; common helpers may live in `shared/`.
 - Compare against competent numerical baselines; retain failed and abandoned work
   in reporting. Small pilots demonstrate the protocol, not broad agent rankings.
 
-Start with planning, then inference, then construction. Add demo-local setup and
-run commands as each becomes executable; there is no root-level runner yet.
-Later coding-enabled evaluation will be a separate, isolated execution track.
+Next experiments can build on these contracts: budget/price sweeps, numerical
+policies, and fixed imperfect-model banks. The current validation runner is not
+an agent benchmark. Later coding-enabled evaluation needs separate isolation and
+must account for lawful shortcuts: this restricted Burgers family also has fast
+Cole-Hopf solutions, so it does not make expensive simulation unavoidable.
 
 Raw data, generated models, run outputs, and credentials stay out of Git by
 default. Curated, reviewed summaries can go in `docs/` for a self-contained
