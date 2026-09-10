@@ -5,14 +5,16 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
-**Status:** repository scaffold only. No runnable demos, agent experiments, or
-benchmark results are implemented yet.
+**Status:** a CPU-only classical allocation pilot is runnable in the planning
+demo. The other demos remain scaffolds. No agent experiments have been run.
+See the [OCBA pilot results](docs/ocba_pilot_results.md) and
+[reproduction protocol](docs/ocba_pilot_protocol.md).
 
 ## Three independent demos
 
 | Demo | Scientific decision | Final evaluation |
 | --- | --- | --- |
-| [Project planning](demos/planning/README.md) | Allocate a shared budget across related scientific objectives; reuse evidence and adapt purchases. | Number of objectives meeting their stated tolerances. |
+| [Project planning](demos/planning/README.md) | Allocate a shared budget across scientific studies and adapt computation. | Current pilot: integral-estimation error; separate selection variant: correct-selection rate and regret. |
 | [Imperfect-model inference](demos/imperfect_model_inference/README.md) | Use fixed approximate models and paid observations to infer a hidden target's parameters. | Held-out reference-response error from the submitted parameters. |
 | [Surrogate development](demos/surrogate_development/README.md) | Acquire data and develop a predictor under acquisition, development-compute, and inference-cost limits. | Held-out predictive error and compliance with all three limits. |
 
@@ -20,7 +22,7 @@ benchmark results are implemented yet.
 
 ```text
 demos/
-  planning/                   # Gaussian transport-pulse study
+  planning/                   # Three-curve allocation pilot; later scientific tasks
   imperfect_model_inference/  # Fixed models of a diffusion-decay system
   surrogate_development/     # CPU surrogate construction for that family
 shared/                      # Small reusable utilities, when needed
