@@ -10,10 +10,11 @@ foundation now provides numerical tools, observations, budgets, fitting, and
 separate planning/inference scoring contracts. Its numerical validation and
 scripted contract checks are runnable. A single-episode planning runner now has
 complete local audit logs, an offline fake-model mode, and an optional GPT-5.6 Sol
-integration. Offline checks and its fixed-policy CPU comparison pass. The first
-live attempt produced one model response but no submission because second-turn
-history counting rejected response-only metadata; the replay fix is tested, but
-no scored agent episode has been run. No trained imperfect-model bank exists.
+integration. Offline checks and its fixed-policy CPU comparison pass. Two live
+attempts are retained: the first exposed a fixed replay-integration defect; the
+post-fix attempt progressed for 11 responses and spent 19.17 scientific credits,
+but reached its per-response output cap before submission. No scored agent episode
+or trained imperfect-model bank exists.
 See the [planning runner protocol](docs/planning_agent_runner.md).
 See the [Burgers foundation results](docs/burgers_foundation_results.md),
 [OCBA pilot results](docs/ocba_pilot_results.md), and

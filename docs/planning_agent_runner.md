@@ -1,12 +1,14 @@
 # First planning-agent runner
 
-Implemented and checked offline on 2026-09-10. One paid attempt was made after
-explicit authorization. It produced one GPT-5.6 Sol response but no submission:
+Implemented and checked offline on 2026-09-10. Two paid attempts were made, each
+after explicit authorization. The first produced one GPT-5.6 Sol response but no submission:
 the second input-token-count request rejected a returned reasoning item's
 response-only `status` field. The incomplete run was retained and not retried.
 The runner now projects returned items onto canonical replayable input fields,
-with a regression fixture matching the observed payload; that correction has not
-yet been verified by another live episode. The scripted dry-run checks the runner,
+with a regression fixture matching the observed payload; that correction was
+verified by the second live episode. That episode progressed normally through 11
+responses, but its final response exhausted the configured 8,192-token output
+allowance entirely on reasoning and produced no submission. The scripted dry-run checks the runner,
 not GPT-5.6 Sol's scientific planning. The numerical foundation and allocation
 pilot are unchanged.
 
@@ -203,6 +205,30 @@ was sent, no profile was submitted, and no agent score exists. The paired fixed
 policy remained 0.03445358599 normalized RMSE at 4.449612403 credits. This is an
 integration failure, not evidence about planning performance. Raw artifacts are
 local and ignored by Git.
+
+### Retained post-fix live attempt
+
+Run ID: `20260911T011713Z-live-d2f5e0b9e7`. The replay correction worked across
+11 generations. The agent inspected its budget, acquired one record at each of
+the three sensors, fit at grid 32, ran two grid-64 calibration checks, and computed
+three forecast candidates: grid 128 at viscosity 0.20 and grid 64 at viscosities
+0.20 and 0.22. It spent 19.17054264 of 20 scientific credits: 6 on observations,
+3.403100775 on calibration/fitting, and 9.76744186 on forecasting.
+
+Generation 11 received 8,308 input tokens and used all 8,192 allowed output tokens
+as reasoning tokens. The provider returned `incomplete` with reason
+`max_output_tokens`; it contained no function call. The runner therefore did not
+fabricate a submission. Across all 11 responses, the standard-price lower estimate
+was approximately $0.27 and the conservative recorded upper bound was $0.4473,
+both below the $2 ceiling.
+
+Officially, the episode has no submitted profile and no score. As a clearly marked
+post-hoc diagnostic, the already purchased forecast profiles would have scored
+0.011957215598 (viscosity 0.20, grid 128), 0.008731787976 (viscosity 0.20, grid 64),
+and 0.017800514499 (viscosity 0.22, grid 64). The best happened to outperform the
+fixed policy's 0.03445358599, but it was never submitted and is not converted into
+an agent result. The failure is relevant to stopping and task completion under a
+budget, while the output ceiling remains a consequential experimental condition.
 
 Tested environment: Python 3.13.5, NumPy 2.3.4, SciPy 1.16.1, OpenAI 2.54.0,
 HTTPX 0.28.1. The existing local virtual environment inherited system packages;

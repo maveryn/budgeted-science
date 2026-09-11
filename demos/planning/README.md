@@ -2,11 +2,12 @@
 
 **Status:** the CPU allocation pilot and shared numerical foundation are preserved.
 A complete single-episode agent runner now passes offline checks and includes an
-independently budgeted fixed-policy CPU comparison. The first paid attempt ended
-after one model response, before submission, because second-turn token counting
-rejected response-only metadata. The local run is retained; the replay projection
-is now covered by offline tests. There is no scored LLM result, and the scripted
-fake-model result is not an agent-performance result.
+independently budgeted fixed-policy CPU comparison. The first paid attempt exposed
+a replay-integration defect that is now fixed and covered by offline tests. A
+post-fix attempt progressed for 11 responses and spent 19.17 scientific credits,
+but generation 11 exhausted its 8,192-token response allowance entirely on
+reasoning before submission. Both runs are retained. There is no scored LLM result,
+and the scripted fake-model result is not an agent-performance result.
 
 ## First logged agent episode
 
