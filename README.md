@@ -5,6 +5,13 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
+**Scientific claim verification:** a separate [offline predator-prey demo](demos/claim_verification/README.md)
+now provides 30 completed-study variants, three report formats, 5-credit audit
+tools, objective verdict scoring, and fully logged scripted fixtures. Numerical
+commissioning checks integration and output-sampling errors independently.
+No verification-agent/API evaluation has been run. See the
+[commissioning report](docs/claim_verification_toy_results.md).
+
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
 new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget
@@ -66,13 +73,14 @@ and four budgeted fixed recipes run locally. The default agent task remains
 one-parameter; `--two-parameter` now enables a logged amplitude/viscosity episode
 with the same scientific budget and actual-profile scoring.
 
-## Three independent demos
+## Four independent demos
 
 | Demo | Scientific decision | Final evaluation |
 | --- | --- | --- |
 | [Project planning](demos/planning/README.md) | Allocate a shared budget between target observations and computations. | Predator-prey toy: worst normalized parameter error and all-parameter success. Preserved Burgers: actual forecast-profile error. Allocation pilot: its own integral/selection scores. |
 | [Imperfect-model inference](demos/imperfect_model_inference/README.md) | Use fixed approximate models and paid observations to infer a hidden target's parameters. | Held-out reference-response error from the submitted parameters. |
 | [Surrogate development](demos/surrogate_development/README.md) | Acquire data and develop a predictor under acquisition, development-compute, and inference-cost limits. | Held-out predictive error and compliance with all three limits. |
+| [Claim verification](demos/claim_verification/README.md) | Audit a completed numerical study using purchased verification computations. | Correctness of the original claim's within-5% verdict; coverage and error rates reported separately. |
 
 ## Repository layout
 
@@ -81,13 +89,15 @@ demos/
   planning/                   # Preserved allocation pilot; logged Burgers agent runner
   imperfect_model_inference/  # Burgers fixed-predictor contract; model banks are future work
   surrogate_development/     # Planned CPU surrogate construction demo
-shared/budgeted_science/     # Independent resource_planning/, burgers/, optional agents/
+  claim_verification/        # CPU catalog and offline scripted audit episodes
+shared/budgeted_science/     # Scientific packages plus optional agent infrastructure
 tests/                       # Numerical, tool-contract and offline runner tests
 docs/                        # Protocol notes and proposal-appendix material
 tmp/burgers_foundation/      # Ignored validation outputs and backend cache
 ```
 
-Each demo has its own `README.md`, `src/`, `configs/`, and `tests/`. No demo imports
+Each demo has its own README and entry points; numerical contracts and tests
+live in the shared package and root tests where appropriate. No demo imports
 another demo. The two Burgers facades currently live in the shared package and
 are tested independently; neither requires the other demo or surrogate training.
 

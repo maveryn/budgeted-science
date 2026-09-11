@@ -5,6 +5,20 @@ It uses Python 3.10+, NumPy, SciPy, and standard-library tests. Shared code neve
 imports a demo. Planning and inference each own an episode ledger, purchased
 records, and submission; only a deterministic backend cache may be shared.
 
+## Completed-study claim verification
+
+`budgeted_science.claim_verification` reuses the existing predator-prey RHS
+through an internal adapter without refactoring the frozen planning code.
+It owns separate study generation, independently checked peak references,
+public audit tools, a five-credit ledger, and original-claim verdict scoring.
+Only SDK-independent logging is reused from the agents package; no model
+transport or credential loading is included.
+
+The public facade exposes artifacts and numerical refinement, not target
+measurement, candidate-parameter fitting, or reference access. The 30-case
+catalog is developmental. See the [demo contract](../demos/claim_verification/README.md)
+and [measured commissioning results](../docs/claim_verification_toy_results.md).
+
 ## Independent resource-planning toy
 
 The opt-in `harder_config()` adds doubled range widths, 1%-of-initial-scale

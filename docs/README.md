@@ -20,6 +20,11 @@ and the preserved [allocation/OCBA pilot](ocba_pilot_results.md), with its
 [protocol](ocba_pilot_protocol.md). The foundation validates numerical and tool
 contracts, not agents or adaptive policies.
 
+The [claim-verification commissioning report](claim_verification_toy_results.md)
+adds a completed-study audit toy with three report formats, 30 development
+variants, numerical check effects, and scripted logging fixtures. It reports
+no LLM performance and does not require a general classical verifier.
+
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
 validation output stays in ignored `tmp/burgers_foundation/`.
