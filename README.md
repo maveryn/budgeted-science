@@ -13,8 +13,11 @@ complete local audit logs, an offline fake-model mode, and an optional GPT-5.6 S
 integration. Offline checks and its fixed-policy CPU comparison pass. Two live
 attempts are retained: the first exposed a fixed replay-integration defect; the
 post-fix attempt progressed for 11 responses and spent 19.17 scientific credits,
-but reached its per-response output cap before submission. No scored agent episode
-or trained imperfect-model bank exists.
+but reached its per-response output cap before submission. A subsequent
+two-parameter episode completed: agent normalized RMSE 0.01834 at 19.80 credits,
+versus 0.01812 at 17.88 credits for its fixed-policy comparison. This is one
+development instance, not evidence of an adaptive-planning advantage. No trained
+imperfect-model bank exists. See the [completed-run audit](docs/planning_two_parameter_agent_run.md).
 See the [planning runner protocol](docs/planning_agent_runner.md).
 See the [Burgers foundation results](docs/burgers_foundation_results.md),
 [OCBA pilot results](docs/ocba_pilot_results.md), and

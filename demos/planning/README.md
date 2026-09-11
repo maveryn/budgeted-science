@@ -6,8 +6,11 @@ independently budgeted fixed-policy CPU comparison. The first paid attempt expos
 a replay-integration defect that is now fixed and covered by offline tests. A
 post-fix attempt progressed for 11 responses and spent 19.17 scientific credits,
 but generation 11 exhausted its 8,192-token response allowance entirely on
-reasoning before submission. Both runs are retained. There is no scored LLM result,
-and the scripted fake-model result is not an agent-performance result.
+reasoning before submission. Both earlier runs are retained. The subsequent
+two-parameter episode submitted successfully: normalized RMSE 0.01834 at 19.80
+credits, versus 0.01812 at 17.88 credits for the fixed policy. See the
+[completed-run audit](../../docs/planning_two_parameter_agent_run.md).
+The scripted fake-model result is not an agent-performance result.
 
 ## Opt-in two-parameter CPU trial
 
