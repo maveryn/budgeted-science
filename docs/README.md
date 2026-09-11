@@ -14,7 +14,8 @@ An appendix for a completed pilot should cover:
 Distinguish planned experiments from completed runs. Record configuration,
 code revision, model version, and evaluation conditions for reported results.
 Current curated results include the [two-baseline resource-planning pilot](resource_planning_toy_results.md)
-and its [protocol](resource_planning_toy_protocol.md), the [Burgers foundation validation](burgers_foundation_results.md)
+and its [protocol](resource_planning_toy_protocol.md), the
+[resource-planning agent protocol and audit](resource_planning_agent_run.md), the [Burgers foundation validation](burgers_foundation_results.md)
 and the preserved [allocation/OCBA pilot](ocba_pilot_results.md), with its
 [protocol](ocba_pilot_protocol.md). The foundation validates numerical and tool
 contracts, not agents or adaptive policies.

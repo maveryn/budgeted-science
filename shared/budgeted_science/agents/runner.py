@@ -25,7 +25,7 @@ class StopEpisode(Exception):
 
 def provenance(repo):
     files = sorted((repo / "shared" / "budgeted_science").rglob("*.py"))
-    files += [repo / "pyproject.toml", repo / "demos/planning/src/run_agent.py"]
+    files += [repo / "pyproject.toml", *sorted((repo / "demos/planning/src").glob("run*agent.py"))]
     files += sorted((repo / "tests").glob("test*.py"))
     hashes = {p.relative_to(repo).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in files if p.is_file()}
@@ -79,17 +79,24 @@ def replay_output_item(item):
                      if key in item and item[key] is not None})
 
 
-async def run_episode(repo, output_root, *, mode, config=None, instance=None, gateway=None, key_file=None):
+async def run_episode(repo, output_root, *, mode, config=None, instance=None, gateway=None, key_file=None,
+                      adapter=None):
     if mode not in ("dry-run", "live"):
         raise ValueError("Choose dry-run or explicitly choose live.")
     config = config or RunConfig()
     instance = instance or PrivateInstance(target_amplitude=1.1 if config.task_variant == "viscosity_amplitude" else 1.0)
-    if config.task_variant == "viscosity" and instance.target_amplitude != 1.0:
+    if adapter is None and config.task_variant == "viscosity" and instance.target_amplitude != 1.0:
         raise ValueError("one-parameter task requires target amplitude 1")
     repo = Path(repo).resolve()
     log = RunLog(output_root, mode)
     started = time.monotonic()
-    messages, tools = prompts(config), tool_definitions(config)
+    episode = None
+    render = regenerate if adapter is None else adapter.regenerate
+    if adapter is None:
+        messages, tools = prompts(config), tool_definitions(config)
+    else:
+        episode = adapter.create_episode(config, instance, log, started + config.deadline_seconds)
+        messages, tools = adapter.prompts(config, episode), adapter.tool_definitions()
     manifest = {"schema_version": 1, "run_id": log.path.name, "mode": mode,
                 "started_utc": utc_now(), "termination_reason": "running",
                 "public_configuration": config.public(),
@@ -107,7 +114,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
     log.event("prompt_frozen", messages=messages, tool_schema_hash=digest(tools))
     log.event("run_started", mode=mode)
     money = ApiBudget(config.api_ceiling_usd)
-    episode = PlanningEpisode(config, instance, log)
+    episode = episode if episode is not None else PlanningEpisode(config, instance, log)
     baseline, reason, responses = None, "internal_error", 0
     history = deepcopy(messages)
     history_output_sequences = []
@@ -136,11 +143,17 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
 
     try:
         # The paired comparison is an independent CPU run, never model context.
-        baseline = run_fixed_policy(config, instance, log)
+        baseline = (run_fixed_policy(config, instance, log) if adapter is None
+                    else adapter.run_comparisons(config, instance, log))
+        if adapter is not None:
+            # CPU comparisons have their own limits, outside the agent deadline.
+            started = time.monotonic()
+            episode.deadline = started + config.deadline_seconds
+            log.event("agent_started", deadline_seconds=config.deadline_seconds)
         remaining()
         if gateway is None:
             if mode == "dry-run":
-                gateway = ScriptedGateway()
+                gateway = ScriptedGateway() if adapter is None else adapter.scripted_gateway()
             else:
                 key = load_api_key(key_file or repo / "openaiapi.txt")
                 log.redactor.add(key)
@@ -242,5 +255,5 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
         manifest.update(termination_reason=reason, ended_utc=utc_now())
         log.write_json("manifest.json", manifest, replace=True)
         log.close()
-        regenerate(log.path)
+        render(log.path)
     return log.path, reason

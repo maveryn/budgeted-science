@@ -17,7 +17,7 @@ def _write(path, text):
     os.replace(temporary, path)
 
 
-def regenerate(path):
+def regenerate(path, *, report_writer=None):
     path = Path(path).resolve()
     manifest = json.loads((path / "manifest.json").read_text(encoding="utf-8"))
     events, torn = read_events(path)
@@ -77,6 +77,9 @@ def regenerate(path):
     status = finished["termination_reason"] if finished else "interrupted_without_finalization"
     lines += [f"Termination: {status}.", ""]
     _write(path / "transcript.md", "\n".join(lines))
+
+    if report_writer is not None:
+        return report_writer(path, manifest, events, finished, status)
 
     report = ["# Planning episode evaluation", "", f"Mode: {manifest['mode']}. Termination: **{status}**.", ""]
     configuration = manifest["public_configuration"]

@@ -20,6 +20,12 @@ continuous error is the maximum normalized parameter error, not its mean.
 See the [full contract](../docs/resource_planning_toy_protocol.md) and
 [measured pilot](../docs/resource_planning_toy_results.md).
 
+The optional `agents.resource` adapter exposes the 16-time subset, the same GP
+fitter over purchased evidence, and parameter-vector submission to a logged model.
+It reuses the API/history/spending engine with task-specific prompt and reporting
+hooks. The scientific package itself still requires no OpenAI SDK. See the
+[agent-run protocol](../docs/resource_planning_agent_run.md).
+
 ## Restricted viscous-Burgers system
 
 The current family solves `u_t + u*u_x = nu*u_xx` on periodic `[0, 2*pi)`, with

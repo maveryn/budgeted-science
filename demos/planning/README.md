@@ -19,7 +19,29 @@ freeze, pilot, and offline regeneration commands are in the
 [results](../../docs/resource_planning_toy_results.md). Read the
 [protocol](../../docs/resource_planning_toy_protocol.md) for baseline assumptions,
 paid warm starts, resource contracts, scoring, and limits. No API dependency,
-credential, Docker container, or code-writing agent is used by this toy.
+credential, Docker container, or code-writing agent is used by these CPU baselines.
+
+### Logged predator-prey agent
+
+The separate `run_resource_agent.py` adapter gives GPT the same purchased-evidence
+GP fitter while leaving all 40 credits available for its own choices. It uses the
+16-time measurement grid and compares the submitted parameter vector against both
+unchanged CPU policies. It does not use Burgers' profile-RMSE score.
+
+```powershell
+python demos/planning/src/run_resource_agent.py --dry-run
+```
+
+Read the [agent protocol and run audit](../../docs/resource_planning_agent_run.md)
+before a paid run. `--live` starts exactly one GPT-5.6 Sol/high episode with a $2
+API ceiling, 32,768 output tokens per response, 30 responses, and a 20-minute
+deadline. Raw logs stay under ignored `runs/resource_agent/`; `--render RUN_DIR`
+regenerates the transcript and report offline. No automatic retry or extra agent.
+
+The first live attempt was interrupted by a provider-overload error after nine
+low-fidelity simulations (9/40 credits), without a submission. It was not rerun.
+The complete logs and both independent baseline results are preserved; see the
+linked audit. This incomplete attempt supplies no agent accuracy result.
 
 ## Preserved Burgers and allocation work
 

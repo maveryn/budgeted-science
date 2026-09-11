@@ -9,8 +9,10 @@ adapting them to domain-specific scientific applications.
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
 credits. It uses live low/high-fidelity solvers and protected target measurements,
 without LLM/API calls. See the [protocol](docs/resource_planning_toy_protocol.md)
-and [paired CPU pilot results](docs/resource_planning_toy_results.md). This does
-not replace the Burgers demo or its earlier agent runs.
+and [paired CPU pilot results](docs/resource_planning_toy_results.md). An optional
+[logged GPT adapter](docs/resource_planning_agent_run.md) now adds the shared
+purchased-evidence fitter and a separate `run_resource_agent.py` entry point.
+It does not replace the Burgers demo or its earlier agent runs.
 
 **Status:** the CPU allocation pilot is preserved, and a shared viscous-Burgers
 foundation now provides numerical tools, observations, budgets, fitting, and

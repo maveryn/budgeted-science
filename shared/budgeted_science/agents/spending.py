@@ -11,7 +11,7 @@ INPUT_CACHED = Decimal("0.4")
 OUTPUT = Decimal("20")  # Includes reasoning tokens, not only visible text.
 MAX_INPUT_TOKENS = 256_000
 PRICING = {
-    "date_verified": "2026-09-10", "service_tier": "default",
+    "date_verified": "2026-09-11", "service_tier": "default",
     "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
     "input_upper_per_million_usd": str(INPUT_UPPER),
     "output_per_million_usd": str(OUTPUT), "max_input_tokens": MAX_INPUT_TOKENS,
