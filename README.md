@@ -8,7 +8,9 @@ adapting them to domain-specific scientific applications.
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
 new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget
-remains 40 after a development sweep at 40/32/24. No v2 agent run was performed.
+remains 40 after a development sweep at 40/32/24. One subsequent GPT-5.6 Sol/high
+episode used 40/40 credits and passed with largest parameter error 0.546%; the
+local-fitting control also passed (0.877%). See the [single-agent run audit](docs/resource_planning_v2_agent_run.md).
 See the [v2 setup, results, and commands](docs/resource_planning_v2_results.md).
 
 **Preserved planning toy (v1):** an independent predator-prey inverse problem compares

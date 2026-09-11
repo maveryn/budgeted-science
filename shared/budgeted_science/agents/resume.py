@@ -117,7 +117,7 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
     messages, tools = read_json(parent, "prompts.json"), read_json(parent, "tools.json")
     if digest(messages) != manifest["prompt_hash"] or digest(tools) != manifest["tool_schema_hash"]:
         raise ValueError("frozen prompt or schema changed")
-    if digest(tools) != digest(tool_definitions()):
+    if digest(tools) != digest(tool_definitions(config)):
         raise ValueError("tool schema migration is not supported")
     events, torn = read_events(parent)
     if torn:
@@ -139,9 +139,12 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
     if final and restored.tools.get_status() != final["evaluation"]["scientific_status"]:
         raise ValueError("checkpoint disagrees with finalized state")
     private = manifest["PRIVATE_harness_instance_not_agent_input"]
-    instance = ResourceInstance(tuple(private["target_parameters"]), private["target_seed"])
+    instance = ResourceInstance(tuple(private["target_parameters"]), private["target_seed"], private.get("noise_seed", 0))
     if tuple(saved["environment"]["theta_true"]) != instance.theta:
         raise ValueError("private target mismatch")
+    if (restored.tools.public_config != config.environment_config().public()
+            or restored._noise_seed != instance.noise_seed):
+        raise ValueError("saved environment or noise stream mismatch")
     history, output_sequences, pending = deepcopy(messages), [], {}
     attempted, ids, requested = 0, [], set()
     for event in events:

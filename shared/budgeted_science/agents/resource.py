@@ -8,7 +8,7 @@ import time
 
 import numpy as np
 
-from budgeted_science.resource_planning.config import Config
+from budgeted_science.resource_planning.config import Config, harder_config
 from budgeted_science.resource_planning.emulator import Calibration, GPSettings, check_deadline
 from budgeted_science.resource_planning.environment import Episode
 from budgeted_science.resource_planning.policies import run_policy
@@ -27,6 +27,7 @@ class ResourceRunConfig:
     deadline_seconds: float = 1200.0
     task_variant: str = "resource_planning"
     require_full_budget: bool = False
+    environment_version: str = "v1"
 
     def __post_init__(self):
         RunConfig(**{k: getattr(self, k) for k in (
@@ -39,9 +40,14 @@ class ResourceRunConfig:
             raise ValueError("unknown resource task")
         if type(self.require_full_budget) is not bool:
             raise ValueError("require_full_budget must be boolean")
+        if self.environment_version not in ("v1", "v2"):
+            raise ValueError("unknown resource environment version")
+
+    def environment_config(self):
+        return harder_config() if self.environment_version == "v2" else Config()
 
     def public(self):
-        return {**self.__dict__, "environment": Config().public(),
+        return {**self.__dict__, "environment": self.environment_config().public(),
                 "fit_settings": GPSettings().to_dict(), "fitting_seed": 0,
                 "agent_initialization": "free initial evidence only; no paid warm start"}
 
@@ -50,25 +56,32 @@ class ResourceRunConfig:
 class ResourceInstance:
     theta: tuple
     target_seed: int = 2000
+    noise_seed: int = 0
 
     @classmethod
-    def first_evaluation(cls):
-        bounds = np.asarray(Config().bounds)
-        return cls(tuple(np.random.default_rng(2000).uniform(bounds[:, 0], bounds[:, 1])))
+    def first_evaluation(cls, environment_version="v1"):
+        config = ResourceRunConfig(environment_version=environment_version).environment_config()
+        seed = 6000 if environment_version == "v2" else 2000
+        bounds = np.asarray(config.bounds)
+        return cls(tuple(np.random.default_rng(seed).uniform(bounds[:, 0], bounds[:, 1])),
+                   seed, seed * 10 if environment_version == "v2" else 0)
 
     def private(self):
         return {"target_parameters": list(self.theta), "target_seed": self.target_seed,
+                "noise_seed": self.noise_seed,
                 "selection": "first frozen evaluation target by original ordering"}
 
 
-def tool_definitions():
+def tool_definitions(config=None):
+    environment = (config or ResourceRunConfig()).environment_config()
+    measurement = "noisy" if environment.observation_noise_fraction else "noiseless"
     theta = {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}
     actions = [
         ("simulate_low", "Purchase a low-accuracy candidate trajectory for 1 credit. Returns x,y at all 16 times. Exact repeat is free.", {"theta": theta}),
         ("simulate_high", "Purchase a high-accuracy candidate trajectory for 8 credits. Returns x,y at all 16 times. Exact repeat is free.", {"theta": theta}),
-        ("measure_target", "Purchase one noiseless scalar from the fixed target for 12 credits. Existing observations are free. No candidate parameters accepted.",
+        ("measure_target", f"Purchase one {measurement} scalar from the fixed target for 12 credits. Existing observations are free. No candidate parameters accepted.",
          {"variable": {"type": "string", "enum": ["x", "y"]},
-          "time": {"type": "number", "enum": list(Config().working_times)}}),
+          "time": {"type": "number", "enum": list(environment.working_times)}}),
         ("get_status", "Free budget, purchase inventory, and submission status; no new evidence.", {}),
         ("evidence", "Retrieve all already available observations and purchased trajectories for free.", {}),
         ("compare_cached_candidates", "Free residual comparisons of purchased candidates against available target observations. Residuals are not parameter errors.", {}),
@@ -82,7 +95,16 @@ def tool_definitions():
 
 
 def prompts(config, episode):
-    public = Config().public()
+    environment = config.environment_config()
+    public = environment.public()
+    noise = ("Nonzero-time target observations, including the free time-1 readings, have independent "
+             "zero-mean Gaussian measurement noise with known standard deviations 0.10 for x and 0.05 for y "
+             "(1% of their initial populations, NOT 1% of each observed value). Known time-zero values are exact. "
+             "Retrieving the same variable/time returns the SAME noisy reading, not a new independent trial. "
+             "Candidate simulations are deterministic and contain no measurement noise. The fitting helper includes this noise model."
+             if environment.observation_noise_fraction else "Measurements are noiseless.")
+    full_budget = (" This episode requires using all 40 scientific credits before submission; choose the purchases yourself. "
+                   "A submit call while credits remain is rejected." if config.require_full_budget else "")
     return [
         {"role": "developer", "content":
          "You are conducting a budgeted scientific parameter-recovery investigation. "
@@ -97,11 +119,11 @@ The populations are x and y; initial conditions are known. The horizon is 8 in d
 
 Initial free observations: {json.dumps(episode.initial_observations)}
 
-You have 40 shared scientific credits. A NEW low simulation costs 1, a NEW high simulation 8, and a NEW target scalar measurement 12. A candidate simulation accepts your chosen theta and purchases its full trajectory; responses return x,y at times 0.5,1.0,...,8.0. Target measurements accept only x/y and one of those times, not candidate parameters. Measurements are noiseless. Exact repeats of purchased simulations or observations, including the free observations at time 1, cost zero. Known time-zero values are in the evidence. Invalid or unaffordable requests cost nothing; a simulation that executes and fails retains its charge and is cached. Prices are declared resource credits, not measured runtime or dollars. You start with no paid simulations or measurements.
+You have 40 shared scientific credits. A NEW low simulation costs 1, a NEW high simulation 8, and a NEW target scalar measurement 12. A candidate simulation accepts your chosen theta and purchases its full trajectory; responses return x,y at times 0.5,1.0,...,8.0. Target measurements accept only x/y and one of those times, not candidate parameters. {noise} Exact repeats of purchased simulations or observations, including the free observations at time 1, cost zero. Known time-zero values are in the evidence. Invalid or unaffordable requests cost nothing; a simulation that executes and fails retains its charge and is cached. Prices are declared resource credits, not measured runtime or dollars. You start with no paid simulations or measurements.
 
 Analysis and retrieval are free scientific actions. compare_cached_candidates compares only purchased predictions with available observations. fit_purchased uses a two-fidelity GP (high=low+discrepancy), independent population channels, correlated time outputs, and 2,048 prior particles with fixed numerical settings. It returns an approximate posterior mean and diagnostics. These diagnostics are not validated confidence statements. It only uses purchased data, cannot run new simulations or measurements, and requires at least one successful simulation. You may submit its estimate or a different in-bounds vector. An unchanged-evidence fit is reused. Free tools remain available after scientific credits run out.
 
-Success requires EVERY parameter to have relative error at most 10 percent. The private evaluator reports E_worst=max_i(abs(theta_hat_i-theta_true_i)/(0.10*abs(theta_true_i))); success is E_worst<=1. It scores your submitted parameters, not your explanations or confidence. There is no bonus for saving credits or stopping early. Private scores and true parameters are not revealed during the investigation.
+Success requires EVERY parameter to have relative error at most {100 * environment.tolerance:g} percent. The private evaluator reports E_worst=max_i(abs(theta_hat_i-theta_true_i)/({environment.tolerance:.2f}*abs(theta_true_i))); success is E_worst<=1. It scores your submitted parameters, not your explanations or confidence. There is no bonus for saving credits or stopping early. Private scores and true parameters are not revealed during the investigation.{full_budget}
 
 Submit before the separate runner limits: {config.max_responses} model responses and {config.deadline_seconds:g} seconds. API usage has a separate ${config.api_ceiling_usd} ceiling and can end the episode before the scientific budget is exhausted. No fallback answer is supplied if you do not submit."""},
     ]
@@ -130,8 +152,9 @@ class ResourceEpisode:
         self.log, self.deadline, self.parent_call = log, deadline, None
         self.require_full_budget = config.require_full_budget
         self.executed, self.fits = {}, {}
-        self.schemas = {t["name"]: t["parameters"] for t in tool_definitions()}
-        self.environment = Episode(instance.theta, log=environment_logger(log, "agent", lambda: self.parent_call))
+        self.schemas = {t["name"]: t["parameters"] for t in tool_definitions(config)}
+        self.environment = Episode(instance.theta, config.environment_config(), noise_seed=instance.noise_seed,
+                                   log=environment_logger(log, "agent", lambda: self.parent_call))
         self.tools = self.environment.tools
         self.initial_observations = self.tools.evidence()["observations"]
 
@@ -147,10 +170,13 @@ class ResourceEpisode:
         obj.log, obj.deadline, obj.parent_call = log, deadline, None
         obj.require_full_budget = config.require_full_budget
         obj.executed, obj.fits = deepcopy(saved["executed"]), deepcopy(saved["fits"])
-        obj.schemas = {t["name"]: t["parameters"] for t in tool_definitions()}
+        obj.schemas = {t["name"]: t["parameters"] for t in tool_definitions(config)}
         obj.environment = restore_episode(saved["environment"], environment_logger(log, "agent", lambda: obj.parent_call))
         if tuple(obj.environment._theta_true) != tuple(instance.theta):
             raise ValueError("saved target does not match private manifest")
+        if (obj.environment._config.public() != config.environment_config().public()
+                or obj.environment._noise_seed != instance.noise_seed):
+            raise ValueError("saved environment or noise stream does not match manifest")
         obj.tools, obj.initial_observations = obj.environment.tools, deepcopy(saved["initial_observations"])
         return obj
 
@@ -175,10 +201,11 @@ class ResourceEpisode:
             result.update(cache_hit=True, analysis_seconds=time.monotonic() - started)
             self.log.event("fit_reused", role="agent", parent_call=self.parent_call, result=result)
             return result
-        public = Config().public()
+        public = self.tools.public_config
         calibration = Calibration(successful, evidence["observations"], public["bounds"],
                                   public["initial"], public["working_times"], seed=0,
-                                  settings=GPSettings(), deadline=self.deadline)
+                                  settings=GPSettings(), deadline=self.deadline,
+                                  noise_fraction=public.get("observation_noise_fraction", 0.0))
         check_deadline(self.deadline)
         diagnostics = calibration.diagnostics()
         fit_id = f"fit-{len(self.fits) + 1:04d}"
@@ -219,7 +246,7 @@ class ResourceEpisode:
                 validate_arguments(args, self.schemas[name])
                 check_deadline(self.deadline)
                 if name == "submit" and self.require_full_budget and self.budget_status()["remaining"] != 0:
-                    raise ValueError("This continuation requires using all 40 scientific credits before submission; choose further useful purchases.")
+                    raise ValueError("This episode requires using all 40 scientific credits before submission; choose further useful purchases.")
                 if name == "fit_purchased":
                     result = self.fit()
                 else:
@@ -256,15 +283,21 @@ class ResourceEpisode:
 
 def run_comparisons(config, instance, log):
     results = {}
-    for policy in ("random", "adaptive"):
+    policies = ("random", "adaptive", "local") if config.environment_version == "v2" else ("random", "adaptive")
+    for policy in policies:
         started = time.monotonic()
-        environment = Episode(instance.theta, log=environment_logger(log, policy, lambda: None))
+        environment = Episode(instance.theta, config.environment_config(), noise_seed=instance.noise_seed,
+                              log=environment_logger(log, policy, lambda: None))
         details, termination = None, "submitted"
         try:
-            details = run_policy(environment.tools, policy=policy, seed=0,
-                                 deadline=time.monotonic() + 300,
-                                 log=lambda kind, **data: log.event("baseline_event", policy=policy,
-                                                                 event_kind=kind, data=data))
+            options = {"seed": 0, "deadline": time.monotonic() + 300,
+                       "log": lambda kind, **data: log.event("baseline_event", policy=policy,
+                                                             event_kind=kind, data=data)}
+            if policy == "local":
+                from budgeted_science.resource_planning.local_policy import run_local_policy
+                details = run_local_policy(environment.tools, **options)
+            else:
+                details = run_policy(environment.tools, policy=policy, **options)
         except Exception as exc:
             termination = "deadline" if isinstance(exc, TimeoutError) else "baseline_error"
             environment.abort(termination)
@@ -291,6 +324,6 @@ class ResourceAdapter:
         return regenerate(path, report_writer=write_report)
 
     @staticmethod
-    def scripted_gateway():
+    def scripted_gateway(config=None):
         from .resource_fake import ResourceScriptedGateway
-        return ResourceScriptedGateway()
+        return ResourceScriptedGateway(require_full_budget=bool(config and config.require_full_budget))

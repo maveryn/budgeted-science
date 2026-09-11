@@ -13,11 +13,15 @@ paid-data-only multistart local least-squares control; `harder_pilot` runs the
 development budget sweep and frozen noisy comparison. V1 defaults remain intact.
 See [v2 results](../docs/resource_planning_v2_results.md). Noise-aware GP updates
 include the declared sensor variance separately from numerical regularization.
+`ResourceRunConfig(environment_version="v2")` selects the same environment in
+the logged agent adapter; prompts, fitting, comparisons, and resume all retain
+the noisy contract. See the [first v2 agent run](../docs/resource_planning_v2_agent_run.md).
 
 `budgeted_science.resource_planning` contains the CPU predator-prey environment,
 flat-credit accounting, protected observations, shared multifidelity GP fitter,
-two baseline policies, supervised experiment runner, and offline reports. It
-does not import Burgers or use its work-to-credit conversion. The only reused
+two GP baseline policies plus the local-fitting control, supervised experiment
+runner, and offline reports. It does not import Burgers or use its work-to-credit
+conversion. The only reused
 agent utility is SDK-independent durable local logging.
 
 Use `Episode(...).tools` for public actions and keep `Episode.evaluate()` private.

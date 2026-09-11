@@ -6,6 +6,10 @@ from .fake import ScriptedGateway
 
 
 class ResourceScriptedGateway(ScriptedGateway):
+    def __init__(self, *, require_full_budget=False):
+        super().__init__()
+        self.require_full_budget = require_full_budget
+
     async def stream(self, body, metadata):
         self.requests.append(body)
         turn = len(self.requests)
@@ -17,7 +21,11 @@ class ResourceScriptedGateway(ScriptedGateway):
             name, arguments = "measure_target", {"variable": "y", "time": 4.0}
         elif turn == 3:
             name, arguments = "simulate_high", {"theta": [.95, .085, 1.5]}
-        elif turn == 4:
+        elif self.require_full_budget and 4 <= turn <= 8:
+            # Two high and three low purchases fill the remaining 19 credits.
+            name = "simulate_high" if turn <= 5 else "simulate_low"
+            arguments = {"theta": [0.90 + 0.01 * turn, .075, 1.35]}
+        elif turn == (9 if self.require_full_budget else 4):
             name, arguments = "fit_purchased", {}
         else:
             last = json.loads(previous[-1]["output"])

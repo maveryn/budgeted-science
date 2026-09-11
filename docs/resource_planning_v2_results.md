@@ -4,9 +4,10 @@
 
 Implemented and evaluated on 2026-09-11, CPU-only. The new local-fitting baseline
 passed **28/40 fresh-target cases (70%)**, versus **0/40** for each GP baseline.
-All 120 evaluation episodes submitted within their 40-credit budgets. No LLM/API
-call was made and no credential file was read. The original toy and saved agent
-results are retained as v1; these are separate v2 experiments.
+All 120 evaluation episodes submitted within their 40-credit budgets. During
+this CPU milestone no LLM/API call was made and no credential file was read.
+The original toy and saved agent results are retained as v1; these are separate
+v2 experiments.
 
 ## Task changes
 
@@ -33,9 +34,10 @@ The high-fidelity model and target still share the same physical equations.
 Scoring uses the submitted parameters, with no savings reward or confidence score.
 
 The implementation is opt-in through `harder_config()` and the v2 CPU command.
-`Config()` and the existing logged GPT runner retain v1 defaults. A v2 agent run
-has not been performed; its task-specific adapter must use the new configuration
-and disclose the noise model before a paid evaluation.
+`Config()` and the logged GPT runner retain v1 defaults. The subsequent opt-in
+`--harder` agent adapter discloses the noise model, uses noise-aware fitting,
+and compares all three baselines. See the separate
+[v2 agent evaluation](resource_planning_v2_agent_run.md); this CPU pilot is unchanged.
 
 ## New classical baseline
 
@@ -177,4 +179,5 @@ Repeat invocations create new run directories. Rendering uses saved events only.
 For a single offline case, create `Episode(theta, harder_config(), noise_seed=...)`
 and pass only `episode.tools` to `run_local_policy`; keep the episode and evaluator
 private. This is trusted-process separation, not protection from arbitrary Python
-introspection. No claim about GPT performance on v2 is made.
+introspection. This CPU pilot alone makes no claim about GPT performance; the
+subsequent single-agent evaluation is reported separately above.

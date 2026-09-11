@@ -13,20 +13,33 @@ def purchases(status):
 
 def write_report(path, manifest, events, finished, status):
     config = manifest["public_configuration"]
+    environment = config["environment"]
+    harder = config.get("environment_version") == "v2"
+    evidence_description = (
+        "Target observations at nonzero times have independent Gaussian noise (sigma_x=0.10, sigma_y=0.05); "
+        "the same variable/time returns its existing reading. Known initial conditions remain exact. "
+        if harder else "Measurements are noiseless; ")
+    baseline_description = (
+        "The random and GP-adaptive baselines pay their prescribed 12-credit initialization; "
+        "the additional local-fitting baseline chooses locations within its fixed resource allocation."
+        if harder else "the two baseline policies pay for their own prescribed 12-credit initialization.")
     lines = ["# Predator-prey resource-planning episode", "",
              f"Mode: {manifest['mode']}; termination: **{status}**.", "",
              f"Model: {config['model']}; reasoning: {config['reasoning_effort']}; "
              f"response limit: {config['max_responses']}; output tokens/response: {config['max_output_tokens']}.", "",
              "Scientific pool: 40 credits. Low/high/measurement prices: 1/8/12. "
-             "Measurements are noiseless; all methods use the same 16-time menu. "
+             f"{evidence_description}All methods use the same 16-time menu. "
              "GPT starts with free evidence only and can call the shared purchased-evidence fitter; "
-             "the two baseline policies pay for their own prescribed 12-credit initialization.", "",
-             "E_worst = max_i |estimate_i - target_i| / (0.10 |target_i|). "
+             f"{baseline_description}", "",
+             f"E_worst = max_i |estimate_i - target_i| / ({environment['tolerance']:.2f} |target_i|). "
              "Success requires E_worst <= 1 and a valid submission. No reward for saving resources, "
              "stopping early, or reporting confidence. Missing submissions are incomplete, not fabricated answers.", ""]
     if manifest["mode"] != "live":
         lines += ["**SCRIPTED OFFLINE FIXTURE: no LLM evaluated; actual API spending $0. "
                   "Token usage below is synthetic testing data.**", ""]
+    if config.get("require_full_budget") and not manifest.get("resume"):
+        lines += ["The frozen initial prompt requires spending all 40 scientific credits before submission. "
+                  "This full-budget comparison does not evaluate early stopping.", ""]
     if manifest.get("resume"):
         lines += ["## Continuation", "", "This continues the same scientific episode with the existing conversation, "
                   "purchases, and API ledger. The prior attempt is preserved in prior_attempts/. "
@@ -44,7 +57,7 @@ def write_report(path, manifest, events, finished, status):
         comparisons = finished.get("fixed_policy") or {}
         rows = [("GPT-5.6 Sol" if manifest["mode"] == "live" else "Scripted fake",
                  evaluation, evaluation.get("scientific_status", {}), status, finished["elapsed_seconds"])]
-        for policy in ("random", "adaptive"):
+        for policy in ("random", "adaptive", "local"):
             if policy in comparisons:
                 item = comparisons[policy]
                 rows.append((policy, item["evaluation"], item["scientific_status"],

@@ -103,7 +103,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
         messages, tools = prompts(config), tool_definitions(config)
     else:
         episode = adapter.create_episode(config, instance, log, started + config.deadline_seconds)
-        messages, tools = adapter.prompts(config, episode), adapter.tool_definitions()
+        messages, tools = adapter.prompts(config, episode), adapter.tool_definitions(config)
     manifest = {"schema_version": 1, "run_id": log.path.name, "mode": mode,
                 "started_utc": utc_now(), "termination_reason": "running",
                 "public_configuration": config.public(),
@@ -171,7 +171,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
         remaining()
         if gateway is None:
             if mode == "dry-run":
-                gateway = ScriptedGateway() if adapter is None else adapter.scripted_gateway()
+                gateway = ScriptedGateway() if adapter is None else adapter.scripted_gateway(config)
             else:
                 key = load_api_key(key_file or repo / "openaiapi.txt")
                 log.redactor.add(key)

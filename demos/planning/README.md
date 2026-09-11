@@ -13,8 +13,21 @@ python -m budgeted_science.resource_planning.harder_pilot development
 python -m budgeted_science.resource_planning.harder_pilot pilot --freeze <DEVELOPMENT_DIR>
 ```
 
-Use `harder_config()` for individual CPU cases. The existing logged GPT command
-below still uses v1; no v2 agent evaluation has been run.
+Use `harder_config()` for individual CPU cases. Add `--harder` to the logged
+agent command for v2; omitting it preserves v1. One GPT-5.6 Sol/high v2 episode
+completed 40/40 credits and passed (largest error 0.546%); the stronger local
+baseline also passed (0.877%). See the [run audit and complete logs](../../docs/resource_planning_v2_agent_run.md).
+
+```powershell
+python demos/planning/src/run_resource_agent.py --dry-run --harder --api-ceiling-usd 3.00 --require-full-budget
+```
+
+The v2 runner discloses noisy observations and the 5% tolerance, uses the
+noise-aware purchased-evidence fitter, and compares all three frozen baselines.
+The full-budget flag discloses and enforces using all 40 credits. A paid `--live`
+attempt needs explicit authorization; the $3 override is never automatic.
+V2 logs live under ignored `runs/resource_agent_v2/`. Resume restores the saved
+environment and noise seed without a new `--harder` flag.
 
 ## Preserved predator-prey resource-allocation toy (v1)
 

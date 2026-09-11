@@ -1,5 +1,8 @@
 # Logged GPT-5.6 Sol resource-planning evaluation
 
+This page preserves the original v1 evaluation. For the wider-range, noisy,
+5%-tolerance setup, see the [separate v2 agent run](resource_planning_v2_agent_run.md).
+
 ## Completed continuation: 2026-09-11
 
 The same interrupted episode was explicitly resumed, not restarted. GPT-5.6 Sol
