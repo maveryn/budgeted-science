@@ -26,6 +26,8 @@ class ScriptedGateway:
             name, args = "fit", {"record_ids": [last[0]["record_id"]], "resolution": 32, "max_evaluations": 16}
         elif turn == 3:
             name, args = "simulate", {"viscosity": last["viscosity"], "resolution": 64, "protocol": "forecast"}
+            if "initial_amplitude" in last:
+                args["initial_amplitude"] = last["initial_amplitude"]
         else:
             name, args = "submit", {"profile": last["forecast_profile"]}
         output = [

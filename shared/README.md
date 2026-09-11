@@ -43,7 +43,8 @@ Modules live under `budgeted_science.burgers`:
 | `cache.SimulationService` | Episode-local purchases plus optional shared `SimulationCache`; the metered candidate prediction backend. |
 | `observations.ObservationService` | `acquire(sensor_id, replicates=1)` buys trials; `retrieve(record_id)` returns an already purchased immutable record for free. |
 | `fitting.fit_viscosity` | Inject `predictor(nu, acquired_records)` returning a `(records, 5)` array; bounded fit retains the best completed result if interrupted. |
-| `joint_fitting.fit_viscosity_amplitude` | Opt-in Python helper with injected `predictor(nu, A, acquired_records)`; counts all forward calls, including numerical Jacobian evaluations. Not wired to the current agent tools. |
+| `joint_fitting.fit_viscosity_amplitude` | Opt-in Python helper with injected `predictor(nu, A, acquired_records)`; counts all forward calls, including numerical Jacobian evaluations. Used by `AmplitudePlanningTools` in the two-parameter runner. |
+| `tools.AmplitudePlanningTools` | Opt-in planning facade with candidate amplitude in `simulate` and joint `fit`; the same actions, accounting and profile submission as planning. |
 | `tools.PlanningTools` | `observe`, `record`, `budget`, `simulate`, `fit`, `submit`; adjustable candidate resolution. |
 | `tools.InferenceTools` | `observe`, `record`, `budget`, `predict`, `fit`, `submit`; only pre-registered fixed predictors, with no adjustable-solver/reference action. |
 | `reference`, `scoring` | Trusted evaluator-side reference and final scores. Never exposed by tool dispatch. |

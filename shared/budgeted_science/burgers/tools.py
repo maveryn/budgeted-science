@@ -7,6 +7,7 @@ import numpy as np
 
 from .config import SolverConfig, viscosity
 from .fitting import PredictionUnavailable, fit_viscosity
+from .joint_fitting import fit_viscosity_amplitude
 from .scoring import validate_profile
 
 
@@ -69,6 +70,24 @@ class PlanningTools(_CommonTools):
     def submit(self, profile):
         self._submission = tuple(validate_profile(profile))
         return {"status": "submitted", "kind": "forecast_profile"}
+
+
+class AmplitudePlanningTools(PlanningTools):
+    """Opt-in joint-amplitude planning; retains the same actions and ledger."""
+
+    def simulate(self, viscosity, initial_amplitude, resolution=64, protocol="calibration"):
+        return self._simulations.run(SolverConfig(viscosity, resolution, protocol,
+                                                initial_amplitude=initial_amplitude)).public()
+
+    def fit(self, record_ids, resolution=64, max_evaluations=48):
+        SolverConfig(0.2, resolution)
+        records = self._observations.resolve(record_ids)
+
+        def predictor(nu, amplitude, acquired):
+            config = SolverConfig(nu, resolution, initial_amplitude=amplitude)
+            return _record_predictions(self._simulations.run(config), acquired)
+
+        return fit_viscosity_amplitude(predictor, records, max_evaluations=max_evaluations).public()
 
 
 @dataclass(frozen=True)

@@ -12,12 +12,12 @@ from budgeted_science.burgers.config import FORECAST_POSITIONS, LENGTH, RECORD_T
 from budgeted_science.burgers.observations import ObservationService
 from budgeted_science.burgers.reference import ReferenceOracle
 from budgeted_science.burgers.scoring import score_planning
-from budgeted_science.burgers.tools import PlanningTools
+from budgeted_science.burgers.tools import AmplitudePlanningTools, PlanningTools
 
 from .records import digest
 
 
-def tool_definitions():
+def tool_definitions(config=None):
     number = {"type": "number", "minimum": 0.1, "maximum": 0.3}
     resolution = {"type": "integer", "enum": [32, 64, 128]}
     definitions = [
@@ -35,13 +35,37 @@ def tool_definitions():
         ("submit", "Submit the actual forecast values at the 16 specified positions. The first valid submission ends the episode; no private score is returned.",
          {"profile": {"type": "array", "items": {"type": "number"}, "minItems": 16, "maxItems": 16}}),
     ]
-    return [{"type": "function", "name": name, "description": description, "strict": True,
+    tools = [{"type": "function", "name": name, "description": description, "strict": True,
              "parameters": {"type": "object", "properties": deepcopy(properties),
                             "required": list(properties), "additionalProperties": False}}
             for name, description, properties in definitions]
+    if config is not None and config.task_variant == "viscosity_amplitude":
+        for tool in tools:
+            if tool["name"] == "simulate":
+                tool["parameters"]["properties"]["initial_amplitude"] = {
+                    "type": "number", "minimum": 0.8, "maximum": 1.2}
+                tool["parameters"]["required"].append("initial_amplitude")
+                tool["description"] += " Specify candidate calibration amplitude A; forecast uses 1.5*A."
+            elif tool["name"] == "fit":
+                tool["description"] = (
+                    "Jointly fit viscosity and initial amplitude to acquired records with bounded least squares "
+                    "at the chosen resolution, starting at the public midpoint (nu=0.2, A=1.0). "
+                    "max_evaluations bounds ALL underlying predictor attempts, including finite-difference "
+                    "Jacobian calls, not credits. Every distinct solve is charged. Returns the best completed "
+                    "fit if interrupted; evaluation_limit does not mean convergence. A repeated fit restarts; "
+                    "identical purchased solves are reused for free.")
+    return tools
 
 
 def prompts(config):
+    joint = config.task_variant == "viscosity_amplitude"
+    unknown = ("unknown dimensionless viscosity coefficient in [0.1, 0.3] and unknown initial amplitude A in [0.8, 1.2]"
+               if joint else "unknown dimensionless viscosity coefficient in [0.1, 0.3]")
+    initial_conditions = (
+        "Calibration initial condition: A*sin(x). Forecast initial condition: 1.5*A*sin(x). "
+        "The same unknown A applies to both experiments; the relative factor 1.5 is known."
+        if joint else "Calibration initial condition: sin(x). Forecast initial condition: 1.5*sin(x).")
+    candidate_parameters = "viscosity and initial amplitude A" if joint else "viscosity"
     developer = (
         "You are performing one budgeted scientific investigation through the supplied tools. "
         "Choose your own workflow to minimize final forecast error within the scientific budget. "
@@ -49,17 +73,17 @@ def prompts(config):
         "a prose-only final response without submission is incomplete. No browser, shell, filesystem, "
         "or exact-target/reference tool is available. No lengthy initial plan is required."
     )
-    user = f"""Task: forecast the final profile of a fixed system with an unknown dimensionless viscosity coefficient in [0.1, 0.3].
+    user = f"""Task: forecast the final profile of a fixed system with {unknown}.
 
 Equation: u_t + u*u_x = nu*u_xx, periodic x in [0, 2*pi), final time T=1.
-Calibration initial condition: sin(x). Forecast initial condition: 1.5*sin(x).
+{initial_conditions}
 Observation sensors 0,1,2 are at {list(SENSOR_POSITIONS)}.
-One acquisition returns the calibration values at times {list(RECORD_TIMES)} from one sensor. Independent Gaussian noise has standard deviation {config.noise_std}. Replicates are fresh trials with the same fixed target. Acquisition cannot choose a target viscosity or access the forecast experiment.
+One acquisition returns the calibration values at times {list(RECORD_TIMES)} from one sensor. Independent Gaussian noise has standard deviation {config.noise_std}. Replicates are fresh trials with the same fixed target. Acquisition cannot choose target parameters or access the forecast experiment.
 
-Candidate simulations accept your chosen viscosity and grids 32,64,128. They use Rusanov flux, centered diffusion and SSP-RK2, with dt=min(time to next record, 0.4/(max(abs(u))/dx + 2*nu/dx**2)). Numerical approximation errors can remain even when fitting observed data well. The sinusoidal periodic family also admits Cole-Hopf analysis; this is a restricted tool-use toy, not intrinsically expensive physics.
+Candidate simulations accept your chosen {candidate_parameters} and grids 32,64,128. They use Rusanov flux, centered diffusion and SSP-RK2, with dt=min(time to next record, 0.4/(max(abs(u))/dx + 2*nu/dx**2)). Numerical approximation errors can remain even when fitting observed data well. The sinusoidal periodic family also admits Cole-Hopf analysis; this is a restricted tool-use toy, not intrinsically expensive physics.
 
 Scientific budget: {config.scientific_credits} shared credits for observations and computation.
-One sensor record costs {config.record_price} credits. A solver's work proxy is grid points times RHS evaluations, divided by {WORK_PER_CREDIT} for credits. The normalizer is the public nu=0.2, N=64 calibration solve; this is not measured FLOPs or dollars. Actual solve cost varies with the candidate and protocol. All solves inside fit are charged. Invalid requests are uncharged; attempted work on interrupted/failed calculations remains charged. Only complete deterministic results are reused free within this episode. Repeated observations cost again; record retrieval is free. Incomplete solves are not resumable.
+One sensor record costs {config.record_price} credits. A solver's work proxy is grid points times RHS evaluations, divided by {WORK_PER_CREDIT} for credits. The normalizer is the public nu=0.2, A=1, N=64 calibration solve; this is not measured FLOPs or dollars. Actual solve cost varies with the candidate and protocol. All solves inside fit are charged. Invalid requests are uncharged; attempted work on interrupted/failed calculations remains charged. Only complete deterministic results are reused free within this episode. Repeated observations cost again; record retrieval is free. Incomplete solves are not resumable.
 
 Submit 16 finite forecast values for T=1 at positions {list(FORECAST_POSITIONS)}.
 Score: RMSE of YOUR SUBMITTED PROFILE against the private noise-free target forecast, divided by the fixed amplitude scale 1.5. Lower is better. Parameter estimation alone is not the submitted answer. There is no correctness feedback, success tolerance, or separate reward for spending all credits or stopping early. You can submit your best answer even after scientific credits are exhausted.
@@ -124,14 +148,18 @@ class LoggedSimulations:
 
 class PlanningEpisode:
     def __init__(self, config, instance, log, role="agent"):
+        if config.task_variant == "viscosity" and instance.target_amplitude != 1.0:
+            raise ValueError("one-parameter task requires target amplitude 1")
         self.config, self.instance, self.log, self.role = config, instance, log, role
         self.ledger = Ledger.shared(config.scientific_credits)
-        self.observations = ObservationService(ReferenceOracle(instance.target_viscosity), self.ledger,
+        self.observations = ObservationService(ReferenceOracle(instance.target_viscosity,
+                                                               initial_amplitude=instance.target_amplitude), self.ledger,
                                                seed=instance.seed, noise_std=config.noise_std,
                                                record_price=config.record_price)
         self.simulations = LoggedSimulations(self.ledger, log, role)
-        self.tools = PlanningTools(self.observations, self.simulations, self.ledger)
-        self.schemas = {t["name"]: t["parameters"] for t in tool_definitions()}
+        tool_class = AmplitudePlanningTools if config.task_variant == "viscosity_amplitude" else PlanningTools
+        self.tools = tool_class(self.observations, self.simulations, self.ledger)
+        self.schemas = {t["name"]: t["parameters"] for t in tool_definitions(config)}
         self.executed = {}
 
     @property
@@ -202,8 +230,10 @@ class PlanningEpisode:
     def evaluate(self):
         profile = None if self.submission is None else list(self.submission)
         return {"submitted_profile": profile,
-                "reference_profile": ReferenceOracle(self.instance.target_viscosity).forecast_profile().tolist(),
-                "score": None if profile is None else score_planning(profile, self.instance.target_viscosity),
+                "reference_profile": ReferenceOracle(self.instance.target_viscosity,
+                    initial_amplitude=self.instance.target_amplitude).forecast_profile().tolist(),
+                "score": None if profile is None else score_planning(profile, self.instance.target_viscosity,
+                    target_amplitude=self.instance.target_amplitude),
                 "scientific_budget": self.ledger.status(),
                 "spending_by_activity": {"observations": self.ledger.status()["spent"]["observation"],
                                          **self.simulations.spending}}
@@ -216,16 +246,26 @@ def run_fixed_policy(config, instance, log):
         if not result["ok"]:
             raise RuntimeError("fixed policy could not complete a requested tool action")
         return result["result"]
-    record = call("observe", {"sensor_id": 2, "replicates": 1})[0]
-    fitted = call("fit", {"record_ids": [record["record_id"]], "resolution": 32, "max_evaluations": 16})
+    joint = config.task_variant == "viscosity_amplitude"
+    records = [call("observe", {"sensor_id": sensor, "replicates": 1})[0]
+               for sensor in ((0, 1, 2) if joint else (2,))]
+    fitted = call("fit", {"record_ids": [r["record_id"] for r in records],
+                          "resolution": 64 if joint else 32, "max_evaluations": 12 if joint else 16})
     if fitted["viscosity"] is None:
         raise RuntimeError("fixed policy has no completed fit")
-    forecast = call("simulate", {"viscosity": fitted["viscosity"], "resolution": 64, "protocol": "forecast"})
+    forecast_args = {"viscosity": fitted["viscosity"], "resolution": 64, "protocol": "forecast"}
+    if joint:
+        forecast_args["initial_amplitude"] = fitted["initial_amplitude"]
+    forecast = call("simulate", forecast_args)
     if forecast["status"] != "completed":
         raise RuntimeError("fixed policy has no completed forecast")
     call("submit", {"profile": forecast["forecast_profile"]})
     result = episode.evaluate()
-    result["description"] = "One sensor-2 record; N=32 fit (max 16 predictions); N=64 forecast. Not an optimal baseline."
+    result["description"] = (
+        "One record from each sensor; N=64 joint fit (max 12 predictions); N=64 forecast. "
+        "Development-selected recipe from the CPU trial, not an optimal or held-out-tuned baseline."
+        if joint else "One sensor-2 record; N=32 fit (max 16 predictions); N=64 forecast. Not an optimal baseline.")
+    result["fit"] = fitted
     log.event("fixed_policy_finished", evaluation=result)
     log.write_json("fixed_policy_evaluation.json", result)
     return result

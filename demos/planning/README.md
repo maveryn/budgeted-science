@@ -22,9 +22,25 @@ python demos/planning/src/two_parameter_pilot.py
 This performs reference/recoverability checks and four independent 20-credit
 fixed-policy trials, saving complete numerical traces to a new ignored
 `tmp/burgers_two_parameter/` directory. No API access or credentials are involved.
-The ordinary Python joint fitter is not an incremental agent action. The existing
-`run_agent.py` prompt, tools and one-parameter episode remain unchanged.
+The ordinary Python joint fitter is not an incremental agent action. The default
+`run_agent.py` task remains one-parameter. An opt-in logged two-parameter task
+uses the same seven actions, adds candidate amplitude to `simulate`, and makes
+`fit` estimate both parameters. Its paired comparison uses three records,
+an N=64 joint fit capped at 12 predictions, and an N=64 forecast.
 See [measured results and limitations](../../docs/burgers_two_parameter_trial.md).
+
+Verify the two-parameter runner without credentials or API calls:
+
+```powershell
+python demos/planning/src/run_agent.py --dry-run --two-parameter --max-output-tokens 32768
+```
+
+With explicit authorization for one paid run, replace `--dry-run` with `--live`.
+The default response limit remains 8,192; the explicit 32,768 option was approved
+for the first joint-parameter episode. High reasoning, the 20-credit pool, $2 API
+ceiling, 30-response limit and 20-minute deadline remain unchanged. Larger
+output reservations can stop a run before the full $2 is actually consumed;
+the runner never sends a request whose maximum cost cannot be covered.
 
 ## First logged agent episode
 

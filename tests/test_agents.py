@@ -76,7 +76,7 @@ class AccountingTests(unittest.TestCase):
 
     def test_configuration_locks_model_effort_and_limits(self):
         for values in ({"model": "other"}, {"reasoning_effort": "low"}, {"api_ceiling_usd": "2.01"},
-                       {"max_responses": 31}, {"max_output_tokens": 8193}, {"deadline_seconds": 1201}):
+                       {"max_responses": 31}, {"max_output_tokens": 32769}, {"deadline_seconds": 1201}):
             with self.assertRaises(ValueError):
                 RunConfig(**values)
 

@@ -22,8 +22,9 @@ See the [Burgers foundation results](docs/burgers_foundation_results.md),
 
 An [opt-in two-parameter CPU trial](docs/burgers_two_parameter_trial.md) now adds
 unknown initial amplitude alongside viscosity. Reference/recoverability checks
-and four budgeted fixed recipes run locally. The existing one-parameter agent
-task is unchanged; the new variant has not been evaluated with an agent.
+and four budgeted fixed recipes run locally. The default agent task remains
+one-parameter; `--two-parameter` now enables a logged amplitude/viscosity episode
+with the same scientific budget and actual-profile scoring.
 
 ## Three independent demos
 

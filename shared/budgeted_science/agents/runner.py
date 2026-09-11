@@ -82,11 +82,14 @@ def replay_output_item(item):
 async def run_episode(repo, output_root, *, mode, config=None, instance=None, gateway=None, key_file=None):
     if mode not in ("dry-run", "live"):
         raise ValueError("Choose dry-run or explicitly choose live.")
-    config, instance = config or RunConfig(), instance or PrivateInstance()
+    config = config or RunConfig()
+    instance = instance or PrivateInstance(target_amplitude=1.1 if config.task_variant == "viscosity_amplitude" else 1.0)
+    if config.task_variant == "viscosity" and instance.target_amplitude != 1.0:
+        raise ValueError("one-parameter task requires target amplitude 1")
     repo = Path(repo).resolve()
     log = RunLog(output_root, mode)
     started = time.monotonic()
-    messages, tools = prompts(config), tool_definitions()
+    messages, tools = prompts(config), tool_definitions(config)
     manifest = {"schema_version": 1, "run_id": log.path.name, "mode": mode,
                 "started_utc": utc_now(), "termination_reason": "running",
                 "public_configuration": config.public(),
@@ -151,8 +154,9 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
             artifact = log.write_json(f"api/{request_id}-count-request.json", count_body)
             log.event("token_count_requested", request_id=request_id, artifact=artifact)
             try:
+                count_timeout = remaining()
                 count = await asyncio.wait_for(gateway.count(count_body, lambda meta:
-                    log.event("count_metadata", local_request_id=request_id, **meta)), timeout=remaining())
+                    log.event("count_metadata", local_request_id=request_id, **meta)), timeout=count_timeout)
                 artifact = log.write_json(f"api/{request_id}-count-response.json", count)
                 log.event("token_count_received", request_id=request_id, response=count, artifact=artifact)
                 if count.get("object") != "response.input_tokens":
@@ -169,7 +173,8 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
                       tool_output_sequences=list(history_output_sequences))
             responses += 1
             try:
-                response = await asyncio.wait_for(consume(body, request_id), timeout=remaining())
+                response_timeout = remaining()
+                response = await asyncio.wait_for(consume(body, request_id), timeout=response_timeout)
             except BaseException:
                 # Once attempted, a generation may be billed even without a
                 # completed response. Its reservation is never silently released.

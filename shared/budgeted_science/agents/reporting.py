@@ -79,6 +79,10 @@ def regenerate(path):
     _write(path / "transcript.md", "\n".join(lines))
 
     report = ["# Planning episode evaluation", "", f"Mode: {manifest['mode']}. Termination: **{status}**.", ""]
+    configuration = manifest["public_configuration"]
+    report += [f"Task variant: {configuration.get('task_variant', 'viscosity')}. "
+               f"Model: {configuration['model']}; reasoning: {configuration['reasoning_effort']}; "
+               f"output-token limit per response: {configuration['max_output_tokens']}.", ""]
     if manifest["mode"] == "dry-run":
         report += ["This is a scripted harness test, not a GPT-5.6 Sol result. API token counts and costs below are synthetic fixtures; actual API spending was $0.", ""]
     report += ["One instance and a simple fixed policy cannot establish adaptive-allocation gains or benchmark validity. "
@@ -93,6 +97,8 @@ def regenerate(path):
             metric = "Not submitted" if score is None else f"{score['normalized_profile_rmse']:.10g}"
             spent = sum(result["scientific_budget"]["spent"].values())
             report.append(f"| {title} | {metric} | {spent:.10g} |")
+        if baseline is not None:
+            report += ["", "Fixed policy: " + baseline.get("description", "See the saved fixed-policy evaluation."), ""]
         report += ["", "## API accounting", "", "Conservative standard-pricing bounds, not an invoice. Unknown usage retains its full reservation. "
                    "Reasoning is included in output tokens; cache writes are covered by the input bound.", "",
                    "```json", json_text(finished["api_budget"]), "```", "",

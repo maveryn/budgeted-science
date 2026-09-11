@@ -18,8 +18,13 @@ still cannot choose candidate parameters or access the forecast experiment.
 `ReferenceOracle(..., initial_amplitude=A)` opt into the extension. Planning
 evaluation accepts `score_planning(profile, target_nu, target_amplitude=A)`.
 Every default remains A=1, including the existing planning/inference facades
-and logged agent runner. This trial does **not** update their prompts or tools,
+and logged agent runner. The CPU trial did **not** update their prompts or tools,
 add arbitrary Python execution, or introduce incremental fitting actions.
+
+A subsequent runner integration now exposes the variant via `--two-parameter`;
+the default remains viscosity-only. See the planning README for the offline/live
+commands and explicit 32,768-token option. The measurements below describe the
+CPU trial, not an agent run.
 
 The new `joint_fitting.fit_viscosity_amplitude` is an ordinary bounded SciPy
 least-squares helper with an injected, metered candidate predictor. It starts
