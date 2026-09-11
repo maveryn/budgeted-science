@@ -141,7 +141,8 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
     if final and restored.tools.get_status() != final["evaluation"]["scientific_status"]:
         raise ValueError("checkpoint disagrees with finalized state")
     private = manifest["PRIVATE_harness_instance_not_agent_input"]
-    instance = ResourceInstance(tuple(private["target_parameters"]), private["target_seed"], private.get("noise_seed", 0))
+    instance = ResourceInstance(tuple(private["target_parameters"]), private["target_seed"], private.get("noise_seed", 0),
+                                private.get("selection", "first frozen evaluation target by original ordering"))
     if tuple(saved["environment"]["theta_true"]) != instance.theta:
         raise ValueError("private target mismatch")
     if (restored.tools.public_config != config.environment_config().public()

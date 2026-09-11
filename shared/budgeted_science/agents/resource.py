@@ -65,6 +65,19 @@ class ResourceInstance:
     theta: tuple
     target_seed: int = 2000
     noise_seed: int = 0
+    selection: str = "first frozen evaluation target by original ordering"
+
+    @classmethod
+    def from_seed(cls, target_seed, noise_replicate=0):
+        """Explicit v2 instance selection; never part of the model-facing config."""
+        if type(target_seed) is not int or target_seed < 0:
+            raise ValueError("target seed must be a nonnegative integer")
+        if type(noise_replicate) is not int or not 0 <= noise_replicate < 10:
+            raise ValueError("noise replicate must be an integer in [0, 9]")
+        bounds = np.asarray(harder_config().bounds)
+        theta = np.random.default_rng(target_seed).uniform(bounds[:, 0], bounds[:, 1])
+        return cls(tuple(theta), target_seed, 10 * target_seed + noise_replicate,
+                   "explicit preselected v2 target and noise replicate")
 
     @classmethod
     def first_evaluation(cls, environment_version="v1"):
@@ -77,7 +90,7 @@ class ResourceInstance:
     def private(self):
         return {"target_parameters": list(self.theta), "target_seed": self.target_seed,
                 "noise_seed": self.noise_seed,
-                "selection": "first frozen evaluation target by original ordering"}
+                "selection": self.selection}
 
 
 def tool_definitions(config=None):

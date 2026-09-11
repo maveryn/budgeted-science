@@ -178,6 +178,46 @@ See the [runner protocol and verification](../../docs/planning_agent_runner.md)
 for the privacy boundary, complete records, fixed-policy comparison and pricing
 assumptions. A single toy run cannot establish an adaptive-planning advantage.
 
+## Five-case matched campaign
+
+The campaign imports the completed 32-credit Sol/Luna case (seed 6000) and its
+three CPU controls, then adds four preselected targets (6020-6023) with matched
+noise. It includes Sol/high, Luna/high, local fitting, randomized acquisition
+plus local fitting, and the existing random-GP/adaptive-GP controls. No changes
+are made to physics, prices, tools, tolerance, or the full-budget requirement.
+
+From the repository root:
+
+```powershell
+python -m budgeted_science.agents.campaign dry-run
+python -m budgeted_science.agents.campaign prepare
+python -m budgeted_science.agents.campaign live <PREPARED_CAMPAIGN_DIR>
+python -m budgeted_science.agents.campaign continue <CAMPAIGN_DIR>
+python -m budgeted_science.agents.campaign render <CAMPAIGN_DIR>
+```
+
+`dry-run` creates a separate scripted rehearsal on development seeds 5000-5003;
+it reads no credentials and makes no API calls. `prepare` freezes the live case
+list, imports, source hashes, settings, and alternating model order without
+running any new solver. `live` requires explicit authorization for eight new
+episodes, with $3 per episode and $24 maximum new spending. No allowance is
+transferred between slots. CPU baselines run once per case, outside agent limits.
+
+`continue` skips completed/imported slots and recovers finalized child records,
+but never repeats an attempted episode. An ambiguous partial attempt requires
+inspection. Explicit single-episode resume retains the original model, target,
+conversation, and cumulative $3/32-credit limits; it is not another sample.
+Systemic authentication, provenance, and accounting failures halt the campaign.
+
+Each campaign has a unique ignored directory under `runs/resource_five_case/`.
+Reports distinguish the imported exploratory case from the four newly selected
+cases and preserve failed/incomplete outcomes. All API-visible logs and returned
+reasoning summaries are retained; raw internal reasoning is not available.
+
+Individual fresh v2 runs also accept `--target-seed` and `--noise-replicate`
+alongside `--harder`. Defaults remain 6000 and 0. These private selectors cannot
+override a resumed run and are never included in agent inputs.
+
 ## Shared Burgers planning contract
 
 Infer a fixed target's viscosity from paid calibration records, then submit a

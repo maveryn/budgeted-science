@@ -17,6 +17,13 @@ GPT also passed, with largest error 3.035%; the local baseline passed at 4.700%.
 The [matched Luna/high run](docs/resource_planning_v2_luna_run.md) completed 32
 credits but failed the tolerance, with largest parameter error 15.682%.
 
+The [five-case 32-credit campaign](docs/resource_planning_five_case_results.md)
+now reports Sol 3/5, Luna 0/5, local fitting 1/5, and 0/5 for randomized
+acquisition plus local fitting and both GP controls. On the four newly selected
+cases alone, Sol passed 2/4 and every other method passed 0/4. All 30 results
+submitted at exactly 32 credits. Eight new model episodes had an API cost upper
+bound of $2.80; this small pilot is not a general performance ranking.
+
 **Preserved planning toy (v1):** an independent predator-prey inverse problem compares
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
 credits. It uses live low/high-fidelity solvers and protected target measurements,

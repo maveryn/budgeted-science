@@ -17,6 +17,8 @@ def main():
     parser.add_argument("--api-key-file", type=Path, help="Live only; default openaiapi.txt in repository")
     parser.add_argument("--model", choices=("gpt-5.6-sol", "gpt-5.6-luna"), help="Fresh-run model; defaults to Sol, cannot change on resume")
     parser.add_argument("--output-root", type=Path)
+    parser.add_argument("--target-seed", type=int, help="Fresh v2 private target seed; default 6000")
+    parser.add_argument("--noise-replicate", type=int, help="Fresh v2 private noise replicate, 0 through 9")
     parser.add_argument("--resume", type=Path, metavar="RUN_DIR", help="Explicitly continue an interrupted run; preserves cumulative limits")
     parser.add_argument("--require-full-budget", action="store_true", help="Require the entire scientific budget before submission; disclosed to the agent")
     parser.add_argument("--scientific-budget", type=int, choices=(24, 32, 40), help="Fresh v2 run budget; default 40, restored on resume")
@@ -25,6 +27,9 @@ def main():
     parser.add_argument("--inspect-resume", action="store_true", help="With --resume, validate restoration offline without creating a continuation")
     parser.add_argument("--resume-api-ceiling-usd", help="Requires explicit user authorization; cumulative resume ceiling up to $3, never a fresh allowance")
     args = parser.parse_args()
+    explicit_instance = args.target_seed is not None or args.noise_replicate is not None
+    if explicit_instance and (not args.harder or args.resume or args.render):
+        parser.error("instance overrides require a fresh --harder run")
     adapter = ResourceAdapter()
     if args.render:
         if args.resume or args.require_full_budget or args.inspect_resume or args.resume_api_ceiling_usd or args.harder or args.api_ceiling_usd or args.scientific_budget is not None or args.model:
@@ -60,6 +65,9 @@ def main():
         api_ceiling_usd=args.api_ceiling_usd or "2.00", require_full_budget=args.require_full_budget,
         scientific_budget=args.scientific_budget or 40)
     instance = resume["instance"] if resume else ResourceInstance.first_evaluation(config.environment_version)
+    if explicit_instance:
+        instance = ResourceInstance.from_seed(args.target_seed if args.target_seed is not None else 6000,
+                                              args.noise_replicate if args.noise_replicate is not None else 0)
     folder = "resource_agent_v2" if config.environment_version == "v2" else "resource_agent"
     path, reason = asyncio.run(run_episode(
         repo, args.output_root or repo / "demos/planning/runs" / folder,
