@@ -12,6 +12,9 @@ without LLM/API calls. See the [protocol](docs/resource_planning_toy_protocol.md
 and [paired CPU pilot results](docs/resource_planning_toy_results.md). An optional
 [logged GPT adapter](docs/resource_planning_agent_run.md) now adds the shared
 purchased-evidence fitter and a separate `run_resource_agent.py` entry point.
+Explicit checkpoint/resume now preserves conversation, purchases, and cumulative
+API charges. The first resumed predator-prey episode submitted successfully at
+40/40 scientific credits; see the linked audit for limits and the single-instance result.
 It does not replace the Burgers demo or its earlier agent runs.
 
 **Status:** the CPU allocation pilot is preserved, and a shared viscous-Burgers

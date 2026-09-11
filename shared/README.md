@@ -25,6 +25,10 @@ fitter over purchased evidence, and parameter-vector submission to a logged mode
 It reuses the API/history/spending engine with task-specific prompt and reporting
 hooks. The scientific package itself still requires no OpenAI SDK. See the
 [agent-run protocol](../docs/resource_planning_agent_run.md).
+Resource-specific JSON checkpoints restore purchased trajectories and evidence
+without solver reruns. Explicit agent resume also restores conversation, fit and
+call-ID caches, and cumulative scientific/API ledgers; see the protocol for the
+supported finalized-interruption recovery path and authorized ceiling overrides.
 
 ## Restricted viscous-Burgers system
 

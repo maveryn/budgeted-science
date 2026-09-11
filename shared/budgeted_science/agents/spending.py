@@ -28,9 +28,26 @@ class AccountingUnavailable(RuntimeError):
 
 
 class ApiBudget:
+    @classmethod
+    def restore(cls, status, reservations):
+        """Keep prior measured charges AND every unresolved request reservation."""
+        budget = cls(status["ceiling_usd"])
+        budget.known_upper = Decimal(status["known_cost_upper_usd"])
+        budget.measured = list(status["measured_responses"])
+        if budget.known_upper != sum((Decimal(r["conservative_cost_upper_usd"]) for r in budget.measured), Decimal(0)):
+            raise AccountingUnavailable("saved measured usage is inconsistent")
+        if set(reservations) != set(status["unsettled_requests"]):
+            raise AccountingUnavailable("saved reservations are incomplete")
+        for name, reservation in reservations.items():
+            budget.reserve(name, reservation["input_tokens"], reservation["max_output_tokens"])
+        if (budget.reserved != Decimal(status["uncertain_reserved_usd"])
+                or budget.known_upper + budget.reserved != Decimal(status["committed_upper_usd"])):
+            raise AccountingUnavailable("saved API ledger is inconsistent")
+        return budget
+
     def __init__(self, ceiling="2.00"):
         self.ceiling = Decimal(ceiling)
-        if not self.ceiling.is_finite() or not 0 <= self.ceiling <= 2:
+        if not self.ceiling.is_finite() or not 0 <= self.ceiling <= 3:
             raise ValueError("invalid API ceiling")
         self.known_upper = Decimal(0)
         self.pending = {}

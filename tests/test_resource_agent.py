@@ -42,7 +42,7 @@ class ToolTests(unittest.TestCase):
         config = ResourceRunConfig()
         self.assertEqual(config.max_output_tokens, 32768)
         self.assertEqual(config.public()["environment"]["costs"], {"low": 1., "high": 8., "measurement": 12.})
-        for kwargs in ({"model": "other"}, {"reasoning_effort": "low"}, {"api_ceiling_usd": "2.01"},
+        for kwargs in ({"model": "other"}, {"reasoning_effort": "low"}, {"api_ceiling_usd": "3.01"},
                        {"max_responses": 31}, {"max_output_tokens": 32769}, {"deadline_seconds": 1201}):
             with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
                 ResourceRunConfig(**kwargs)

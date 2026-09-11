@@ -40,8 +40,19 @@ regenerates the transcript and report offline. No automatic retry or extra agent
 
 The first live attempt was interrupted by a provider-overload error after nine
 low-fidelity simulations (9/40 credits), without a submission. It was not rerun.
-The complete logs and both independent baseline results are preserved; see the
-linked audit. This incomplete attempt supplies no agent accuracy result.
+It was subsequently explicitly resumed: the same episode used 40/40 credits and
+submitted with worst normalized parameter error 0.00069321 (success threshold 1).
+The original logs and unchanged baseline results are preserved. The user added
+a full-credit requirement and authorized a $3 cumulative API ceiling for the final
+response; see the linked audit. This is one instance, not a general model ranking.
+
+Explicit resume is now available: add `--resume <RUN_DIR>` to `--live` to continue
+the same episode and cumulative budgets. `--require-full-budget` records a user
+instruction to spend all 40 scientific credits before submitting. Inspect recovery
+offline with `--inspect-resume`. The original logs, purchases, API reservations,
+and baseline results are preserved; see the audit for recovery safeguards.
+After explicit authorization, `--resume-api-ceiling-usd 3.00` can raise the total
+API ceiling without resetting prior usage; there is no automatic increase.
 
 ## Preserved Burgers and allocation work
 

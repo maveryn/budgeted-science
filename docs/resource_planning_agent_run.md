@@ -1,8 +1,67 @@
 # Logged GPT-5.6 Sol resource-planning evaluation
 
-## Executed attempt: 2026-09-11
+## Completed continuation: 2026-09-11
 
-Exactly one live episode was attempted. It ended **incomplete** when the provider
+The same interrupted episode was explicitly resumed, not restarted. GPT-5.6 Sol
+with high reasoning used **40/40 scientific credits** and submitted successfully.
+The largest relative parameter error was **0.0069321%**, below the 10% requirement.
+
+| Method | Success | Worst normalized parameter error | Credits | Low / high / measurement purchases |
+|---|---|---:|---:|---|
+| GPT-5.6 Sol, high, resumed | Yes | 0.00069321 | 40 | 12 / 2 / 1 |
+| Randomized fixed policy | No | 2.14827575 | 40 | 12 / 2 / 1 |
+| Adaptive GP policy | No | 1.93331646 | 40 | 20 / 1 / 1 |
+
+The three relative parameter errors were 0.0044146%, 0.0034961%, and 0.0069321%.
+The baseline results are the unchanged original comparisons, copied into the
+continuation rather than rerun. This single instance does not establish general
+superiority or isolate the cause of the performance difference.
+
+The initial attempt stopped at 9 credits following provider overload. The first
+continuation (`20260911T104916Z-live-e194663e43`) spent the remaining 31 credits,
+then hit the conservative $2 API reservation ceiling before submission. The user
+then explicitly approved a **$3 cumulative ceiling**. The final continuation
+required one additional model response, whose only tool action was `submit`;
+there were no further scientific purchases. The earlier unknown-charge
+reservation remained in the ledger throughout. No generation was automatically
+retried, and model/reasoning/output limits were unchanged.
+
+There were 19 cumulative generation attempts, of which 18 completed, and 267.571
+seconds of active agent time (excluding downtime between attempts). Recorded
+usage totals 125,298 input and 5,351 output tokens, including 4,828 reasoning
+tokens. The completed responses' conservative cost upper bound is **$0.733510**;
+the original unknown request retains **$0.691100**, giving a combined bound of
+**$1.424610**. These are conservative accounting figures, not an invoice. A
+worst-case next-response reservation explains why the earlier $2 limit blocked
+continuation despite the final bound ending below $2.
+
+The user's first continuation instruction required spending all 40 scientific
+credits before submitting. This is an explicit protocol change from the original
+prompt's optional early submission, not an unchanged-prompt replication. The
+error metric and scientific prices were unchanged; there is no savings reward.
+
+Complete local artifacts (ignored by Git):
+
+- [Readable transcript](../demos/planning/runs/resource_agent/20260911T105916Z-live-cc4d62434b/transcript.md)
+- [Three-way comparison report](../demos/planning/runs/resource_agent/20260911T105916Z-live-cc4d62434b/report.md)
+- [Raw run directory](../demos/planning/runs/resource_agent/20260911T105916Z-live-cc4d62434b/)
+
+Verification: **237 tests passed** (223 shared plus 14 planning-pilot tests).
+Resume tests cover JSON/dense-output restoration without solver reruns, preserved
+unknown charges, call-ID deduplication, fitting reuse, the full-budget submit gate,
+history replay, original-file preservation, limit enforcement, and explicit
+ceiling increases. All 48 final source hashes matched the executed checkout.
+All 128 inherited API/numerical/private/fitting/comparison artifacts matched their
+parent files; parent reports were preserved and its event log was an exact prefix
+of the child's. No baseline execution events appeared after continuation.
+Transcript, report, evaluation JSON, and event log were byte-identical after
+offline regeneration. The final source-manifest hash is
+`5e82ef41d66934dfc3f858758e75ec0db4772b5d7c9783bce54188a4f7cdc154`.
+Numerical environment and baseline-policy sources were unchanged.
+
+## Original interrupted attempt: 2026-09-11
+
+The original live attempt ended **incomplete** when the provider
 reported `APIError: Our servers are currently overloaded. Please try again later.`
 Generation 10 produced no completed response or usable usage record. The runner
 did not retry, substitute a model, resume, or fabricate a final estimate.
@@ -85,7 +144,7 @@ provided. This is trusted-process separation, not a security sandbox.
 
 At most 30 responses, each with up to 32,768 output tokens including reasoning,
 within a 20-minute agent deadline. Baseline CPU time is outside that deadline.
-The independent API ceiling is $2, enforced before generation using official
+The default independent API ceiling is $2, enforced before generation using official
 input-token counts and worst-case output reservations. Inputs above 256,000 tokens
 are refused. The conservative reservation uses $5/million input tokens, covering
 cache writes, and $20/million output tokens. Current base input pricing is
@@ -111,6 +170,65 @@ reference data, baseline records, transcript, and evaluation report. Private
 environment events never enter the model history. Credentials are read only in
 live mode and are redacted from logs; neither secrets nor raw runs are tracked.
 The existing Burgers entry point and report format remain compatible.
+
+## Explicit resume capability
+
+An interrupted, finalized resource-agent attempt can now be continued without
+starting a new scientific episode. Resume restores the full conversation (including
+opaque reasoning), purchases, cached trajectories, observations, fitting cache,
+call-ID deduplication, and cumulative API ledger. The original attempt remains
+unchanged except for an exclusive `resume_claim.json` pointing to its continuation.
+The child contains copies of the preceding raw records and a `prior_attempts/`
+snapshot of the preceding manifest and reports. Baselines are copied, not rerun.
+
+State uses validated JSON and saved dense interpolation coefficients, not pickle
+or replayed solver calls. A checkpoint is atomically replaced after every completed
+tool action. The first pre-checkpoint attempt is migrated from its complete events,
+numerical artifacts, and finalized scientific ledger. Partial model output is kept
+in the transcript but is never executed or inserted as a completed response.
+
+The original 40-credit scientific pool, total API ceiling, 30-response limit,
+and 20 minutes of cumulative active agent time carry across attempts. The API
+ceiling can change only through an explicit authorized override. Offline
+downtime does not count. Uncertain request reservations are not released. New
+generation IDs follow the previous attempt; no generation is silently retried.
+
+Inspect a saved live run without credentials, a continuation claim, or API access:
+
+```powershell
+python demos/planning/src/run_resource_agent.py --live --resume <RUN_DIR> --inspect-resume
+```
+
+When explicitly authorized to continue:
+
+```powershell
+python demos/planning/src/run_resource_agent.py --live --resume <RUN_DIR> --require-full-budget --api-key-file openaiapi.txt
+```
+
+`--require-full-budget` records an additional user instruction requiring all 40
+scientific credits to be used before accepting a submission. It does not purchase
+anything automatically, change the error metric, reset limits, or award a savings
+bonus. Omit it to preserve the original early-submission rule. Once enabled, it
+carries into later continuations. This extra instruction is disclosed in the report.
+
+Only after explicit user authorization to increase total API expenditure, add
+`--resume-api-ceiling-usd 3.00`. This sets a cumulative ceiling, not $3 of new
+spending, and preserves all measured usage and uncertain reservations. It is
+resume-only, defaults to no override, and refuses decreases or amounts above $3.
+The change is recorded in the continuation instruction, manifest, and report.
+It does not change the Burgers runner's $2 limit.
+
+Resume refuses changed numerical code/dependencies, modified prompts/schemas,
+inconsistent checkpoints/ledgers, submitted episodes, already-continued parents,
+and ambiguous unfinished tool execution. An active or unfinalized process is not
+automatically resumed: audit abrupt process death before recovery. Resume is
+currently implemented for this resource-planning task, not Burgers. If a resumed
+attempt is itself interrupted, explicitly resume that child, not its parent.
+Original limits can still prevent completion; additional API spending requires
+new authorization rather than a ledger reset.
+
+Stateless conversation continuation follows the
+[official reasoning documentation](https://developers.openai.com/api/docs/guides/reasoning#preserve-reasoning-without-stored-responses).
 
 ## Reproduction
 

@@ -27,6 +27,18 @@ def write_report(path, manifest, events, finished, status):
     if manifest["mode"] != "live":
         lines += ["**SCRIPTED OFFLINE FIXTURE: no LLM evaluated; actual API spending $0. "
                   "Token usage below is synthetic testing data.**", ""]
+    if manifest.get("resume"):
+        lines += ["## Continuation", "", "This continues the same scientific episode with the existing conversation, "
+                  "purchases, and API ledger. The prior attempt is preserved in prior_attempts/. "
+                  "Counts, scientific spending, API accounting, and elapsed active time below are cumulative; "
+                  "offline downtime is excluded. The independent baselines were restored, not rerun.", ""]
+        previous_ceiling = manifest["resume"].get("prior_api_ceiling_usd", "2.00")
+        if previous_ceiling != config["api_ceiling_usd"]:
+            lines += [f"The user explicitly authorized raising the cumulative API ceiling from ${previous_ceiling} "
+                      f"to ${config['api_ceiling_usd']}. Prior usage and unknown reservations remain charged to that total.", ""]
+        if config.get("require_full_budget"):
+            lines += ["The user explicitly added a requirement to spend all 40 scientific credits before submission. "
+                      "This is a recorded continuation instruction, not an unchanged-prompt replication of the original attempt.", ""]
     if finished:
         evaluation = finished["evaluation"]
         comparisons = finished.get("fixed_policy") or {}
@@ -54,7 +66,7 @@ def write_report(path, manifest, events, finished, status):
                                  ("theta_true", "theta_hat", "errors", "parameter_error", "valid", "success")}), "```", ""]
         lines += ["## API accounting", "", "Conservative cost bounds, not an invoice. "
                   "Reasoning tokens are included in output usage; cache-write costs are covered by reservations. "
-                  "Unknown usage retains its reservation. The $2 cap can stop an episode before all scientific credits are spent.",
+                  f"Unknown usage retains its reservation. The ${config['api_ceiling_usd']} cumulative cap can stop an episode before submission.",
                   "", "```json", json_text(finished["api_budget"]), "```", ""]
         payload = {"mode": manifest["mode"], "termination_reason": status,
                    "evaluation": evaluation, "comparisons": comparisons,

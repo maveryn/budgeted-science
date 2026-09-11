@@ -1,4 +1,4 @@
-"""Single-episode orchestration. No retry, compaction, implicit live call or resume."""
+"""Episode orchestration with explicit resume; no automatic generation retry."""
 
 import asyncio
 from copy import deepcopy
@@ -80,7 +80,7 @@ def replay_output_item(item):
 
 
 async def run_episode(repo, output_root, *, mode, config=None, instance=None, gateway=None, key_file=None,
-                      adapter=None):
+                      adapter=None, resume=None):
     if mode not in ("dry-run", "live"):
         raise ValueError("Choose dry-run or explicitly choose live.")
     config = config or RunConfig()
@@ -88,11 +88,18 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
     if adapter is None and config.task_variant == "viscosity" and instance.target_amplitude != 1.0:
         raise ValueError("one-parameter task requires target amplitude 1")
     repo = Path(repo).resolve()
+    if resume is not None and adapter is None:
+        raise ValueError("resume requires a task adapter")
     log = RunLog(output_root, mode)
     started = time.monotonic()
     episode = None
     render = regenerate if adapter is None else adapter.regenerate
-    if adapter is None:
+    if resume is not None:
+        from .resume import inherit_run
+        inherit_run(log, resume)
+        episode = adapter.restore_episode(config, instance, log, None, resume["saved"])
+        messages, tools = resume["messages"], resume["tools"]
+    elif adapter is None:
         messages, tools = prompts(config), tool_definitions(config)
     else:
         episode = adapter.create_episode(config, instance, log, started + config.deadline_seconds)
@@ -108,19 +115,27 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
                 "PRIVATE_harness_instance_not_agent_input": instance.private(),
                 "pricing": PRICING, "prompt_hash": digest(messages), "tool_schema_hash": digest(tools),
                 **provenance(repo)}
+    prior_elapsed = resume["elapsed"] if resume else 0.0
+    if resume:
+        manifest["resume"] = {"parent": str(resume["parent"]), "prior_elapsed_seconds": prior_elapsed,
+                              "prior_responses": resume["responses"],
+                              "prior_api_ceiling_usd": resume["manifest"]["public_configuration"]["api_ceiling_usd"],
+                              "parent_source_manifest_hash": resume["manifest"]["source_manifest_hash"],
+                              "require_full_budget": config.require_full_budget}
     log.write_json("manifest.json", manifest)
-    log.write_json("prompts.json", messages)
-    log.write_json("tools.json", tools)
-    log.event("prompt_frozen", messages=messages, tool_schema_hash=digest(tools))
+    if resume is None:
+        log.write_json("prompts.json", messages)
+        log.write_json("tools.json", tools)
+        log.event("prompt_frozen", messages=messages, tool_schema_hash=digest(tools))
     log.event("run_started", mode=mode)
-    money = ApiBudget(config.api_ceiling_usd)
+    money = resume["money"] if resume else ApiBudget(config.api_ceiling_usd)
     episode = episode if episode is not None else PlanningEpisode(config, instance, log)
-    baseline, reason, responses = None, "internal_error", 0
-    history = deepcopy(messages)
-    history_output_sequences = []
+    baseline, reason, responses = None, "internal_error", resume["responses"] if resume else 0
+    history = deepcopy(resume["history"] if resume else messages)
+    history_output_sequences = list(resume["output_sequences"]) if resume else []
 
     def remaining():
-        value = config.deadline_seconds - (time.monotonic() - started)
+        value = config.deadline_seconds - prior_elapsed - (time.monotonic() - started)
         if value <= 0:
             raise StopEpisode("deadline")
         return value
@@ -143,13 +158,16 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
 
     try:
         # The paired comparison is an independent CPU run, never model context.
-        baseline = (run_fixed_policy(config, instance, log) if adapter is None
-                    else adapter.run_comparisons(config, instance, log))
+        baseline = (resume["comparisons"] if resume else
+                    (run_fixed_policy(config, instance, log) if adapter is None
+                     else adapter.run_comparisons(config, instance, log)))
         if adapter is not None:
             # CPU comparisons have their own limits, outside the agent deadline.
             started = time.monotonic()
-            episode.deadline = started + config.deadline_seconds
-            log.event("agent_started", deadline_seconds=config.deadline_seconds)
+            episode.deadline = started + config.deadline_seconds - prior_elapsed
+            log.event("agent_started", deadline_seconds=config.deadline_seconds - prior_elapsed)
+            from .resume import save_checkpoint
+            save_checkpoint(log, episode)
         remaining()
         if gateway is None:
             if mode == "dry-run":
@@ -159,7 +177,8 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
                 log.redactor.add(key)
                 gateway = OpenAIGateway(key)
                 del key
-        for index in range(1, config.max_responses + 1):
+        first_index = resume["next_generation"] if resume else 1
+        for index in range(first_index, first_index + config.max_responses - responses):
             remaining()
             request_id = f"generation-{index:03d}"
             body = generation_body(config, history, tools)
@@ -223,6 +242,8 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
                 history_output_sequences.append(log._sequence)
                 history.append({"type": "function_call_output", "call_id": call["call_id"],
                                 "output": json.dumps(result, ensure_ascii=False, allow_nan=False)})
+                if adapter is not None:
+                    save_checkpoint(log, episode)
                 if episode.submission is not None:
                     reason = "submitted"
                     break
@@ -251,7 +272,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
         evaluation = episode.evaluate()
         log.event("run_finished", termination_reason=reason, evaluation=evaluation,
                   fixed_policy=baseline, api_budget=money.status(), model_responses=responses,
-                  elapsed_seconds=time.monotonic() - started)
+                  elapsed_seconds=prior_elapsed + time.monotonic() - started)
         manifest.update(termination_reason=reason, ended_utc=utc_now())
         log.write_json("manifest.json", manifest, replace=True)
         log.close()

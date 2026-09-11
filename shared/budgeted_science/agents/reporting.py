@@ -41,6 +41,9 @@ def regenerate(path, *, report_writer=None):
             for message in e["messages"]:
                 lines += [f"## {message['role'].capitalize()} prompt", "", message["content"], ""]
             lines += ["Tool definitions: [tools.json](tools.json).", ""]
+        elif kind == "resume_started":
+            lines += ["## Explicit continuation", "", f"Parent attempt: {e['parent_run_id']}.", "",
+                      "Additional instruction sent to the model:", "", e["message"]["content"], ""]
         elif kind == "api_response":
             completed.add(e["request_id"])
             lines += [f"## Response {e['request_id']}", "", f"Full response: [{e['artifact']}]({e['artifact']}).", ""]

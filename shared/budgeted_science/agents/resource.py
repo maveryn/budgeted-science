@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from dataclasses import dataclass
+from decimal import Decimal
 import json
 import time
 
@@ -25,13 +26,19 @@ class ResourceRunConfig:
     max_output_tokens: int = 32768
     deadline_seconds: float = 1200.0
     task_variant: str = "resource_planning"
+    require_full_budget: bool = False
 
     def __post_init__(self):
         RunConfig(**{k: getattr(self, k) for k in (
-            "model", "reasoning_effort", "api_ceiling_usd", "max_responses",
+            "model", "reasoning_effort", "max_responses",
             "max_output_tokens", "deadline_seconds")})
+        amount = Decimal(self.api_ceiling_usd)
+        if not amount.is_finite() or not 0 <= amount <= 3:
+            raise ValueError("resource API ceiling must be between zero and $3; increases require explicit authorization")
         if self.task_variant != "resource_planning":
             raise ValueError("unknown resource task")
+        if type(self.require_full_budget) is not bool:
+            raise ValueError("require_full_budget must be boolean")
 
     def public(self):
         return {**self.__dict__, "environment": Config().public(),
@@ -121,11 +128,31 @@ def environment_logger(log, role, parent):
 class ResourceEpisode:
     def __init__(self, config, instance, log, deadline=None):
         self.log, self.deadline, self.parent_call = log, deadline, None
+        self.require_full_budget = config.require_full_budget
         self.executed, self.fits = {}, {}
         self.schemas = {t["name"]: t["parameters"] for t in tool_definitions()}
         self.environment = Episode(instance.theta, log=environment_logger(log, "agent", lambda: self.parent_call))
         self.tools = self.environment.tools
         self.initial_observations = self.tools.evidence()["observations"]
+
+    def checkpoint(self):
+        from budgeted_science.resource_planning.checkpoint import export_episode
+        return {"environment": export_episode(self.environment), "executed": deepcopy(self.executed),
+                "fits": deepcopy(self.fits), "initial_observations": self.initial_observations}
+
+    @classmethod
+    def restore(cls, config, instance, log, deadline, saved):
+        from budgeted_science.resource_planning.checkpoint import restore_episode
+        obj = cls.__new__(cls)
+        obj.log, obj.deadline, obj.parent_call = log, deadline, None
+        obj.require_full_budget = config.require_full_budget
+        obj.executed, obj.fits = deepcopy(saved["executed"]), deepcopy(saved["fits"])
+        obj.schemas = {t["name"]: t["parameters"] for t in tool_definitions()}
+        obj.environment = restore_episode(saved["environment"], environment_logger(log, "agent", lambda: obj.parent_call))
+        if tuple(obj.environment._theta_true) != tuple(instance.theta):
+            raise ValueError("saved target does not match private manifest")
+        obj.tools, obj.initial_observations = obj.environment.tools, deepcopy(saved["initial_observations"])
+        return obj
 
     @property
     def submission(self):
@@ -191,6 +218,8 @@ class ResourceEpisode:
                 args = json.loads(arguments, parse_constant=reject)
                 validate_arguments(args, self.schemas[name])
                 check_deadline(self.deadline)
+                if name == "submit" and self.require_full_budget and self.budget_status()["remaining"] != 0:
+                    raise ValueError("This continuation requires using all 40 scientific credits before submission; choose further useful purchases.")
                 if name == "fit_purchased":
                     result = self.fit()
                 else:
@@ -250,6 +279,7 @@ def run_comparisons(config, instance, log):
 
 class ResourceAdapter:
     create_episode = staticmethod(ResourceEpisode)
+    restore_episode = staticmethod(ResourceEpisode.restore)
     prompts = staticmethod(prompts)
     tool_definitions = staticmethod(tool_definitions)
     run_comparisons = staticmethod(run_comparisons)
