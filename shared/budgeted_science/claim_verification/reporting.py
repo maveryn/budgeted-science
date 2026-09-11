@@ -22,13 +22,19 @@ def numeric_quotes(submission, records):
 def render_episode(path):
     path = Path(path)
     events, torn = read_events(path)
+    manifest_path = path / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
+    baseline = manifest.get("method") == "fixed_two_check"
     lines = ["# Scripted verification transcript", "",
              "Offline fixture, not an LLM investigation. API expenditure: $0.", ""]
+    if baseline:
+        lines = ["# Fixed two-check baseline transcript", "",
+                 "Task-specific numerical verifier, not an LLM or a predetermined-answer fixture. API expenditure: $0.", ""]
     for event in events:
         if event["kind"] == "prompt":
             lines.extend(["## Task prompt", "", event["text"], ""])
         elif event["kind"] == "assistant_message":
-            lines.extend(["## Scripted assistant", "", event["text"], ""])
+            lines.extend(["## Baseline" if baseline else "## Scripted assistant", "", event["text"], ""])
         elif event["kind"] in ("tool_call", "tool_result", "duplicate_call"):
             lines.extend([f"### {event['kind']}", "", "~~~json",
                           json.dumps({k: v for k, v in event.items() if k not in ("utc", "sequence")},
@@ -43,6 +49,10 @@ def render_episode(path):
     report = ["# Scripted verification outcome", "",
               "**This is a software fixture, not measured agent performance.**", "",
               "Actual API calls: 0. API expenditure: $0.", ""]
+    if baseline:
+        report = ["# Fixed two-check baseline outcome", "",
+                  "Task-specific numerical decision based only on purchased public evidence.", "",
+                  "Actual API calls: 0. API expenditure: $0.", ""]
     if evaluation:
         report.extend(["~~~json", json.dumps(evaluation, indent=2), "~~~", "",
                        "## Mechanical citation checks", "",

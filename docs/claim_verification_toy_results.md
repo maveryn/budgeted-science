@@ -4,6 +4,10 @@ Completed September 11, 2026. **No LLM or API evaluation was performed.**
 This milestone verifies numerical construction, audit-tool contracts, scoring,
 and scripted logging. It does not report agent performance.
 
+A subsequent [fixed two-check numerical baseline](claim_verification_baseline_results.md)
+achieved 30/30 correct verdicts on this same development catalog. That separate
+run computes decisions from purchased evidence; it is not an LLM evaluation.
+
 ## Implemented task
 
 An auditor receives a completed two-population computational study, its solver

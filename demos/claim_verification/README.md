@@ -11,6 +11,10 @@ LLM judge, or arbitrary-code workspace**.
 
 See the [measured commissioning report](../../docs/claim_verification_toy_results.md).
 
+A [fixed two-check numerical baseline](../../docs/claim_verification_baseline_results.md)
+now scores 30/30 on this development catalog at 5 credits per study. Its
+verdicts are calculated from purchased results, not predetermined fixtures.
+
 ## Run
 
 From the repository root, using the existing editable installation:
@@ -85,6 +89,19 @@ The named fixtures have **predetermined verdicts**. They test tool interactions,
 charges, logging, and termination, not scientific reasoning. ACCEPT and REJECT
 use the same two-check script; ABSTAIN inspects the report and submits; the
 interrupted fixture stops after the integration purchase.
+
+The separate fixed baseline reads the structured public analysis result,
+buys integration then sampling refinement, and compares the reported peak with
+the combined run using the 5% threshold. Run it independently of the fixtures:
+
+~~~powershell
+.\.venv\Scripts\python.exe -m budgeted_science.claim_verification.fixed_baseline --catalog $catalog
+.\.venv\Scripts\python.exe -m budgeted_science.claim_verification.fixed_baseline --render PATH_TO_BASELINE_RUN
+~~~
+
+It uses only public audit tools, not private labels or references, and has an
+independent five-credit ledger per study. It is a task-specific baseline, not
+a general classical verifier for arbitrary scientific reports.
 
 An optional `--script FILE.json` supplies a JSON list of message or tool-call
 objects. Tool steps accept `tool`, `arguments`, `call_id`, and optional `save_as`.
