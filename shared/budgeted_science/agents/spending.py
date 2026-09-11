@@ -21,6 +21,7 @@ PRICING = {
 MODEL_RATES = {
     "gpt-5.6-sol": (INPUT_UPPER, INPUT_UNCACHED, INPUT_CACHED, OUTPUT),
     "gpt-5.6-luna": (Decimal("0.25"), Decimal("0.20"), Decimal("0.02"), Decimal("1.20")),
+    "gpt-5.6-terra": (Decimal("2.50"), Decimal("2.00"), Decimal("0.20"), Decimal("12.00")),
 }
 
 

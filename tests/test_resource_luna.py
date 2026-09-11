@@ -39,7 +39,7 @@ class LunaTests(unittest.TestCase):
                 self.assertEqual(prompts(config, episode), prompts(sol, episode))
             finally:
                 log.close()
-        for model in ("gpt-5.6", "other", "gpt-5.6-terra"):
+        for model in ("gpt-5.6", "other", "gpt-6-astra"):
             with self.assertRaises(ValueError):
                 replace(config, model=model)
         with self.assertRaises(ValueError):

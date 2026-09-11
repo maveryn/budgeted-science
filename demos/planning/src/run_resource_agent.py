@@ -1,4 +1,4 @@
-"""One explicit GPT-5.6 Sol/Luna resource-planning run or an offline harness check."""
+"""One explicit GPT-5.6 Sol/Luna/Terra resource-planning run or an offline harness check."""
 
 import argparse
 import asyncio
@@ -15,7 +15,7 @@ def main():
     choice.add_argument("--live", action="store_true", help="One paid attempt; $2 default total ceiling, explicitly authorized overrides up to $3")
     choice.add_argument("--render", type=Path, metavar="RUN_DIR", help="Regenerate local transcript/report without execution")
     parser.add_argument("--api-key-file", type=Path, help="Live only; default openaiapi.txt in repository")
-    parser.add_argument("--model", choices=("gpt-5.6-sol", "gpt-5.6-luna"), help="Fresh-run model; defaults to Sol, cannot change on resume")
+    parser.add_argument("--model", choices=("gpt-5.6-sol", "gpt-5.6-luna", "gpt-5.6-terra"), help="Fresh-run model; defaults to Sol, cannot change on resume")
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--target-seed", type=int, help="Fresh v2 private target seed; default 6000")
     parser.add_argument("--noise-replicate", type=int, help="Fresh v2 private noise replicate, 0 through 9")

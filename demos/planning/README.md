@@ -218,6 +218,36 @@ Individual fresh v2 runs also accept `--target-seed` and `--noise-replicate`
 alongside `--harder`. Defaults remain 6000 and 0. These private selectors cannot
 override a resumed run and are never included in agent inputs.
 
+## Terra extension of the completed five-case campaign
+
+The separate Terra campaign adds five fresh `gpt-5.6-terra`/high episodes on the
+same cases, with identical scientific prompts, tools, noise and 32-credit budgets.
+It imports the 30 completed Sol/Luna/classical results without rerunning them.
+Each Terra episode has a $3 API ceiling; the extension permits five live slots
+and at most $15 new spending. Standard-price reservations use $2.50/million
+input tokens (including cache-write upper bound) and $12/million output tokens.
+
+```powershell
+python -m budgeted_science.agents.terra_campaign dry-run
+python -m budgeted_science.agents.terra_campaign prepare
+python -m budgeted_science.agents.terra_campaign live <PREPARED_TERRA_DIR>
+python -m budgeted_science.agents.terra_campaign continue <TERRA_DIR>
+python -m budgeted_science.agents.terra_campaign render <TERRA_DIR>
+```
+
+Preparation verifies prior artifact hashes and freezes the extension separately.
+The offline rehearsal uses scripted responses on these already evaluated cases;
+it reads no credentials and runs no new CPU comparison. Live mode needs explicit
+authorization. Continuation never relaunches an attempted episode. Logs are
+stored under ignored `runs/resource_terra_five_case/`; earlier logs remain intact.
+Terra was added after the previous results were known, so this is a matched
+extension, not a new held-out evaluation. The standalone runner also accepts
+`--model gpt-5.6-terra`; existing defaults and resume constraints are unchanged.
+
+The [completed extension and audit](../../docs/resource_planning_terra_results.md)
+reports Terra 2/5, all five submissions at 32 credits, and a $1.69 total new API
+cost upper bound. The original Sol/Luna/classical results remain unchanged.
+
 ## Shared Burgers planning contract
 
 Infer a fixed target's viscosity from paid calibration records, then submit a

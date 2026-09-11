@@ -24,6 +24,12 @@ cases alone, Sol passed 2/4 and every other method passed 0/4. All 30 results
 submitted at exactly 32 credits. Eight new model episodes had an API cost upper
 bound of $2.80; this small pilot is not a general performance ranking.
 
+The [matched Terra/high extension](docs/resource_planning_terra_results.md)
+added five fresh episodes without rerunning the earlier results. Terra passed
+2/5 (2/4 excluding the exploratory anchor), with median largest error 20.92%.
+All five submitted at 32 credits; total new API cost upper bound was $1.69.
+The combined comparison contains 35 results, with full local logs preserved.
+
 **Preserved planning toy (v1):** an independent predator-prey inverse problem compares
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
 credits. It uses live low/high-fidelity solvers and protected target measurements,

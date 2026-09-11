@@ -14,9 +14,9 @@ NAMES = {'gpt-5.6-sol': 'GPT-5.6 Sol (high)', 'gpt-5.6-luna': 'GPT-5.6 Luna (hig
          'random': 'Random acquisition + GP', 'adaptive': 'Adaptive GP'}
 
 
-def summarize(slots, new_only=False):
+def summarize(slots, new_only=False, *, names=None):
     groups = []
-    for method, name in NAMES.items():
+    for method, name in (NAMES if names is None else names).items():
         selected = [s for s in slots.values() if s['method'] == method and (not new_only or s['case_seed'] != 6000)]
         rows = [s['result'] for s in selected if 'result' in s]
         valid = [r for r in rows if r['evaluation'].get('valid') and r['termination_reason'] == 'submitted']
