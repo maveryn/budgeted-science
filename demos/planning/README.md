@@ -1,5 +1,28 @@
 # Resource-rational scientific project planning
 
+## Predator-prey resource-allocation toy
+
+The new CPU-only implementation lives in the independent shared package
+`budgeted_science.resource_planning`. It compares a randomized fixed allocation
+against a one-step cost-aware GP policy: both pay for candidate simulations and
+target evidence from one 40-credit pool. Scoring requires all three hidden
+parameters to be within 10%; unused credits have no reward.
+
+```powershell
+python -m budgeted_science.resource_planning.validate --sparse-ambiguity
+python -m budgeted_science.resource_planning.experiment --phase debug
+python -m budgeted_science.resource_planning.experiment --phase development
+```
+
+Freeze the completed development run before generating pilot targets; exact
+freeze, pilot, and offline regeneration commands are in the
+[results](../../docs/resource_planning_toy_results.md). Read the
+[protocol](../../docs/resource_planning_toy_protocol.md) for baseline assumptions,
+paid warm starts, resource contracts, scoring, and limits. No API dependency,
+credential, Docker container, or code-writing agent is used by this toy.
+
+## Preserved Burgers and allocation work
+
 **Status:** the CPU allocation pilot and shared numerical foundation are preserved.
 A complete single-episode agent runner now passes offline checks and includes an
 independently budgeted fixed-policy CPU comparison. The first paid attempt exposed

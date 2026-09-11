@@ -5,6 +5,13 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
+**New planning toy:** an independent predator-prey inverse problem now compares
+randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
+credits. It uses live low/high-fidelity solvers and protected target measurements,
+without LLM/API calls. See the [protocol](docs/resource_planning_toy_protocol.md)
+and [paired CPU pilot results](docs/resource_planning_toy_results.md). This does
+not replace the Burgers demo or its earlier agent runs.
+
 **Status:** the CPU allocation pilot is preserved, and a shared viscous-Burgers
 foundation now provides numerical tools, observations, budgets, fitting, and
 separate planning/inference scoring contracts. Its numerical validation and
@@ -33,7 +40,7 @@ with the same scientific budget and actual-profile scoring.
 
 | Demo | Scientific decision | Final evaluation |
 | --- | --- | --- |
-| [Project planning](demos/planning/README.md) | Allocate a shared budget between target observations, parameter fitting, and forecast computation. | Burgers foundation: error of the actual submitted forecast profile. The preserved allocation pilot has its own integral/selection scores. |
+| [Project planning](demos/planning/README.md) | Allocate a shared budget between target observations and computations. | Predator-prey toy: worst normalized parameter error and all-parameter success. Preserved Burgers: actual forecast-profile error. Allocation pilot: its own integral/selection scores. |
 | [Imperfect-model inference](demos/imperfect_model_inference/README.md) | Use fixed approximate models and paid observations to infer a hidden target's parameters. | Held-out reference-response error from the submitted parameters. |
 | [Surrogate development](demos/surrogate_development/README.md) | Acquire data and develop a predictor under acquisition, development-compute, and inference-cost limits. | Held-out predictive error and compliance with all three limits. |
 
@@ -44,7 +51,7 @@ demos/
   planning/                   # Preserved allocation pilot; logged Burgers agent runner
   imperfect_model_inference/  # Burgers fixed-predictor contract; model banks are future work
   surrogate_development/     # Planned CPU surrogate construction demo
-shared/budgeted_science/     # Numerical burgers/ and optional agents/ integration
+shared/budgeted_science/     # Independent resource_planning/, burgers/, optional agents/
 tests/                       # Numerical, tool-contract and offline runner tests
 docs/                        # Protocol notes and proposal-appendix material
 tmp/burgers_foundation/      # Ignored validation outputs and backend cache

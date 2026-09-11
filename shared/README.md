@@ -5,6 +5,21 @@ It uses Python 3.10+, NumPy, SciPy, and standard-library tests. Shared code neve
 imports a demo. Planning and inference each own an episode ledger, purchased
 records, and submission; only a deterministic backend cache may be shared.
 
+## Independent resource-planning toy
+
+`budgeted_science.resource_planning` contains the CPU predator-prey environment,
+flat-credit accounting, protected observations, shared multifidelity GP fitter,
+two baseline policies, supervised experiment runner, and offline reports. It
+does not import Burgers or use its work-to-credit conversion. The only reused
+agent utility is SDK-independent durable local logging.
+
+Use `Episode(...).tools` for public actions and keep `Episode.evaluate()` private.
+The environment allows arbitrary times, while the baseline GP uses a fixed
+16-time grid. Every parameter must meet its relative tolerance: the primary
+continuous error is the maximum normalized parameter error, not its mean.
+See the [full contract](../docs/resource_planning_toy_protocol.md) and
+[measured pilot](../docs/resource_planning_toy_results.md).
+
 ## Restricted viscous-Burgers system
 
 The current family solves `u_t + u*u_x = nu*u_xx` on periodic `[0, 2*pi)`, with

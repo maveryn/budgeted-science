@@ -1,0 +1,67 @@
+{
+  "run_id": "20260911T094128Z-pilot-463f2ae408",
+  "summary_sha256": "5a327b155853181c366bee92672dca93ac6e88bf11af02d804a4bac55c016c5c",
+  "renderer_sha256": "6e269bae1089b49340dfe4545eebacec8c55997b0bc0c2051fc0ad029f6da2a7",
+  "scientific_provenance": {
+    "source_hashes": {
+      "demos/planning/tests/test_ocba_pilot.py": "10de868f886c98604823daf0d1c9b54fb2ab36d71462a8ead83e8c2247f1ac18",
+      "demos/planning/tests/test_two_parameter_pilot.py": "3820a3f87e893f51e3006557eefa0e08b9c2de7e2dae043e2a001407c297b872",
+      "pyproject.toml": "8fc2a6034dc0963102d5d4e403bcadc62f744979be5545adefc03a4035e74cb3",
+      "shared/budgeted_science/__init__.py": "7031e4c993cb3ccbedbd7fe438a12ce6c6832282f01e3bef8c29435c18afb731",
+      "shared/budgeted_science/agents/__init__.py": "8ccb2b5543c279e6c67cb6793c71c36663090c266e3369386805ee7525c37fc9",
+      "shared/budgeted_science/agents/api.py": "ba7a530edfa2fadf91a76af6090e3634ccc8456e398ee9b9267b256b3a785227",
+      "shared/budgeted_science/agents/config.py": "ae9ece49957b51652e0929e455b22479af422ee711e1f00858d080c543abb69e",
+      "shared/budgeted_science/agents/fake.py": "c7f49b184be801e064c87f931a2cde3595ec4d6c0664a96fb1124a30a92cb0e5",
+      "shared/budgeted_science/agents/planning.py": "6593e1a65c680278739a331985e36494bffc09779bf5b796a3e39843b052a0a1",
+      "shared/budgeted_science/agents/records.py": "8d1e0b0bbc05701e493ab9b3f32b12f116699204634d7453c91064631c497fd8",
+      "shared/budgeted_science/agents/reporting.py": "75d1461aa7ed2561e3c0a1da5ad3ce46ca094c0287528f2c3fdbe0e4a2812eec",
+      "shared/budgeted_science/agents/runner.py": "93c360e0923d7e0154f1438827f38bbae0108ec3c8176ec6653885ffe42588a1",
+      "shared/budgeted_science/agents/spending.py": "1cf6e707bd00914e0e2b799c6b800df0413d49314543c9021913eeed5dff6c0e",
+      "shared/budgeted_science/burgers/__init__.py": "5941fec89b0a38e086cada5898e0a8abae56b54d0fc628cb13a66775c1a9b1e3",
+      "shared/budgeted_science/burgers/budget.py": "1060c1691a89b272d7aa14d801ba7ca77152be4ee365900be9d2971c617e5149",
+      "shared/budgeted_science/burgers/cache.py": "ea19d7aa82150f4cb5f855ff7021e22ca7fbc8a3c5a08faa351d94b74a98432a",
+      "shared/budgeted_science/burgers/config.py": "a64e5fbd0b51c0cc2761ae9106961fd56c015066fa14059f9bbf6e1d3ead25c2",
+      "shared/budgeted_science/burgers/fitting.py": "9f79b454fbf2c11b849bfed541b62c86e1bf2a41e6f0a74260afbf86715a8d7b",
+      "shared/budgeted_science/burgers/joint_fitting.py": "7c63f58571defce2908607e661d6e93faaaf8a837befc438546449e8555cb073",
+      "shared/budgeted_science/burgers/numerics.py": "f9dc6e02d28a2e803d20f556dd513cc930967238f387ba04e03e0d81300f3e37",
+      "shared/budgeted_science/burgers/observations.py": "79b21e35b83978a7f3f2dfc3633e3c9039100d9d179d757e311f6d8e7d2cea6e",
+      "shared/budgeted_science/burgers/reference.py": "3d612fa85ecd7a913ea765808d1f87ccefa3e0a1a4c0cc69ed877c36ae2bf360",
+      "shared/budgeted_science/burgers/scoring.py": "9e46656d98359208f280d4d8b54e94316e11dba5bde0589f940d3595c2c5ef00",
+      "shared/budgeted_science/burgers/tools.py": "a7716d934ebec546b2f97be3aecc8dc9678ec28beff1b64e33d54d74b87df482",
+      "shared/budgeted_science/burgers/validate.py": "b06a32265193d8f17394024ee9cb273cbb2990cfeafad79d67d99d243ea4436c",
+      "shared/budgeted_science/resource_planning/__init__.py": "2a349391dc1dc0772a9239540a16be9befc42b860059b842a5655603732ae42b",
+      "shared/budgeted_science/resource_planning/config.py": "6b34afea9012fab7388a972ed1c502d074f3a895b55c6e32f4b9fdb7efc2662d",
+      "shared/budgeted_science/resource_planning/emulator.py": "1b0f91572c3574f3c5fa65a1d037705eea900e09691fd97a2f75d819e4ee82af",
+      "shared/budgeted_science/resource_planning/environment.py": "6b77e261544f35fb8d594b5492bdaef6a0ed0201ab50f4bdbc183e6302969add",
+      "shared/budgeted_science/resource_planning/experiment.py": "2e692111eb213303a0bfa75021a9f6e06bcc75d523106f943c7f1099f765ea85",
+      "shared/budgeted_science/resource_planning/policies.py": "0450b5d7d2756dd8232bcd488b36ac3ccf0ee915eff2d8319ed6879185590124",
+      "shared/budgeted_science/resource_planning/reporting.py": "ad977bd3e2f5e445dd829c31cb89153c57b8e2656d52bf0b0da0b53f938d5f27",
+      "shared/budgeted_science/resource_planning/validate.py": "a2f6df71e4c8d7f434739d1796c8c6994444a4e7d6bd8678961dfa2c6f20dbb8",
+      "tests/test_agents.py": "4b93ff78b4205a8662d54be821523fd02f700d88f949fd1acd216d4658e0be1b",
+      "tests/test_agents_two_parameter.py": "4e92464d2596df4b7f8413b780aa4f5dbf1cebf2123a8216ed23bf694766e6c4",
+      "tests/test_burgers.py": "b87a5a43698cfc2e7b2bf15d06782043aa6b6c0fb2bc54f0f36830f8061da6cb",
+      "tests/test_burgers_two_parameter.py": "b886e9bc17ef191c0847c5642abc93b66fba79855b0c94dfbab7505997288e28",
+      "tests/test_resource_planning_emulator.py": "254a5e810df0cd5a167e853981d3812538ee55800dfe3231d125fdb765de3ab0",
+      "tests/test_resource_planning_environment.py": "855872795b04108a95cebdcab4915a4c1835e73d2ebbadb32c1d91ecbf4e3408",
+      "tests/test_resource_planning_identifiability.py": "225b55a410a6695e5eda79707db0381edae7a24e9b6457825c8101fbae640341",
+      "tests/test_resource_planning_reporting.py": "a4513220becee06fb1fb3e3b32bd335636a5ddff2a673291e978808b7d760439"
+    },
+    "versions": {
+      "python": "3.13.5",
+      "numpy": "2.3.4",
+      "scipy": "1.16.1"
+    },
+    "freeze_digest": "948dae2f42c10237a47f4b11b0c098ef835681c0af7287aec471c65e3b3d80a9"
+  },
+  "completion": {
+    "complete": true,
+    "attempts": 120,
+    "expected_attempts": 120,
+    "source_unchanged": true,
+    "execution_failures": 0
+  },
+  "figures": {
+    "paired_errors.svg": "2394a0796e843ada6e2b06a4358a6c45949c0dc44666314a5f709f03819110ce",
+    "resource_allocation.svg": "7cb5f80f92922bb9b113ab12cbe44af751e0eafcbef7937e191fd47b873cec86"
+  }
+}
