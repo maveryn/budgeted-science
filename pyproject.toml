@@ -9,6 +9,9 @@ description = "CPU scientific environments with explicit resource accounting"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.26,<3", "scipy>=1.11,<2"]
 
+[project.optional-dependencies]
+agents = ["openai>=2.54,<3"]
+
 [tool.setuptools.packages.find]
 where = ["shared"]
 include = ["budgeted_science*"]

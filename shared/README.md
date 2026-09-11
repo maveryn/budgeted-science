@@ -123,5 +123,20 @@ python -m budgeted_science.burgers.validate
 The validator writes evaluator-only CSV/JSON/Markdown, two scripted traces, and a
 cache under ignored `tmp/burgers_foundation/`. Use `--output` to choose another
 private directory. [Measured results](../docs/burgers_foundation_results.md)
-describe what has been verified. No API agent, trained bank, adaptive-allocation
-comparison, or model-discrepancy correction is included.
+describe the numerical milestone. That validator includes no API agent, trained
+bank, adaptive-allocation comparison, or model-discrepancy correction.
+
+## Optional agent integration
+
+`budgeted_science.agents` adds a logged planning adapter, frozen first-run settings,
+separate API-dollar reservations, streaming Responses integration, a scripted fake
+gateway and offline transcript/report regeneration. It does not modify the
+numerical methods or the inference facade. OpenAI imports and credential loading
+are deferred until an explicitly requested live run; `pip install -e '.[agents]'`
+installs the optional SDK. Base numerical tests and the dry-run need no SDK/key.
+
+The adapter adds free `simulation_record(result_id)` retrieval, compact numerical
+tool replies, complete per-fit solver logging and duplicate-call protection.
+Full output items and available reasoning summaries are preserved in API history.
+There is no arbitrary-code environment, and local raw records include private
+evaluator state. See the [runner protocol](../docs/planning_agent_runner.md).

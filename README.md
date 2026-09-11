@@ -8,8 +8,11 @@ adapting them to domain-specific scientific applications.
 **Status:** the CPU allocation pilot is preserved, and a shared viscous-Burgers
 foundation now provides numerical tools, observations, budgets, fitting, and
 separate planning/inference scoring contracts. Its numerical validation and
-scripted contract checks are runnable. No agent experiments or trained
-imperfect-model banks have been run or built.
+scripted contract checks are runnable. A single-episode planning runner now has
+complete local audit logs, an offline fake-model mode, and an optional GPT-5.6 Sol
+integration. Offline checks and its fixed-policy CPU comparison pass; no paid
+agent experiment or trained imperfect-model bank has been run or built.
+See the [planning runner protocol](docs/planning_agent_runner.md).
 See the [Burgers foundation results](docs/burgers_foundation_results.md),
 [OCBA pilot results](docs/ocba_pilot_results.md), and
 [pilot reproduction protocol](docs/ocba_pilot_protocol.md).
@@ -26,11 +29,11 @@ See the [Burgers foundation results](docs/burgers_foundation_results.md),
 
 ```text
 demos/
-  planning/                   # Preserved allocation pilot; Burgers planning contract
+  planning/                   # Preserved allocation pilot; logged Burgers agent runner
   imperfect_model_inference/  # Burgers fixed-predictor contract; model banks are future work
   surrogate_development/     # Planned CPU surrogate construction demo
-shared/budgeted_science/     # Installable shared package, including burgers/
-tests/                       # Shared numerical and tool-contract tests
+shared/budgeted_science/     # Numerical burgers/ and optional agents/ integration
+tests/                       # Numerical, tool-contract and offline runner tests
 docs/                        # Protocol notes and proposal-appendix material
 tmp/burgers_foundation/      # Ignored validation outputs and backend cache
 ```
@@ -64,8 +67,8 @@ for the scientific contract and limitations.
 
 ## Initial implementation principles
 
-- CPU-only scientific computation and training; API-hosted agents may be added
-  separately. Classical controls should run without API credentials.
+- CPU-only scientific computation and training; API-hosted agents use a separate
+  optional integration. Classical controls run without API credentials.
 - Structured actions executed by trusted numerical tools. No Docker, GPU, or
   arbitrary execution of agent-generated code is required for the first pilots.
 - Explicit budgets, complete action/cost records, and private final evaluation.
@@ -83,3 +86,19 @@ Cole-Hopf solutions, so it does not make expensive simulation unavoidable.
 Raw data, generated models, run outputs, and credentials stay out of Git by
 default. Curated, reviewed summaries can go in `docs/` for a self-contained
 proposal appendix; readers should not need to inspect code to understand results.
+
+## Logged planning episode
+
+The dry-run uses a scripted fake model, does not read credentials, and makes no
+network calls. After installing the numerical package:
+
+```powershell
+python demos/planning/src/run_agent.py --dry-run
+```
+
+Each run writes a frozen prompt/schema, full API-visible event log, complete
+numerical records, readable transcript and paired comparison report under ignored
+`demos/planning/runs/`. Inspect the [protocol](docs/planning_agent_runner.md) before
+authorizing `--live`. Live mode requires `pip install -e '.[agents]'`, uses
+`gpt-5.6-sol` with high reasoning, and enforces a separate $2 API spending bound.
+Installation, tests and ordinary imports never start paid calls.

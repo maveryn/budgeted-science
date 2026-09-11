@@ -1,8 +1,45 @@
 # Resource-rational scientific project planning
 
-**Status:** the CPU allocation pilot is preserved. The shared Burgers foundation
-now also provides a planning tool contract and a scripted end-to-end check.
-No LLM runs or Burgers policy comparisons have been performed.
+**Status:** the CPU allocation pilot and shared numerical foundation are preserved.
+A complete single-episode agent runner now passes offline checks and includes an
+independently budgeted fixed-policy CPU comparison. No paid LLM run has been
+performed, and the scripted fake-model result is not an agent-performance result.
+
+## First logged agent episode
+
+From the repository root, after the editable numerical install:
+
+```powershell
+python demos/planning/src/run_agent.py --dry-run
+```
+
+Read the generated `prompts.json`, `tools.json`, `transcript.md` and `report.md`
+under the unique ignored `demos/planning/runs/<run_id>/` directory. The raw JSONL
+and numerical artifacts are complete; no paid API call or credential read occurs.
+
+When explicitly authorizing one live episode:
+
+```powershell
+python -m pip install -e '.[agents]'
+python demos/planning/src/run_agent.py --live --api-key-file openaiapi.txt
+```
+
+Settings: `gpt-5.6-sol`, high reasoning, 20 scientific credits, 2 credits per sensor
+record, noise 0.01, and a separate $2 API ceiling. At most 30 model responses,
+8,192 output tokens each including reasoning, and 20 minutes. No automatic retry,
+model substitution, conversation truncation or extra closing narrative. Incomplete
+outcomes are retained. API access and token counting must be available or the run
+stops. Raw logs remain local and untracked.
+
+Regenerate derived documents without API access or tool execution:
+
+```powershell
+python demos/planning/src/run_agent.py --render demos/planning/runs/<run_id>
+```
+
+See the [runner protocol and verification](../../docs/planning_agent_runner.md)
+for the privacy boundary, complete records, fixed-policy comparison and pricing
+assumptions. A single toy run cannot establish an adaptive-planning advantage.
 
 ## Shared Burgers planning contract
 
@@ -31,7 +68,7 @@ recommended budget. Numerical tables and the trace are written to ignored
 `tmp/burgers_foundation/`; see the [foundation results](../../docs/burgers_foundation_results.md).
 
 Next work includes selecting useful budget/price regimes, matched classical
-policies, stopping/allocation diagnostics, and agents. No result currently
+policies, stopping/allocation diagnostics, and paid agents. No result currently
 establishes that adaptive allocation helps in this restricted system, which also
 permits fast Cole-Hopf computation. The foundation is not a finalized benchmark.
 
@@ -86,7 +123,7 @@ peak search, integration, and uncertainty tools.
 - `runs/`: generated local records and summaries; ignored by Git.
 
 The baseline-only allocation pilot is complete and unchanged. The Burgers
-structured-tool facade is implemented in the shared package; agent integration,
-randomized experiment suites, and numerical policy comparisons remain future
-work. Neither implementation requires running the inference or
+structured-tool facade and logged API runner are implemented in the shared
+package; paid runs, randomized experiment suites and broader numerical policy
+comparisons remain future work. Neither implementation requires running the inference or
 surrogate-development demos.
