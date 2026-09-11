@@ -14,6 +14,8 @@ local-fitting control also passed (0.877%). See the [single-agent run audit](doc
 See the [v2 setup, results, and commands](docs/resource_planning_v2_results.md).
 At [32 credits on the same instance](docs/resource_planning_v2_32_credit_run.md),
 GPT also passed, with largest error 3.035%; the local baseline passed at 4.700%.
+The [matched Luna/high run](docs/resource_planning_v2_luna_run.md) completed 32
+credits but failed the tolerance, with largest parameter error 15.682%.
 
 **Preserved planning toy (v1):** an independent predator-prey inverse problem compares
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared

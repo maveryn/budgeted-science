@@ -61,7 +61,8 @@ def write_report(path, manifest, events, finished, status):
     if finished:
         evaluation = finished["evaluation"]
         comparisons = finished.get("fixed_policy") or {}
-        rows = [("GPT-5.6 Sol" if manifest["mode"] == "live" else "Scripted fake",
+        model_name = {"gpt-5.6-sol": "GPT-5.6 Sol", "gpt-5.6-luna": "GPT-5.6 Luna"}[config["model"]]
+        rows = [(model_name if manifest["mode"] == "live" else "Scripted fake",
                  evaluation, evaluation.get("scientific_status", {}), status, finished["elapsed_seconds"])]
         for policy in ("random", "adaptive", "local"):
             if policy in comparisons:

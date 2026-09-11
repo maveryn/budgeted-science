@@ -1,5 +1,8 @@
 # GPT-5.6 Sol at 32 scientific credits
 
+A later [matched Luna/high evaluation](resource_planning_v2_luna_run.md) used
+the identical scientific prompt and instance; this page preserves the Sol run.
+
 ## Result: 2026-09-11
 
 One new GPT-5.6 Sol/high episode completed **32/32 scientific credits** and

@@ -15,7 +15,7 @@ from budgeted_science.resource_planning.checkpoint import restore_episode
 from budgeted_science.resource_planning.environment import _SOLVER_KEY
 from .records import digest, read_events
 from .resource import ResourceInstance, ResourceRunConfig, tool_definitions
-from .spending import ApiBudget
+from .spending import ApiBudget, pricing_for_model
 
 
 def read_json(parent, relative):
@@ -102,6 +102,8 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
             raise ValueError("explicit resume ceiling must not decrease and cannot exceed $3")
         values["api_ceiling_usd"] = str(amount)
     config = ResourceRunConfig(**values)
+    if manifest["pricing"] != pricing_for_model(config.model):
+        raise ValueError("model pricing changed; cannot resume with different accounting")
     if public["environment"] != config.public()["environment"] or public["fit_settings"] != config.public()["fit_settings"]:
         raise ValueError("scientific configuration changed; cannot resume")
     for name in ("numpy", "scipy"):
@@ -182,7 +184,7 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
         body_path = parent / f"api/{name}-request.json"
         limit = read_json(parent, body_path.relative_to(parent))["max_output_tokens"] if body_path.exists() else config.max_output_tokens
         reservations[name] = {"input_tokens": count["input_tokens"], "max_output_tokens": limit}
-    money = ApiBudget.restore(status, reservations)
+    money = ApiBudget.restore(status, reservations, model=config.model)
     if money.ceiling != Decimal(public["api_ceiling_usd"]):
         raise ValueError("saved API ceiling disagrees with manifest")
     # Only an explicit caller override may raise the cumulative ceiling. All

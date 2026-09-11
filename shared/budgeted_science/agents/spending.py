@@ -18,6 +18,22 @@ PRICING = {
     "note": "Conservative model-usage bound, not an invoice; no cache discounts assumed in the ceiling.",
 }
 
+MODEL_RATES = {
+    "gpt-5.6-sol": (INPUT_UPPER, INPUT_UNCACHED, INPUT_CACHED, OUTPUT),
+    "gpt-5.6-luna": (Decimal("0.25"), Decimal("0.20"), Decimal("0.02"), Decimal("1.20")),
+}
+
+
+def pricing_for_model(model):
+    if model not in MODEL_RATES:
+        raise ValueError("no verified pricing for requested model")
+    if model == "gpt-5.6-sol":
+        return dict(PRICING)  # Preserve historical Sol manifest pricing.
+    upper, uncached, cached, output = MODEL_RATES[model]
+    return {**PRICING, "model": model, "source": "https://developers.openai.com/api/docs/pricing",
+            "input_upper_per_million_usd": str(upper), "input_uncached_per_million_usd": str(uncached),
+            "input_cached_per_million_usd": str(cached), "output_per_million_usd": str(output)}
+
 
 class ApiLimit(RuntimeError):
     pass
@@ -29,9 +45,12 @@ class AccountingUnavailable(RuntimeError):
 
 class ApiBudget:
     @classmethod
-    def restore(cls, status, reservations):
+    def restore(cls, status, reservations, *, model=None):
         """Keep prior measured charges AND every unresolved request reservation."""
-        budget = cls(status["ceiling_usd"])
+        saved_model = status.get("model", "gpt-5.6-sol")
+        if model is not None and model != saved_model:
+            raise AccountingUnavailable("saved API model does not match requested model")
+        budget = cls(status["ceiling_usd"], model=saved_model)
         budget.known_upper = Decimal(status["known_cost_upper_usd"])
         budget.measured = list(status["measured_responses"])
         if budget.known_upper != sum((Decimal(r["conservative_cost_upper_usd"]) for r in budget.measured), Decimal(0)):
@@ -45,7 +64,10 @@ class ApiBudget:
             raise AccountingUnavailable("saved API ledger is inconsistent")
         return budget
 
-    def __init__(self, ceiling="2.00"):
+    def __init__(self, ceiling="2.00", *, model="gpt-5.6-sol"):
+        pricing_for_model(model)
+        self.model = model
+        self.input_upper, self.input_uncached, self.input_cached, self.output_rate = MODEL_RATES[model]
         self.ceiling = Decimal(ceiling)
         if not self.ceiling.is_finite() or not 0 <= self.ceiling <= 3:
             raise ValueError("invalid API ceiling")
@@ -60,7 +82,7 @@ class ApiBudget:
             raise ApiLimit("input_context_limit")
         if request_id in self.pending:
             raise ValueError("request already reserved")
-        amount = (count * INPUT_UPPER + output * OUTPUT) / MILLION
+        amount = (count * self.input_upper + output * self.output_rate) / MILLION
         if self.known_upper + self.reserved + amount > self.ceiling:
             raise ApiLimit("api_ceiling")
         self.pending[request_id] = {"input_tokens": count, "max_output_tokens": output, "amount": amount}
@@ -84,8 +106,8 @@ class ApiBudget:
                 raise ValueError("inconsistent token usage")
         except (KeyError, ValueError, TypeError) as exc:
             raise AccountingUnavailable("missing_or_invalid_usage") from exc
-        upper = (inputs * INPUT_UPPER + outputs * OUTPUT) / MILLION
-        lower = ((inputs - cached) * INPUT_UNCACHED + cached * INPUT_CACHED + outputs * OUTPUT) / MILLION
+        upper = (inputs * self.input_upper + outputs * self.output_rate) / MILLION
+        lower = ((inputs - cached) * self.input_uncached + cached * self.input_cached + outputs * self.output_rate) / MILLION
         self.measured.append({"request_id": request_id, "usage": usage,
                               "standard_cost_lower_usd": str(lower), "conservative_cost_upper_usd": str(upper)})
         del self.pending[request_id]
@@ -96,6 +118,7 @@ class ApiBudget:
 
     def status(self):
         return {
+            "model": self.model,
             "ceiling_usd": str(self.ceiling), "known_cost_upper_usd": str(self.known_upper),
             "uncertain_reserved_usd": str(self.reserved),
             "committed_upper_usd": str(self.known_upper + self.reserved),

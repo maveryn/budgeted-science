@@ -31,8 +31,11 @@ class ResourceRunConfig:
     scientific_budget: int = 40
 
     def __post_init__(self):
+        if self.model not in ("gpt-5.6-sol", "gpt-5.6-luna"):
+            raise ValueError("resource model must be explicitly gpt-5.6-sol or gpt-5.6-luna")
+        # Reuse limit/reasoning validation; the resource model is validated above.
         RunConfig(**{k: getattr(self, k) for k in (
-            "model", "reasoning_effort", "max_responses",
+            "reasoning_effort", "max_responses",
             "max_output_tokens", "deadline_seconds")})
         amount = Decimal(self.api_ceiling_usd)
         if not amount.is_finite() or not 0 <= amount <= 3:

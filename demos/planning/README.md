@@ -35,6 +35,12 @@ The [32-credit follow-up](../../docs/resource_planning_v2_32_credit_run.md) pass
 on the same instance: GPT's largest error was 3.035%, versus 4.700% for the local
 baseline. This is one paired case, not a multi-target agent success rate.
 
+The resource runner also supports explicit `--model gpt-5.6-luna`; Sol remains
+the default. Both retain high reasoning and the same task interface, with
+model-specific API price accounting. The [Luna 32-credit run](../../docs/resource_planning_v2_luna_run.md)
+completed but failed the 5% tolerance (largest error 15.682%). A model cannot be
+changed during resume, and there is no automatic fallback to another model.
+
 ## Preserved predator-prey resource-allocation toy (v1)
 
 The new CPU-only implementation lives in the independent shared package

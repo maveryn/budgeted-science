@@ -1,4 +1,4 @@
-"""One explicit GPT-5.6 Sol resource-planning run or an offline harness check."""
+"""One explicit GPT-5.6 Sol/Luna resource-planning run or an offline harness check."""
 
 import argparse
 import asyncio
@@ -15,6 +15,7 @@ def main():
     choice.add_argument("--live", action="store_true", help="One paid attempt; $2 default total ceiling, explicitly authorized overrides up to $3")
     choice.add_argument("--render", type=Path, metavar="RUN_DIR", help="Regenerate local transcript/report without execution")
     parser.add_argument("--api-key-file", type=Path, help="Live only; default openaiapi.txt in repository")
+    parser.add_argument("--model", choices=("gpt-5.6-sol", "gpt-5.6-luna"), help="Fresh-run model; defaults to Sol, cannot change on resume")
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--resume", type=Path, metavar="RUN_DIR", help="Explicitly continue an interrupted run; preserves cumulative limits")
     parser.add_argument("--require-full-budget", action="store_true", help="Require the entire scientific budget before submission; disclosed to the agent")
@@ -26,7 +27,7 @@ def main():
     args = parser.parse_args()
     adapter = ResourceAdapter()
     if args.render:
-        if args.resume or args.require_full_budget or args.inspect_resume or args.resume_api_ceiling_usd or args.harder or args.api_ceiling_usd or args.scientific_budget is not None:
+        if args.resume or args.require_full_budget or args.inspect_resume or args.resume_api_ceiling_usd or args.harder or args.api_ceiling_usd or args.scientific_budget is not None or args.model:
             parser.error("render cannot be combined with resume options")
         for artifact in adapter.regenerate(args.render):
             print(artifact)
@@ -35,7 +36,7 @@ def main():
     mode = "live" if args.live else "dry-run"
     resume = None
     if args.resume:
-        if args.harder or args.api_ceiling_usd or args.scientific_budget is not None:
+        if args.harder or args.api_ceiling_usd or args.scientific_budget is not None or args.model:
             parser.error("resume restores its environment; use --resume-api-ceiling-usd for an authorized increase")
         from budgeted_science.agents.resume import prepare_resume
         resume = prepare_resume(args.resume, mode=mode, require_full_budget=args.require_full_budget,
@@ -54,6 +55,7 @@ def main():
     if args.scientific_budget not in (None, 40) and not args.harder:
         parser.error("lower scientific budgets require --harder")
     config = resume["config"] if resume else ResourceRunConfig(
+        model=args.model or "gpt-5.6-sol",
         environment_version="v2" if args.harder else "v1",
         api_ceiling_usd=args.api_ceiling_usd or "2.00", require_full_budget=args.require_full_budget,
         scientific_budget=args.scientific_budget or 40)

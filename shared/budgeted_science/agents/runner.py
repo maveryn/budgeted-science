@@ -16,7 +16,7 @@ from .fake import ScriptedGateway
 from .planning import PlanningEpisode, prompts, run_fixed_policy, tool_definitions
 from .records import RunLog, digest, utc_now
 from .reporting import regenerate
-from .spending import AccountingUnavailable, ApiBudget, ApiLimit, PRICING
+from .spending import AccountingUnavailable, ApiBudget, ApiLimit, pricing_for_model
 
 
 class StopEpisode(Exception):
@@ -113,7 +113,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
                                "reasoning": {"effort": "high", "summary": "auto"},
                                "include": ["reasoning.encrypted_content"]},
                 "PRIVATE_harness_instance_not_agent_input": instance.private(),
-                "pricing": PRICING, "prompt_hash": digest(messages), "tool_schema_hash": digest(tools),
+                "pricing": pricing_for_model(config.model), "prompt_hash": digest(messages), "tool_schema_hash": digest(tools),
                 **provenance(repo)}
     prior_elapsed = resume["elapsed"] if resume else 0.0
     if resume:
@@ -128,7 +128,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
         log.write_json("tools.json", tools)
         log.event("prompt_frozen", messages=messages, tool_schema_hash=digest(tools))
     log.event("run_started", mode=mode)
-    money = resume["money"] if resume else ApiBudget(config.api_ceiling_usd)
+    money = resume["money"] if resume else ApiBudget(config.api_ceiling_usd, model=config.model)
     episode = episode if episode is not None else PlanningEpisode(config, instance, log)
     baseline, reason, responses = None, "internal_error", resume["responses"] if resume else 0
     history = deepcopy(resume["history"] if resume else messages)
