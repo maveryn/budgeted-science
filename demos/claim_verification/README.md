@@ -1,4 +1,4 @@
-# Scientific claim verification: offline predator-prey toy
+# Scientific claim verification: predator-prey toy
 
 Audit a **completed computational study**, not an unknown physical system.
 Every report claims that the maximum of species A on [0,8] is accurate within
@@ -6,8 +6,10 @@ Every report claims that the maximum of species A on [0,8] is accurate within
 
 The completed CPU milestone provides 30 development studies on six systems,
 three report formats, two paid checks, objective verdict scoring, and durable
-scripted episodes. It has **no live mode, model transport, credential access,
-LLM judge, or arbitrary-code workspace**.
+scripted episodes. The scientific package has no credential access or LLM judge.
+An optional [logged agent runner](../../docs/claim_verification_agent_protocol.md)
+connects these tools to an explicitly selected model; paid calls require
+`--live` and authorization. No arbitrary-code workspace is available.
 
 See the [measured commissioning report](../../docs/claim_verification_toy_results.md).
 
@@ -15,7 +17,19 @@ A [fixed two-check numerical baseline](../../docs/claim_verification_baseline_re
 now scores 30/30 on this development catalog at 5 credits per study. Its
 verdicts are calculated from purchased results, not predetermined fixtures.
 
+The [first live Terra/high episode](../../docs/claim_verification_terra_first_result.md)
+correctly accepted the first catalog study after sampling then integration
+refinement, using 5 credits and an API cost upper bound of USD 0.044409.
+Only one sound development case has been tested with a model so far.
+
 ## Run
+
+The optional model runner supports `--inspect`, `--dry-run`, `--live`,
+`--render PATH`, and explicit `--resume PATH` with live/dry mode preserved.
+Its defaults are GPT-5.6 Terra, high reasoning, 5 audit credits, and a cumulative
+USD 3 API ceiling. Resume preserves prior purchases, messages, limits and
+uncertain API reservations; it does not create a new evaluation sample.
+See the [agent protocol](../../docs/claim_verification_agent_protocol.md) for commands.
 
 From the repository root, using the existing editable installation:
 
@@ -108,8 +122,10 @@ objects. Tool steps accept `tool`, `arguments`, `call_id`, and optional `save_as
 An argument such as `$integration.run_id` reuses a previous result saved as
 `integration`. `{"interrupt": true}` exercises partial-run preservation.
 Duplicate call IDs replay the original response without repeating a purchase.
-Episodes stop at the first valid submission, 30 tool requests, five minutes,
-or interruption. There is no crash-resume or automatic retry.
+Scripted episodes stop at the first valid submission, 30 tool requests, five
+minutes, or interruption. That offline script runner has no crash-resume or
+automatic retry. The separate model runner has the limits and explicit
+checkpoint/resume support described in its linked protocol.
 
 Private scoring compares the **original printed claim**, not an improved run,
 with the reference. A binary verdict is correct iff it matches the 5% label;

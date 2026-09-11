@@ -5,12 +5,16 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
-**Scientific claim verification:** a separate [offline predator-prey demo](demos/claim_verification/README.md)
+**Scientific claim verification:** a separate [predator-prey demo](demos/claim_verification/README.md)
 now provides 30 completed-study variants, three report formats, 5-credit audit
 tools, objective verdict scoring, and fully logged scripted fixtures. Numerical
 commissioning checks integration and output-sampling errors independently.
-No verification-agent/API evaluation has been run. See the
-[commissioning report](docs/claim_verification_toy_results.md).
+The [fixed two-check baseline](docs/claim_verification_baseline_results.md) scores
+30/30 on this development catalog. The [first Terra/high episode](docs/claim_verification_terra_first_result.md)
+correctly accepted one sound claim using 5 credits, matching that baseline on
+the same case. This single-case smoke test is not a model evaluation across the
+catalog. See the [commissioning report](docs/claim_verification_toy_results.md)
+and [logged runner/resume protocol](docs/claim_verification_agent_protocol.md).
 
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
@@ -89,7 +93,7 @@ demos/
   planning/                   # Preserved allocation pilot; logged Burgers agent runner
   imperfect_model_inference/  # Burgers fixed-predictor contract; model banks are future work
   surrogate_development/     # Planned CPU surrogate construction demo
-  claim_verification/        # CPU catalog and offline scripted audit episodes
+  claim_verification/        # CPU catalog, scripted audits, optional logged agent runner
 shared/budgeted_science/     # Scientific packages plus optional agent infrastructure
 tests/                       # Numerical, tool-contract and offline runner tests
 docs/                        # Protocol notes and proposal-appendix material

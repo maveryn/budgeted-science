@@ -24,6 +24,11 @@ The [claim-verification commissioning report](claim_verification_toy_results.md)
 adds a completed-study audit toy with three report formats, 30 development
 variants, numerical check effects, and scripted logging fixtures. It reports
 no LLM performance and does not require a general classical verifier.
+Subsequently, the [fixed two-check verifier](claim_verification_baseline_results.md)
+scored 30/30 on the development catalog. The [first Terra/high smoke test](claim_verification_terra_first_result.md)
+correctly accepted one sound study at 5 credits. Its
+[agent protocol](claim_verification_agent_protocol.md) documents logs, spending
+limits, offline inspection and explicit same-episode resume.
 
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
