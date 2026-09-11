@@ -9,6 +9,23 @@ but generation 11 exhausted its 8,192-token response allowance entirely on
 reasoning before submission. Both runs are retained. There is no scored LLM result,
 and the scripted fake-model result is not an agent-performance result.
 
+## Opt-in two-parameter CPU trial
+
+The amplitude/viscosity extension uses calibration `A*sin(x)` and forecast
+`1.5*A*sin(x)`, with unknown A in `[0.8, 1.2]` and nu in `[0.1, 0.3]`. It keeps
+the original numerical methods, costs, and actual-profile scoring. Run locally:
+
+```powershell
+python demos/planning/src/two_parameter_pilot.py
+```
+
+This performs reference/recoverability checks and four independent 20-credit
+fixed-policy trials, saving complete numerical traces to a new ignored
+`tmp/burgers_two_parameter/` directory. No API access or credentials are involved.
+The ordinary Python joint fitter is not an incremental agent action. The existing
+`run_agent.py` prompt, tools and one-parameter episode remain unchanged.
+See [measured results and limitations](../../docs/burgers_two_parameter_trial.md).
+
 ## First logged agent episode
 
 From the repository root, after the editable numerical install:

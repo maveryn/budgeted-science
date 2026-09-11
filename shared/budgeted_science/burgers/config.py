@@ -8,6 +8,7 @@ import numpy as np
 
 LENGTH = 2 * math.pi
 VISCOSITY_BOUNDS = (0.1, 0.3)
+INITIAL_AMPLITUDE_BOUNDS = (0.8, 1.2)
 RESOLUTIONS = (32, 64, 128)
 RECORD_TIMES = (0.2, 0.4, 0.6, 0.8, 1.0)
 AMPLITUDES = {"calibration": 1.0, "forecast": 1.5}
@@ -46,6 +47,13 @@ def protocol_amplitude(protocol):
     return AMPLITUDES[protocol]
 
 
+def initial_amplitude_value(value):
+    value = finite_real(value, "initial_amplitude")
+    if not INITIAL_AMPLITUDE_BOUNDS[0] <= value <= INITIAL_AMPLITUDE_BOUNDS[1]:
+        raise ValueError("initial_amplitude must be in [0.8, 1.2]")
+    return value
+
+
 def sensor_index(sensor_id):
     sensor_id = integer(sensor_id, "sensor_id")
     if sensor_id >= len(SENSOR_POSITIONS):
@@ -59,6 +67,7 @@ class SolverConfig:
     resolution: int = 64
     protocol: str = "calibration"
     safety: float = 0.4
+    initial_amplitude: float = 1.0
 
     def __post_init__(self):
         object.__setattr__(self, "viscosity", viscosity(self.viscosity))
@@ -67,6 +76,7 @@ class SolverConfig:
             raise ValueError(f"resolution must be one of {RESOLUTIONS}")
         object.__setattr__(self, "resolution", n)
         protocol_amplitude(self.protocol)
+        object.__setattr__(self, "initial_amplitude", initial_amplitude_value(self.initial_amplitude))
         safety = finite_real(self.safety, "safety")
         if not 0 < safety <= 0.4:
             raise ValueError("safety must be in (0, 0.4]")
@@ -74,7 +84,7 @@ class SolverConfig:
 
     @property
     def amplitude(self):
-        return protocol_amplitude(self.protocol)
+        return self.initial_amplitude * protocol_amplitude(self.protocol)
 
     @property
     def positions(self):
@@ -82,7 +92,7 @@ class SolverConfig:
 
     def identity(self):
         """Full deterministic configuration; float.hex avoids cache quantization."""
-        return {
+        identity = {
             "solver_version": SOLVER_VERSION,
             "viscosity": self.viscosity.hex(),
             "resolution": self.resolution,
@@ -95,3 +105,9 @@ class SolverConfig:
             "initial_condition": "amplitude*sin(x)",
             "representation": "uniform-grid-values",
         }
+        # Preserve existing A=1 cache keys. Record other A values explicitly:
+        # multiplication by the forecast factor can round adjacent A values to
+        # the same effective amplitude, but their public configurations differ.
+        if self.initial_amplitude != 1.0:
+            identity["initial_amplitude"] = self.initial_amplitude.hex()
+        return identity

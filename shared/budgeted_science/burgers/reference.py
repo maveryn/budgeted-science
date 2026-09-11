@@ -10,13 +10,14 @@ import numpy as np
 
 from .config import (
     LENGTH, RECORD_TIMES, FORECAST_POSITIONS, SENSOR_POSITIONS,
-    viscosity, integer, protocol_amplitude, sensor_index,
+    viscosity, integer, protocol_amplitude, sensor_index, initial_amplitude_value,
 )
 
 
-def reference_values(nu, protocol, positions, times=RECORD_TIMES, *, grid_size=1024):
+def reference_values(nu, protocol, positions, times=RECORD_TIMES, *, grid_size=1024,
+                     initial_amplitude=1.0):
     nu = viscosity(nu)
-    amplitude = protocol_amplitude(protocol)
+    amplitude = initial_amplitude_value(initial_amplitude) * protocol_amplitude(protocol)
     n = integer(grid_size, "grid_size", 32)
     if n & (n - 1):
         raise ValueError("reference grid_size must be a power of two")
@@ -54,8 +55,9 @@ def reference_values(nu, protocol, positions, times=RECORD_TIMES, *, grid_size=1
 class ReferenceOracle:
     """Private fixed-target component owned by the trusted experiment harness."""
 
-    def __init__(self, target_viscosity, *, grid_size=1024):
+    def __init__(self, target_viscosity, *, grid_size=1024, initial_amplitude=1.0):
         self._target = viscosity(target_viscosity)
+        self._initial_amplitude = initial_amplitude_value(initial_amplitude)
         n = integer(grid_size, "grid_size", 32)
         if n & (n - 1):
             raise ValueError("reference grid_size must be a power of two")
@@ -67,10 +69,12 @@ class ReferenceOracle:
         if sensor_id not in self._records:
             self._records[sensor_id] = reference_values(
                 self._target, "calibration", [SENSOR_POSITIONS[sensor_id]], grid_size=self._grid_size,
+                initial_amplitude=self._initial_amplitude,
             )[:, 0]
         return self._records[sensor_id].copy()
 
     def forecast_profile(self):
         return reference_values(
             self._target, "forecast", FORECAST_POSITIONS, [1.0], grid_size=self._grid_size,
+            initial_amplitude=self._initial_amplitude,
         )[0]

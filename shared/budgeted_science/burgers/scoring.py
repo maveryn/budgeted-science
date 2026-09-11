@@ -32,9 +32,9 @@ def profile_error(profile, truth):
     return error
 
 
-def score_planning(profile, target_viscosity):
+def score_planning(profile, target_viscosity, *, target_amplitude=1.0):
     values = validate_profile(profile)
-    truth = ReferenceOracle(target_viscosity).forecast_profile()
+    truth = ReferenceOracle(target_viscosity, initial_amplitude=target_amplitude).forecast_profile()
     return {"normalized_profile_rmse": profile_error(values, truth)}
 
 

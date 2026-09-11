@@ -20,6 +20,11 @@ See the [Burgers foundation results](docs/burgers_foundation_results.md),
 [OCBA pilot results](docs/ocba_pilot_results.md), and
 [pilot reproduction protocol](docs/ocba_pilot_protocol.md).
 
+An [opt-in two-parameter CPU trial](docs/burgers_two_parameter_trial.md) now adds
+unknown initial amplitude alongside viscosity. Reference/recoverability checks
+and four budgeted fixed recipes run locally. The existing one-parameter agent
+task is unchanged; the new variant has not been evaluated with an agent.
+
 ## Three independent demos
 
 | Demo | Scientific decision | Final evaluation |

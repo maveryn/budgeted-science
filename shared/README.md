@@ -13,6 +13,11 @@ forecasting starts from `1.5*sin(x)`. Candidate grids are 32, 64, or 128 points.
 Records contain times 0.2, 0.4, 0.6, 0.8, and 1.0 (simulation results also include
 the initial state). Values are nodal samples on `x_i = i*2*pi/N`, not cell averages.
 
+The opt-in amplitude extension accepts `SolverConfig(..., initial_amplitude=A)`
+with A in `[0.8, 1.2]`. Initial conditions become `A*sin(x)` and `1.5*A*sin(x)`.
+The default A=1, original cache keys, credit normalizer, and existing facades
+remain unchanged. See the [two-parameter CPU trial](../docs/burgers_two_parameter_trial.md).
+
 The conservative Rusanov flux and centered diffusion use SSP-RK2. Each step is
 the smaller of time remaining to the next record and
 `0.4 / (max(abs(u))/dx + 2*nu/dx**2)`. The direct solver also accepts a smaller
@@ -38,6 +43,7 @@ Modules live under `budgeted_science.burgers`:
 | `cache.SimulationService` | Episode-local purchases plus optional shared `SimulationCache`; the metered candidate prediction backend. |
 | `observations.ObservationService` | `acquire(sensor_id, replicates=1)` buys trials; `retrieve(record_id)` returns an already purchased immutable record for free. |
 | `fitting.fit_viscosity` | Inject `predictor(nu, acquired_records)` returning a `(records, 5)` array; bounded fit retains the best completed result if interrupted. |
+| `joint_fitting.fit_viscosity_amplitude` | Opt-in Python helper with injected `predictor(nu, A, acquired_records)`; counts all forward calls, including numerical Jacobian evaluations. Not wired to the current agent tools. |
 | `tools.PlanningTools` | `observe`, `record`, `budget`, `simulate`, `fit`, `submit`; adjustable candidate resolution. |
 | `tools.InferenceTools` | `observe`, `record`, `budget`, `predict`, `fit`, `submit`; only pre-registered fixed predictors, with no adjustable-solver/reference action. |
 | `reference`, `scoring` | Trusted evaluator-side reference and final scores. Never exposed by tool dispatch. |
@@ -99,6 +105,12 @@ Planning submits 16 forecast values at `x_j=(j+0.5)*2*pi/16`, final time 1.
 Its score is the actual submitted profile's RMSE against the noise-free target
 reference, divided by fixed public scale 1.5. Scoring never replaces that profile
 with a perfect calculation using an estimated parameter.
+
+For the two-parameter CPU trial, the private reference accepts
+`initial_amplitude=A`, and scoring uses `score_planning(profile, target_nu,
+target_amplitude=A)`. The normalization remains the fixed public scale 1.5;
+it does not change with the private amplitude. Existing inference scoring stays
+viscosity-only at A=1.
 
 Inference submits a viscosity in `[0.1, 0.3]`. The private evaluator uses that
 viscosity to compute a reference forecast at the same positions and reports

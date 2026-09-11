@@ -52,6 +52,7 @@ class SimulationResult:
     def public(self):
         return {
             "viscosity": self.config.viscosity, "resolution": self.config.resolution,
+            "initial_amplitude": self.config.initial_amplitude,
             "protocol": self.config.protocol, "positions": self.config.positions.tolist(),
             "times": self.times.tolist(), "fields": self.fields.tolist(),
             "status": self.status, "message": self.message,
