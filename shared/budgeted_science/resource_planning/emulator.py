@@ -143,8 +143,11 @@ def uncertainty(weights, log_parameters):
 class Calibration:
     """Immutable real-data fit; fantasy updates never refit hyperparameters."""
     def __init__(self, simulations, observations, bounds, initial, times, *, seed=0,
-                 settings=None, deadline=None):
+                 settings=None, deadline=None, noise_fraction=0.0):
         self.settings = settings or GPSettings()
+        if not math.isfinite(noise_fraction) or not 0 <= noise_fraction <= .1:
+            raise ValueError("invalid measurement noise fraction")
+        self.noise_variance = noise_fraction ** 2
         self.bounds = np.asarray(bounds, dtype=float)
         self.initial = np.asarray(initial, dtype=float)
         self.times = np.asarray(times, dtype=float)
@@ -202,7 +205,8 @@ class Calibration:
             temporal = self.temporal[np.ix_(indices, indices)]
             eigenvalues, vectors = np.linalg.eigh(temporal)
             residual = (values - means[j][..., indices]) @ vectors
-            denominator = variances[j][..., None] * eigenvalues + self.settings.likelihood_jitter
+            denominator = (variances[j][..., None] * eigenvalues
+                           + self.settings.likelihood_jitter + self.noise_variance)
             result -= .5 * (np.log(denominator) + residual * residual / denominator).sum(axis=-1)
         return result
 
@@ -230,7 +234,7 @@ class Calibration:
             oi = np.array([o[0] for o in obs])
             values = np.array([o[1] for o in obs])
             observed = variance[:, None, None] * self.temporal[np.ix_(oi, oi)]
-            observed += np.eye(len(oi)) * self.settings.likelihood_jitter
+            observed += np.eye(len(oi)) * (self.settings.likelihood_jitter + self.noise_variance)
             residual = values - self.means[channel][:, oi]
             cross = variance[:, None, None] * self.temporal[np.ix_(indices, oi)]
             mean += (cross @ np.linalg.solve(observed, residual[..., None]))[..., 0]
@@ -239,7 +243,7 @@ class Calibration:
 
     def observation_gain(self, channel, index, particle_draws, normals):
         mean, cov = self.condition_target(channel, [index])
-        variance = np.maximum(cov[:, 0, 0], 0.) + self.settings.likelihood_jitter
+        variance = np.maximum(cov[:, 0, 0], 0.) + self.settings.likelihood_jitter + self.noise_variance
         outcomes = mean[particle_draws, 0] + np.sqrt(variance[particle_draws]) * normals[:, channel, 0]
         difference = outcomes[:, None] - mean[None, :, 0]
         log_conditional = -.5 * (np.log(variance)[None, :] + difference ** 2 / variance[None, :])
@@ -271,7 +275,7 @@ class Calibration:
                 values = np.array([o[1] for o in obs])
                 selected_variance = self.variances[j][particle_draws]
                 observed_cov = selected_variance[:, None, None] * self.temporal[np.ix_(oi, oi)]
-                observed_cov += np.eye(len(oi)) * self.settings.likelihood_jitter
+                observed_cov += np.eye(len(oi)) * (self.settings.likelihood_jitter + self.noise_variance)
                 between = cross[particle_draws, None, None] * self.temporal[:, oi]
                 residual = values - self.means[j][particle_draws][:, oi]
                 conditional_mean += (between @ np.linalg.solve(observed_cov, residual[..., None]))[..., 0]

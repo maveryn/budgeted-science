@@ -5,7 +5,13 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
-**New planning toy:** an independent predator-prey inverse problem now compares
+**Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
+5% parameter tolerance, and a paid-data-only local least-squares baseline. The
+new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget
+remains 40 after a development sweep at 40/32/24. No v2 agent run was performed.
+See the [v2 setup, results, and commands](docs/resource_planning_v2_results.md).
+
+**Preserved planning toy (v1):** an independent predator-prey inverse problem compares
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
 credits. It uses live low/high-fidelity solvers and protected target measurements,
 without LLM/API calls. See the [protocol](docs/resource_planning_toy_protocol.md)

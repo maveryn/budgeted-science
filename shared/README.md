@@ -7,6 +7,13 @@ records, and submission; only a deterministic backend cache may be shared.
 
 ## Independent resource-planning toy
 
+The opt-in `harder_config()` adds doubled range widths, 1%-of-initial-scale
+Gaussian observation noise, and 5% tolerance. `local_policy` implements the new
+paid-data-only multistart local least-squares control; `harder_pilot` runs the
+development budget sweep and frozen noisy comparison. V1 defaults remain intact.
+See [v2 results](../docs/resource_planning_v2_results.md). Noise-aware GP updates
+include the declared sensor variance separately from numerical regularization.
+
 `budgeted_science.resource_planning` contains the CPU predator-prey environment,
 flat-credit accounting, protected observations, shared multifidelity GP fitter,
 two baseline policies, supervised experiment runner, and offline reports. It

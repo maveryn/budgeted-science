@@ -32,7 +32,8 @@ def make_design(seed, bounds, times):
 def fit_evidence(evidence, config, seed, settings, deadline):
     return Calibration(evidence["simulations"], evidence["observations"], config["bounds"],
                        config["initial"], config["working_times"], seed=seed,
-                       settings=settings, deadline=deadline)
+                       settings=settings, deadline=deadline,
+                       noise_fraction=config.get("observation_noise_fraction", 0.0))
 
 
 def next_candidates(calibration, evidence, config, remaining, seed, step):

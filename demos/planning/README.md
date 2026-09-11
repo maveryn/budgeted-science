@@ -1,6 +1,22 @@
 # Resource-rational scientific project planning
 
-## Predator-prey resource-allocation toy
+## Harder predator-prey toy (v2)
+
+The new CPU setup uses wider parameter ranges, Gaussian noise on all noninitial
+observations (including free time-1 readings), and a 5% parameter tolerance.
+The stronger local-fitting baseline passed 28/40 fresh paired-noise cases versus
+0/40 for each GP control. A development sweep retained 40 credits. See the
+[v2 results and protocol](../../docs/resource_planning_v2_results.md).
+
+```powershell
+python -m budgeted_science.resource_planning.harder_pilot development
+python -m budgeted_science.resource_planning.harder_pilot pilot --freeze <DEVELOPMENT_DIR>
+```
+
+Use `harder_config()` for individual CPU cases. The existing logged GPT command
+below still uses v1; no v2 agent evaluation has been run.
+
+## Preserved predator-prey resource-allocation toy (v1)
 
 The new CPU-only implementation lives in the independent shared package
 `budgeted_science.resource_planning`. It compares a randomized fixed allocation

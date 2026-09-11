@@ -45,6 +45,7 @@ def export_episode(episode):
     with episode._lock:
         return {"version": 1, "solver_key": list(_SOLVER_KEY), "config": episode._config.public(),
                 "theta_true": list(episode._theta_true), "target": episode._target.artifact(),
+                "noise_seed": episode._noise_seed,
                 "state": episode._state, "submission": episode._submission,
                 "ledger": deepcopy(episode._ledger), "observations": deepcopy(list(episode._observations.values())),
                 "cache": [{**{k: deepcopy(v) for k, v in item.items() if k != "trajectory"},
@@ -60,6 +61,9 @@ def restore_episode(state, log=None):
     config = Config.from_public(state["config"])
     episode = Episode.__new__(Episode)
     episode._config, episode._theta_true = config, _theta(state["theta_true"], config)
+    episode._noise_seed = state.get("noise_seed", 0)
+    if isinstance(episode._noise_seed, bool) or not isinstance(episode._noise_seed, int) or episode._noise_seed < 0:
+        raise ValueError("invalid saved observation seed")
     episode._log, episode._logging_failed, episode._emitting = None, False, False
     episode._lock, episode._state, episode._submission, episode._abort_reason = RLock(), "active", None, None
     episode._target = trajectory_from_json(state["target"])

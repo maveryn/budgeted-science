@@ -8,6 +8,7 @@ No baseline, runner, credential, or API modules are imported here.
 
 from copy import deepcopy
 from dataclasses import dataclass
+import hashlib
 from math import fsum, isfinite
 from threading import RLock
 
@@ -241,12 +242,15 @@ class Episode:
     Runtime/API limits belong to the runner, not this environment.
     """
 
-    def __init__(self, theta, config=Config(), log=None):
+    def __init__(self, theta, config=Config(), log=None, *, noise_seed=0):
         if not isinstance(config, Config):
             raise ValueError("config must be a Config")
         if log is not None and not callable(log):
             raise ValueError("log must be callable or None")
         self._config = config
+        if isinstance(noise_seed, bool) or not isinstance(noise_seed, int) or noise_seed < 0:
+            raise ValueError("noise_seed must be a nonnegative integer")
+        self._noise_seed = noise_seed
         self._theta_true = _theta(theta, config)
         self._log = log
         self._logging_failed = False
@@ -260,15 +264,31 @@ class Episode:
         self._observations = {}
         self._target = _solve_high(self._theta_true, config)
         for time in (0.0, 1.0):
-            values = self._target.sample([time])[0]
             for index, variable in enumerate(("x", "y")):
-                record = {"variable": variable, "time": time, "value": float(values[index]),
+                record = {"variable": variable, "time": time, "value": self._observation_value(variable, time),
                           "charge": 0.0, "remaining": config.budget,
                           "record_id": f"observation-{len(self._observations) + 1}", "status": "success"}
+                if config.observation_noise_fraction:
+                    record["noise_std"] = self._noise_std(variable, time)
                 self._observations[variable, time] = record
         self.tools = PublicTools(self)
         self._emit("episode_started", theta_true=list(self._theta_true), config=config.public(),
                    target_artifact=self._target.artifact(), observations=list(self._observations.values()))
+
+    def _noise_std(self, variable, time):
+        # Initial conditions are known exactly; every subsequent observation,
+        # including free evidence at t=1, follows the same declared noise model.
+        return (self._config.observation_noise_fraction * self._config.initial[("x", "y").index(variable)]
+                if time > 0 else 0.0)
+
+    def _observation_value(self, variable, time):
+        value = float(self._target.sample([time])[0, ("x", "y").index(variable)])
+        std = self._noise_std(variable, time)
+        if std:
+            key = f"resource-observation-v2:{self._noise_seed}:{variable}:{float(time).hex()}"
+            seed = int.from_bytes(hashlib.sha256(key.encode()).digest()[:16], "big")
+            value += std * np.random.default_rng(seed).standard_normal()
+        return float(value)
 
     @property
     def _spent(self):
@@ -389,7 +409,9 @@ class Episode:
                       "charge": charge, "remaining": self._remaining}
             private_error = None
             try:
-                result["value"] = float(self._target.sample([time])[0, ("x", "y").index(variable)])
+                result["value"] = self._observation_value(variable, time)
+                if self._config.observation_noise_fraction:
+                    result["noise_std"] = self._noise_std(variable, time)
             except Exception as exc:
                 result.update(status="failed", error="measurement failed")
                 private_error = f"{type(exc).__name__}: {exc}"
@@ -438,7 +460,8 @@ class Episode:
                 predictions = [float(samples[index, ("x", "y").index(record["variable"])])
                                for index, record in enumerate(observations)]
                 residuals = [(prediction - record["value"])
-                             / (self._config.tolerance * abs(record["value"]))
+                             / max(self._config.tolerance * abs(record["value"]),
+                                   record.get("noise_std", 0), np.finfo(float).tiny)
                              for prediction, record in zip(predictions, observations)]
                 candidates.append({"result_id": cached["result_id"], "theta": cached["theta"],
                                    "fidelity": cached["fidelity"],
