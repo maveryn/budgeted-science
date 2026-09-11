@@ -28,6 +28,7 @@ class ResourceRunConfig:
     task_variant: str = "resource_planning"
     require_full_budget: bool = False
     environment_version: str = "v1"
+    scientific_budget: int = 40
 
     def __post_init__(self):
         RunConfig(**{k: getattr(self, k) for k in (
@@ -42,9 +43,13 @@ class ResourceRunConfig:
             raise ValueError("require_full_budget must be boolean")
         if self.environment_version not in ("v1", "v2"):
             raise ValueError("unknown resource environment version")
+        if type(self.scientific_budget) is not int or self.scientific_budget not in (24, 32, 40):
+            raise ValueError("scientific budget must be 24, 32, or 40 credits")
+        if self.environment_version == "v1" and self.scientific_budget != 40:
+            raise ValueError("lower budgets require the v2 environment")
 
     def environment_config(self):
-        return harder_config() if self.environment_version == "v2" else Config()
+        return harder_config(self.scientific_budget) if self.environment_version == "v2" else Config()
 
     def public(self):
         return {**self.__dict__, "environment": self.environment_config().public(),
@@ -103,7 +108,7 @@ def prompts(config, episode):
              "Retrieving the same variable/time returns the SAME noisy reading, not a new independent trial. "
              "Candidate simulations are deterministic and contain no measurement noise. The fitting helper includes this noise model."
              if environment.observation_noise_fraction else "Measurements are noiseless.")
-    full_budget = (" This episode requires using all 40 scientific credits before submission; choose the purchases yourself. "
+    full_budget = (f" This episode requires using all {environment.budget:g} scientific credits before submission; choose the purchases yourself. "
                    "A submit call while credits remain is rejected." if config.require_full_budget else "")
     return [
         {"role": "developer", "content":
@@ -119,7 +124,7 @@ The populations are x and y; initial conditions are known. The horizon is 8 in d
 
 Initial free observations: {json.dumps(episode.initial_observations)}
 
-You have 40 shared scientific credits. A NEW low simulation costs 1, a NEW high simulation 8, and a NEW target scalar measurement 12. A candidate simulation accepts your chosen theta and purchases its full trajectory; responses return x,y at times 0.5,1.0,...,8.0. Target measurements accept only x/y and one of those times, not candidate parameters. {noise} Exact repeats of purchased simulations or observations, including the free observations at time 1, cost zero. Known time-zero values are in the evidence. Invalid or unaffordable requests cost nothing; a simulation that executes and fails retains its charge and is cached. Prices are declared resource credits, not measured runtime or dollars. You start with no paid simulations or measurements.
+You have {environment.budget:g} shared scientific credits. A NEW low simulation costs 1, a NEW high simulation 8, and a NEW target scalar measurement 12. A candidate simulation accepts your chosen theta and purchases its full trajectory; responses return x,y at times 0.5,1.0,...,8.0. Target measurements accept only x/y and one of those times, not candidate parameters. {noise} Exact repeats of purchased simulations or observations, including the free observations at time 1, cost zero. Known time-zero values are in the evidence. Invalid or unaffordable requests cost nothing; a simulation that executes and fails retains its charge and is cached. Prices are declared resource credits, not measured runtime or dollars. You start with no paid simulations or measurements.
 
 Analysis and retrieval are free scientific actions. compare_cached_candidates compares only purchased predictions with available observations. fit_purchased uses a two-fidelity GP (high=low+discrepancy), independent population channels, correlated time outputs, and 2,048 prior particles with fixed numerical settings. It returns an approximate posterior mean and diagnostics. These diagnostics are not validated confidence statements. It only uses purchased data, cannot run new simulations or measurements, and requires at least one successful simulation. You may submit its estimate or a different in-bounds vector. An unchanged-evidence fit is reused. Free tools remain available after scientific credits run out.
 
@@ -246,7 +251,8 @@ class ResourceEpisode:
                 validate_arguments(args, self.schemas[name])
                 check_deadline(self.deadline)
                 if name == "submit" and self.require_full_budget and self.budget_status()["remaining"] != 0:
-                    raise ValueError("This episode requires using all 40 scientific credits before submission; choose further useful purchases.")
+                    total = self.tools.public_config["budget"]
+                    raise ValueError(f"This episode requires using all {total:g} scientific credits before submission; choose further useful purchases.")
                 if name == "fit_purchased":
                     result = self.fit()
                 else:
@@ -296,6 +302,11 @@ def run_comparisons(config, instance, log):
             if policy == "local":
                 from budgeted_science.resource_planning.local_policy import run_local_policy
                 details = run_local_policy(environment.tools, **options)
+            elif policy == "random" and config.scientific_budget != 40:
+                # Reuse the already-defined lower-budget fixed policy, not a
+                # truncated or retuned version of the 40-credit allocation.
+                from budgeted_science.resource_planning.harder_pilot import run_random
+                details = run_random(environment.tools, 0, options["deadline"], options["log"])
             else:
                 details = run_policy(environment.tools, policy=policy, **options)
         except Exception as exc:

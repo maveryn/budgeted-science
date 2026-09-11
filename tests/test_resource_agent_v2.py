@@ -131,6 +131,94 @@ class V2Tools(unittest.TestCase):
 
 
 class V2Runs(unittest.TestCase):
+    def test_lower_budget_validation(self):
+        for value in (0, 20, 31, 33, True, 32.0, "32"):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                ResourceRunConfig(environment_version="v2", scientific_budget=value)
+        with self.assertRaises(ValueError):
+            ResourceRunConfig(scientific_budget=32)
+        for value in (24, 32, 40):
+            self.assertEqual(ResourceRunConfig(environment_version="v2", scientific_budget=value)
+                             .environment_config().budget, value)
+
+    def test_32_credit_prompt_evidence_and_submit_gate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            log = RunLog(temp, "budget32")
+            try:
+                config = ResourceRunConfig(environment_version="v2", scientific_budget=32, require_full_budget=True)
+                instance = ResourceInstance.first_evaluation("v2")
+                episode = ResourceEpisode(config, instance, log)
+                message = json.dumps(prompts(config, episode))
+                self.assertIn("32 shared scientific credits", message)
+                self.assertIn("all 32 scientific credits", message)
+                self.assertNotIn("40", message)
+                self.assertEqual(episode.tools.public_config, harder_config(32).public())
+                result = episode.execute("early", "submit", json.dumps({"theta_hat": MID}))
+                self.assertFalse(result["ok"])
+                self.assertIn("32 scientific credits", result["message"])
+                self.assertEqual(result["budget_after"]["remaining"], 32)
+            finally:
+                log.close()
+
+    def test_32_credit_three_way_baselines(self):
+        with tempfile.TemporaryDirectory() as temp:
+            log = RunLog(temp, "comparisons32")
+            try:
+                config = ResourceRunConfig(environment_version="v2", scientific_budget=32)
+                comparisons = run_comparisons(config, ResourceInstance.first_evaluation("v2"), log)
+                self.assertEqual(set(comparisons), {"random", "adaptive", "local"})
+                for policy, result in comparisons.items():
+                    self.assertEqual(result["termination_reason"], "submitted", policy)
+                    self.assertEqual(result["scientific_status"]["spent"], 32)
+                    self.assertEqual(result["scientific_status"]["remaining"], 0)
+                for policy in ("random", "local"):
+                    counts = [sum(e["kind"] == action for e in comparisons[policy]["scientific_status"]["ledger"])
+                              for action in ("simulate_low", "simulate_high", "measure_target")]
+                    self.assertEqual(counts, [12, 1, 1])
+            finally:
+                log.close()
+
+    def test_lower_budget_offline_completion_and_reporting(self):
+        with tempfile.TemporaryDirectory() as temp, \
+             patch.object(ResourceAdapter, "run_comparisons", return_value={}), \
+             patch("budgeted_science.agents.runner.load_api_key", side_effect=AssertionError("credential read")):
+            for budget in (24, 32):
+                config = ResourceRunConfig(environment_version="v2", scientific_budget=budget,
+                                            api_ceiling_usd="3.00", require_full_budget=True)
+                path, reason = asyncio.run(run_episode(REPO, temp, mode="dry-run", config=config,
+                    instance=ResourceInstance.first_evaluation("v2"), adapter=ResourceAdapter()))
+                self.assertEqual(reason, "submitted")
+                data = json.loads((path / "evaluation.json").read_text(encoding="utf-8"))
+                self.assertEqual(data["evaluation"]["spent"], budget)
+                self.assertEqual(data["evaluation"]["scientific_status"]["remaining"], 0)
+                text = (path / "report.md").read_text(encoding="utf-8")
+                self.assertIn(f"Scientific pool: {budget} credits", text)
+                self.assertIn(f"all {budget} scientific credits", text)
+                original = (path / "report.md").read_bytes()
+                ResourceAdapter.regenerate(path)
+                self.assertEqual(original, (path / "report.md").read_bytes())
+
+    def test_32_credit_resume_preserves_budget_and_noise(self):
+        class Interrupted(ResourceScriptedGateway):
+            async def stream(self, body, metadata):
+                if len(self.requests) == 1:
+                    yield {"type": "response.output_text.delta", "delta": "partial 32-credit fixture"}
+                    raise ConnectionError("offline interruption")
+                async for event in super().stream(body, metadata):
+                    yield event
+        with tempfile.TemporaryDirectory() as temp, \
+             patch.object(ResourceAdapter, "run_comparisons", return_value={}):
+            config = ResourceRunConfig(environment_version="v2", scientific_budget=32, require_full_budget=True)
+            path, reason = asyncio.run(run_episode(REPO, temp, mode="dry-run", config=config,
+                instance=ResourceInstance.first_evaluation("v2"), adapter=ResourceAdapter(), gateway=Interrupted()))
+            self.assertEqual(reason, "request_or_runner_error")
+            resume = prepare_resume(path, mode="dry-run")
+            self.assertEqual(resume["config"].scientific_budget, 32)
+            self.assertEqual(resume["instance"].noise_seed, 60000)
+            self.assertIn("31 of the original 32 scientific credits", resume["message"]["content"])
+            self.assertIn("FULL 32-credit", resume["message"]["content"])
+            self.assertNotIn("40", resume["message"]["content"])
+
     def test_complete_full_budget_offline_run_and_regeneration(self):
         with tempfile.TemporaryDirectory() as temp, \
              patch.object(ResourceAdapter, "run_comparisons", return_value={}), \

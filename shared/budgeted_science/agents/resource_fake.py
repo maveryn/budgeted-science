@@ -15,20 +15,20 @@ class ResourceScriptedGateway(ScriptedGateway):
         turn = len(self.requests)
         metadata({"request_id": f"resource-fake-{turn}"})
         previous = [item for item in body["input"] if item.get("type") == "function_call_output"]
+        last = json.loads(previous[-1]["output"]) if previous else None
         if turn == 1:
             name, arguments = "simulate_low", {"theta": [1.0, .08, 1.4]}
         elif turn == 2:
             name, arguments = "measure_target", {"variable": "y", "time": 4.0}
         elif turn == 3:
             name, arguments = "simulate_high", {"theta": [.95, .085, 1.5]}
-        elif self.require_full_budget and 4 <= turn <= 8:
-            # Two high and three low purchases fill the remaining 19 credits.
-            name = "simulate_high" if turn <= 5 else "simulate_low"
+        elif self.require_full_budget and last["budget_after"]["remaining"] > 0:
+            # Fill the configured budget; retain the original 40-credit trace.
+            name = "simulate_high" if last["budget_after"]["remaining"] >= 8 else "simulate_low"
             arguments = {"theta": [0.90 + 0.01 * turn, .075, 1.35]}
-        elif turn == (9 if self.require_full_budget else 4):
+        elif turn == 4 or (self.require_full_budget and "posterior_mean" not in last["result"]):
             name, arguments = "fit_purchased", {}
         else:
-            last = json.loads(previous[-1]["output"])
             name, arguments = "submit", {"theta_hat": last["result"]["posterior_mean"]}
         response = {
             "id": f"resource-fake-response-{turn}", "object": "response", "status": "completed",

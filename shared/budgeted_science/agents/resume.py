@@ -200,11 +200,11 @@ def prepare_resume(parent, *, mode, require_full_budget=False, api_ceiling_usd=N
         raise ValueError("original response or active-time limit has been exhausted")
     remaining = restored.tools.get_status()["remaining"]
     content = (f"Continue this same interrupted episode. Existing purchases and conversation are retained. "
-               f"You have {remaining:g} of the original 40 scientific credits remaining. "
+               f"You have {remaining:g} of the original {config.scientific_budget:g} scientific credits remaining. "
                f"There are {config.max_responses - attempted} model responses left under the original limits. "
                "Do not start over; use the evidence and free analysis tools already available. ")
     if config.require_full_budget:
-        content += ("The user now requires the FULL 40-credit scientific budget to be used before submission. "
+        content += (f"The user now requires the FULL {config.scientific_budget:g}-credit scientific budget to be used before submission. "
                     "Choose useful additional purchases yourself; a submit call is rejected while credits remain. ")
     content += (f"The cumulative API ceiling is ${config.api_ceiling_usd}, including all prior usage "
                 "and interrupted request reservations; this is not a new allowance. ")

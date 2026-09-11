@@ -29,6 +29,12 @@ attempt needs explicit authorization; the $3 override is never automatic.
 V2 logs live under ignored `runs/resource_agent_v2/`. Resume restores the saved
 environment and noise seed without a new `--harder` flag.
 
+Use `--scientific-budget 32` (or 24) for a lower-budget fresh v2 run; 40 remains
+the default. Resume restores the saved budget and rejects a budget override.
+The [32-credit follow-up](../../docs/resource_planning_v2_32_credit_run.md) passed
+on the same instance: GPT's largest error was 3.035%, versus 4.700% for the local
+baseline. This is one paired case, not a multi-target agent success rate.
+
 ## Preserved predator-prey resource-allocation toy (v1)
 
 The new CPU-only implementation lives in the independent shared package

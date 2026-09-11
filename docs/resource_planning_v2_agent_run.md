@@ -1,5 +1,8 @@
 # GPT-5.6 Sol on the harder resource-planning toy
 
+This page preserves the 40-credit run. The subsequent
+[32-credit paired comparison](resource_planning_v2_32_credit_run.md) is reported separately.
+
 ## Result: 2026-09-11
 
 Exactly one live episode completed without retry, interruption, or continuation.

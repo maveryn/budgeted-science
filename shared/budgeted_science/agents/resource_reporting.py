@@ -14,6 +14,7 @@ def purchases(status):
 def write_report(path, manifest, events, finished, status):
     config = manifest["public_configuration"]
     environment = config["environment"]
+    budget = environment["budget"]
     harder = config.get("environment_version") == "v2"
     evidence_description = (
         "Target observations at nonzero times have independent Gaussian noise (sigma_x=0.10, sigma_y=0.05); "
@@ -23,11 +24,16 @@ def write_report(path, manifest, events, finished, status):
         "The random and GP-adaptive baselines pay their prescribed 12-credit initialization; "
         "the additional local-fitting baseline chooses locations within its fixed resource allocation."
         if harder else "the two baseline policies pay for their own prescribed 12-credit initialization.")
+    if harder and budget != 40:
+        baseline_description = (
+            "The GP-adaptive baseline pays its prescribed 12-credit initialization. "
+            "The existing lower-budget random control uses a preplanned allocation of low simulations, "
+            "one high simulation, and one measurement; the local-fitting baseline retains its fixed resource allocation.")
     lines = ["# Predator-prey resource-planning episode", "",
              f"Mode: {manifest['mode']}; termination: **{status}**.", "",
              f"Model: {config['model']}; reasoning: {config['reasoning_effort']}; "
              f"response limit: {config['max_responses']}; output tokens/response: {config['max_output_tokens']}.", "",
-             "Scientific pool: 40 credits. Low/high/measurement prices: 1/8/12. "
+             f"Scientific pool: {budget:g} credits. Low/high/measurement prices: 1/8/12. "
              f"{evidence_description}All methods use the same 16-time menu. "
              "GPT starts with free evidence only and can call the shared purchased-evidence fitter; "
              f"{baseline_description}", "",
@@ -38,7 +44,7 @@ def write_report(path, manifest, events, finished, status):
         lines += ["**SCRIPTED OFFLINE FIXTURE: no LLM evaluated; actual API spending $0. "
                   "Token usage below is synthetic testing data.**", ""]
     if config.get("require_full_budget") and not manifest.get("resume"):
-        lines += ["The frozen initial prompt requires spending all 40 scientific credits before submission. "
+        lines += [f"The frozen initial prompt requires spending all {budget:g} scientific credits before submission. "
                   "This full-budget comparison does not evaluate early stopping.", ""]
     if manifest.get("resume"):
         lines += ["## Continuation", "", "This continues the same scientific episode with the existing conversation, "
@@ -50,7 +56,7 @@ def write_report(path, manifest, events, finished, status):
             lines += [f"The user explicitly authorized raising the cumulative API ceiling from ${previous_ceiling} "
                       f"to ${config['api_ceiling_usd']}. Prior usage and unknown reservations remain charged to that total.", ""]
         if config.get("require_full_budget"):
-            lines += ["The user explicitly added a requirement to spend all 40 scientific credits before submission. "
+            lines += [f"The user explicitly added a requirement to spend all {budget:g} scientific credits before submission. "
                       "This is a recorded continuation instruction, not an unchanged-prompt replication of the original attempt.", ""]
     if finished:
         evaluation = finished["evaluation"]

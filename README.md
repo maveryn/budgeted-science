@@ -12,6 +12,8 @@ remains 40 after a development sweep at 40/32/24. One subsequent GPT-5.6 Sol/hig
 episode used 40/40 credits and passed with largest parameter error 0.546%; the
 local-fitting control also passed (0.877%). See the [single-agent run audit](docs/resource_planning_v2_agent_run.md).
 See the [v2 setup, results, and commands](docs/resource_planning_v2_results.md).
+At [32 credits on the same instance](docs/resource_planning_v2_32_credit_run.md),
+GPT also passed, with largest error 3.035%; the local baseline passed at 4.700%.
 
 **Preserved planning toy (v1):** an independent predator-prey inverse problem compares
 randomized nonadaptive acquisition with a cost-aware GP policy under 40 shared
