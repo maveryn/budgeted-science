@@ -15,6 +15,11 @@ correctly accepted one sound claim using 5 credits, matching that baseline on
 the same case. This single-case smoke test is not a model evaluation across the
 catalog. See the [commissioning report](docs/claim_verification_toy_results.md)
 and [logged runner/resume protocol](docs/claim_verification_agent_protocol.md).
+The subsequent [30-case Luna/high evaluation](docs/claim_verification_luna_catalog_results.md)
+scored 30/30, matching the fixed verifier, with 5 credits per case and an API
+cost upper bound of USD 0.208. All 30 episodes completed without retry. These
+variants share six development systems and do not establish general verification
+performance or an adaptive-auditing advantage.
 
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The

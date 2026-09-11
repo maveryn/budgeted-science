@@ -20,7 +20,10 @@ verdicts are calculated from purchased results, not predetermined fixtures.
 The [first live Terra/high episode](../../docs/claim_verification_terra_first_result.md)
 correctly accepted the first catalog study after sampling then integration
 refinement, using 5 credits and an API cost upper bound of USD 0.044409.
-Only one sound development case has been tested with a model so far.
+The subsequent [Luna/high catalog evaluation](../../docs/claim_verification_luna_catalog_results.md)
+scored 30/30 at 5 credits each, matching the fixed verifier. It correctly
+accepted all 18 valid claims and rejected all 12 invalid claims, with no
+abstentions, incomplete episodes or retries. Terra remains a one-case result.
 
 ## Run
 

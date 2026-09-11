@@ -70,3 +70,39 @@ are rejected for manual review. This is not arbitrary crash recovery.
 
 Terra supports high reasoning, streaming and function calling.
 [Official model documentation](https://developers.openai.com/api/docs/models/gpt-5.6-terra)
+
+## Thirty-case Luna evaluation
+
+The catalog entry point uses the exact model `gpt-5.6-luna` with high reasoning
+and the same scientific prompt, tools and per-episode limits. It evaluates all
+30 existing development studies once, in catalog order, with independent
+conversations, purchases and budgets. The earlier Terra episode is not pooled
+with this batch. The fixed numerical comparison runs independently per case.
+
+~~~powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.agents.verification_catalog --dry-run
+.\.venv\Scripts\python.exe -u -B -m budgeted_science.agents.verification_catalog --live
+.\.venv\Scripts\python.exe -B -m budgeted_science.agents.verification_catalog --render PATH_TO_CATALOG_RUN
+~~~
+
+Live mode requires fresh user authorization. Thirty slots at a USD 3 episode
+ceiling imply at most USD 90 across the batch; unused allowances are not
+transferred. Luna's verified conservative reservation rates are USD 0.25 per
+million input tokens and USD 1.20 per million output tokens. This uses standard,
+not discounted Batch API processing. [Official pricing](https://developers.openai.com/api/docs/pricing)
+
+The campaign freezes case identities, source/dependency hashes and configuration
+before launching. An exclusive marker is saved before each case. There are no
+automatic retries, duplicate samples, model substitutions or limit increases.
+Ordinary incomplete outcomes are retained; authentication, provenance and
+accounting errors halt the batch. Interrupted batch recovery requires inspecting
+the saved slot markers and episode logs before authorizing any continuation.
+The standalone explicit resume tool remains available for unsubmitted episodes;
+the catalog command itself does not automatically resume or restart them.
+
+Episode directories sit beside the campaign directory to avoid Windows path
+length limits. The campaign links all transcripts and keeps per-case records
+and category/format/system summaries. Offline rendering only reads saved
+results. All correctness denominators include attempted incomplete episodes;
+unattempted slots are reported separately. Dry-run responses and usage are
+synthetic, with zero actual API expenditure.

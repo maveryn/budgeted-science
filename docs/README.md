@@ -29,6 +29,9 @@ scored 30/30 on the development catalog. The [first Terra/high smoke test](claim
 correctly accepted one sound study at 5 credits. Its
 [agent protocol](claim_verification_agent_protocol.md) documents logs, spending
 limits, offline inspection and explicit same-episode resume.
+The subsequent [Luna/high evaluation](claim_verification_luna_catalog_results.md)
+completed all 30 studies with 30/30 correct verdicts, matching the fixed
+numerical verifier at the same 5-credit budget. All raw transcripts remain local.
 
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
