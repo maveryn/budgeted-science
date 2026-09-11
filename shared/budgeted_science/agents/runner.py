@@ -51,6 +51,34 @@ def generation_body(config, history, tools):
             "include": ["reasoning.encrypted_content"]}
 
 
+def replay_output_item(item):
+    """Project a returned item onto its API input form.
+
+    The full returned object remains in the response archive. Returned status,
+    null placeholders and server item IDs on messages are response metadata, not
+    part of the manually managed semantic history. Reasoning IDs and encrypted
+    content are retained so stateless reasoning can continue.
+    """
+    if not isinstance(item, dict):
+        raise StopEpisode("malformed_model_output_item")
+    kind = item.get("type")
+    if kind == "reasoning":
+        required = ("type", "id", "summary")
+        optional = ("content", "encrypted_content")
+    elif kind == "function_call":
+        required = ("type", "call_id", "name", "arguments")
+        optional = ("id", "caller", "namespace")
+    elif kind == "message":
+        required = ("type", "role", "content")
+        optional = ("phase",)
+    else:
+        raise StopEpisode("unsupported_output_item")
+    if any(key not in item or item[key] is None for key in required):
+        raise StopEpisode("malformed_model_output_item")
+    return deepcopy({key: item[key] for key in (*required, *optional)
+                     if key in item and item[key] is not None})
+
+
 async def run_episode(repo, output_root, *, mode, config=None, instance=None, gateway=None, key_file=None):
     if mode not in ("dry-run", "live"):
         raise ValueError("Choose dry-run or explicitly choose live.")
@@ -158,11 +186,12 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
             output = response.get("output")
             if not isinstance(output, list):
                 raise StopEpisode("malformed_model_output")
-            # Preserve every output item (including opaque reasoning, phase and
-            # other replayable fields), followed by function results in order.
-            history.extend(deepcopy(output))
             if any(c.get("type") == "refusal" for item in output for c in item.get("content", [])):
                 raise StopEpisode("refusal")
+            # Preserve every replayable output item (including opaque reasoning
+            # and assistant phase), followed by function results in order. Full
+            # returned objects remain unchanged in the raw response archive.
+            history.extend(replay_output_item(item) for item in output)
             calls = [item for item in output if item.get("type") == "function_call"]
             if not calls:
                 raise StopEpisode("no_submission")

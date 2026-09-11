@@ -137,6 +137,8 @@ installs the optional SDK. Base numerical tests and the dry-run need no SDK/key.
 
 The adapter adds free `simulation_record(result_id)` retrieval, compact numerical
 tool replies, complete per-fit solver logging and duplicate-call protection.
-Full output items and available reasoning summaries are preserved in API history.
+All replayable output fields and available reasoning summaries are preserved in
+API history; complete returned objects, including response-only metadata, remain
+unchanged in the raw archive.
 There is no arbitrary-code environment, and local raw records include private
 evaluator state. See the [runner protocol](../docs/planning_agent_runner.md).

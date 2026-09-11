@@ -2,8 +2,11 @@
 
 **Status:** the CPU allocation pilot and shared numerical foundation are preserved.
 A complete single-episode agent runner now passes offline checks and includes an
-independently budgeted fixed-policy CPU comparison. No paid LLM run has been
-performed, and the scripted fake-model result is not an agent-performance result.
+independently budgeted fixed-policy CPU comparison. The first paid attempt ended
+after one model response, before submission, because second-turn token counting
+rejected response-only metadata. The local run is retained; the replay projection
+is now covered by offline tests. There is no scored LLM result, and the scripted
+fake-model result is not an agent-performance result.
 
 ## First logged agent episode
 

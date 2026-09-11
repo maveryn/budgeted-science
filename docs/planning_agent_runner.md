@@ -1,8 +1,14 @@
 # First planning-agent runner
 
-Implemented and checked offline on 2026-09-10. No paid model evaluation has been
-run for this milestone. The scripted dry-run checks the runner, not GPT-5.6 Sol's
-scientific planning. The numerical foundation and allocation pilot are unchanged.
+Implemented and checked offline on 2026-09-10. One paid attempt was made after
+explicit authorization. It produced one GPT-5.6 Sol response but no submission:
+the second input-token-count request rejected a returned reasoning item's
+response-only `status` field. The incomplete run was retained and not retried.
+The runner now projects returned items onto canonical replayable input fields,
+with a regression fixture matching the observed payload; that correction has not
+yet been verified by another live episode. The scripted dry-run checks the runner,
+not GPT-5.6 Sol's scientific planning. The numerical foundation and allocation
+pilot are unchanged.
 
 ## Frozen first-run settings
 
@@ -121,11 +127,14 @@ rendering without editing the original log; middle-log corruption is reported.
 Forcible process/power loss can prevent finalization; offline reports then explicitly
 state that no finalized score was recorded. This is not live crash-resume.
 
-Returned reasoning summaries and all replayable output items, including opaque
-encrypted reasoning and assistant phase, are preserved in the conversation.
-Nothing is automatically compacted. Raw internal reasoning is not exposed by
-OpenAI. The transcript distinguishes saved tool results from those included in an
-attempted subsequent request. No extra generation is purchased after submission.
+Returned reasoning summaries and all replayable output fields, including reasoning
+IDs, opaque encrypted reasoning and assistant phase, are preserved in the
+conversation. Complete returned items remain unchanged in the raw response archive;
+response-only status/null placeholders and server message IDs are omitted from
+subsequent input. Nothing is automatically compacted. Raw internal reasoning is
+not exposed by OpenAI. The transcript distinguishes saved tool results from those
+included in an attempted subsequent request. No extra generation is purchased
+after submission.
 API-visible errors are scrubbed; authorization headers, environment dumps, keys and
 SDK client objects are never archived. Treat all raw logs as private and review
 before sharing, even though they are untracked.
@@ -177,10 +186,23 @@ history/reasoning preservation, interrupted streams, regeneration, synthetic-sec
 redaction, deduplication, free retrieval, compact/full numerical agreement,
 fit-internal logging, budget errors/reservations, usage failures, output limits,
 deadline/refusal/no-submission outcomes, actual-profile scoring and paired state.
-Verification passed: **41 runner tests + 40 original foundation tests + 12
-allocation-pilot tests = 93 tests**. The SDK mock-transport test ran (was not
+Verification after the live-discovered replay fix passed: **42 runner tests + 40
+original foundation tests + 12 allocation-pilot tests = 94 tests**. The SDK
+mock-transport test ran (was not
 skipped). The final dry-run submitted successfully, and offline regeneration
 preserved its authoritative event log. Python compilation checks also passed.
+
+### Retained first live attempt
+
+Run ID: `20260911T005746Z-live-018a517de6`. GPT-5.6 Sol requested two sensor-1
+replicates, spending 4 of 20 scientific credits. The first generation used 1,257
+input and 696 output tokens, including 670 reasoning tokens. Its conservative
+recorded API upper bound was $0.020205. Before generation two, the official token
+counter returned HTTP 400 for `input[2].status`; therefore no second generation
+was sent, no profile was submitted, and no agent score exists. The paired fixed
+policy remained 0.03445358599 normalized RMSE at 4.449612403 credits. This is an
+integration failure, not evidence about planning performance. Raw artifacts are
+local and ignored by Git.
 
 Tested environment: Python 3.13.5, NumPy 2.3.4, SciPy 1.16.1, OpenAI 2.54.0,
 HTTPX 0.28.1. The existing local virtual environment inherited system packages;

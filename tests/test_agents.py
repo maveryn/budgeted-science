@@ -18,7 +18,7 @@ from budgeted_science.agents.fake import ScriptedGateway
 from budgeted_science.agents.planning import PlanningEpisode, prompts, run_fixed_policy, tool_definitions
 from budgeted_science.agents.records import Redactor, RunLog, digest, read_events
 from budgeted_science.agents.reporting import regenerate
-from budgeted_science.agents.runner import generation_body, run_episode
+from budgeted_science.agents.runner import StopEpisode, generation_body, replay_output_item, run_episode
 from budgeted_science.agents.spending import AccountingUnavailable, ApiBudget, ApiLimit
 from budgeted_science.burgers.scoring import score_planning
 
@@ -79,6 +79,22 @@ class AccountingTests(unittest.TestCase):
                        {"max_responses": 31}, {"max_output_tokens": 8193}, {"deadline_seconds": 1201}):
             with self.assertRaises(ValueError):
                 RunConfig(**values)
+
+    def test_returned_items_are_canonicalized_for_replay(self):
+        reasoning = {"type": "reasoning", "id": "r1", "summary": [], "content": None,
+                     "encrypted_content": "opaque", "status": None}
+        function = {"type": "function_call", "id": "f1", "call_id": "c1", "name": "budget",
+                    "arguments": "{}", "caller": None, "namespace": None, "status": "completed"}
+        message = {"type": "message", "id": "m1", "role": "assistant", "status": "completed",
+                   "phase": "commentary", "content": [{"type": "output_text", "text": "hello"}]}
+        self.assertEqual(replay_output_item(reasoning),
+                         {"type": "reasoning", "id": "r1", "summary": [], "encrypted_content": "opaque"})
+        self.assertEqual(replay_output_item(function),
+                         {"type": "function_call", "call_id": "c1", "name": "budget", "arguments": "{}", "id": "f1"})
+        self.assertEqual(replay_output_item(message),
+                         {"type": "message", "role": "assistant", "content": message["content"], "phase": "commentary"})
+        with self.assertRaisesRegex(StopEpisode, "unsupported_output_item"):
+            replay_output_item({"type": "unknown"})
 
 
 class RecordTests(unittest.TestCase):
@@ -292,7 +308,9 @@ class RunnerTests(unittest.IsolatedAsyncioTestCase):
         responses = [e["response"] for e in events if e["kind"] == "api_response"]
         for i in range(1, 4):
             for item in responses[i-1]["output"]:
-                self.assertIn(item, gateway.requests[i]["input"])
+                self.assertIn(replay_output_item(item), gateway.requests[i]["input"])
+            self.assertFalse(any("status" in item for item in gateway.requests[i]["input"]
+                                 if item.get("type") in ("reasoning", "function_call", "message")))
         for request in gateway.requests:
             self.assertEqual(request["reasoning"], {"effort": "high", "summary": "auto"})
             self.assertFalse(request["store"])
