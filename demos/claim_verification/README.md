@@ -276,6 +276,21 @@ See the [protocol](../../docs/mms_verification_protocol.md) and
 ignored under this demo's `runs/` directory. No API/credential access or changes
 to previous catalogs are included.
 
+The optional [Luna/high runner](../../docs/mms_luna_protocol.md) uses the same six
+MMS studies and ten-credit interface, with a shared $2 batch API ceiling:
+
+```powershell
+python -m budgeted_science.agents.mms_catalog --dry-run
+python -m budgeted_science.agents.mms_catalog --live
+python -m budgeted_science.agents.mms_catalog --render <saved-batch-directory>
+```
+
+It imports verified saved CPU comparisons and never reruns them during a model
+episode. Raw transcripts, responses and numerical records remain local/untracked.
+The [six-case live results](../../docs/mms_luna_results.md) are 6/6 both-correct,
+with a $0.136 conservative total API bound. CPU study-aware rules also solve all
+six using fewer scientific credits; no performance advantage is claimed.
+
 ## Three-stage transport study pilot (previous experiment)
 
 The independent `budgeted_science.study_verification` package audits input

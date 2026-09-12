@@ -208,6 +208,15 @@ finite-grid code-order claim separately. A simple study-aware CPU rule solves
 See its [protocol and commands](docs/mms_verification_protocol.md). No model calls
 or changes to earlier verification experiments are included.
 
+The [MMS Luna evaluation protocol](docs/mms_luna_protocol.md) adds an optional
+logged six-case Luna/high batch with the same ten-credit science and a $2 total
+API cap. Use `python -m budgeted_science.agents.mms_catalog --dry-run` for an
+offline rehearsal; only explicit `--live` accesses the API.
+
+The [completed Luna/high run](docs/mms_luna_results.md) got both claims right on
+6/6 studies, averaging 9.4020 credits. The CPU study-aware rules also get 6/6
+with fewer credits; this remains a working demonstration, not a hard benchmark.
+
 ## Initial implementation principles
 
 - CPU-only scientific computation and training; API-hosted agents use a separate

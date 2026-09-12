@@ -223,7 +223,7 @@ async def run_episode(repo, output_root, *, mode, config=None, instance=None, ga
             output = response.get("output")
             if not isinstance(output, list):
                 raise StopEpisode("malformed_model_output")
-            if any(c.get("type") == "refusal" for item in output for c in item.get("content", [])):
+            if any(c.get("type") == "refusal" for item in output for c in (item.get("content") or [])):
                 raise StopEpisode("refusal")
             # Preserve every replayable output item (including opaque reasoning
             # and assistant phase), followed by function results in order. Full
