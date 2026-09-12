@@ -5,7 +5,14 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
-**Claim-specific verification revision:** the [new CPU pilot](docs/claim_verification_qoi_results.md)
+**1-D transport verification:** the [small PDE demonstration](docs/transport_verification_results.md)
+adds mesh, timestep, scheme and output choices with work-based audit costs.
+It uses 12 development claims across three systems. Balanced, space-focused,
+output-focused and randomized CPU checks score 12/12; time-focused checks score
+9/12. The implementation works, but this catalog still does not demonstrate
+an adaptive-auditing challenge. No model/API calls were made.
+
+**Claim-specific verification revision:** the [earlier CPU pilot](docs/claim_verification_qoi_results.md)
 adds peak-height, peak-time, and cumulative-population claims with configurable
 Euler/RK2 checks. On 108 claims sharing six fresh systems, fixed RK2 scored
 106/108, randomized checks 105/108, fixed Euler 99/108, and an adaptive heuristic

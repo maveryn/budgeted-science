@@ -1,5 +1,14 @@
 # Scientific claim verification: predator-prey toy
 
+## Small transport PDE experiment
+
+The independent `budgeted_science.transport_verification` module adds 12 claims
+across three 1-D transport systems, general reruns, a four-credit work budget
+and five CPU controls. See [setup, results and commands](../../docs/transport_verification_results.md).
+Several fixed rules still score 12/12, so this catalog does not yet establish
+adaptive-auditing value. No LLM calls were made. The earlier demos below remain
+unchanged.
+
 ## Claim-specific revision (CPU only)
 
 The separate `budgeted_science.claim_verification_qoi` package adds peak height,

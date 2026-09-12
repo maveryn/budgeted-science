@@ -7,6 +7,13 @@ records, and submission; only a deterministic backend cache may be shared.
 
 ## Completed-study claim verification
 
+`budgeted_science.transport_verification` is an independent, opt-in linear
+transport PDE toy with finite differences, analytic image/Fourier reference
+checks, work-accounted general reruns and 12 development claims. It reuses
+only SDK-independent logging. The [CPU report](../docs/transport_verification_results.md)
+documents the setup, commands and negative difficulty result: several fixed
+rules score 12/12. No previous environment or model interface was changed.
+
 `budgeted_science.claim_verification_qoi` is a separate opt-in CPU revision with
 peak height, peak time, cumulative population, Euler/RK2 checks, work-proxy
 accounting, and independently checked references. Its five CPU policies receive
