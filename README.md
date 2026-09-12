@@ -226,6 +226,8 @@ proposal appendix; readers should not need to inspect code to understand results
 The separate [finite-grid support audit](docs/ambiguity_luna_results.md) runs
 Luna/high on the two frozen ambiguity claims at two scientific budgets, with a
 $2 whole-batch API cap and complete logs. Its dry-run is entirely offline.
+The [report-style comparison](docs/ambiguity_report_luna_results.md) removes audit
+strategy hints and uses neutral evidence references while preserving that science.
 
 The dry-run uses a scripted fake model, does not read credentials, and makes no
 network calls. After installing the numerical package:

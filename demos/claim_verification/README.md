@@ -274,6 +274,9 @@ For the newer finite-grid forecast-support toy, use the separate
 [protocol and results](../../docs/ambiguity_luna_results.md): two claims at
 32/256 credits, Luna/high, $2 total API cap, and sequential agent-selected batches
 of candidate checks. This does not alter the older catalogs below.
+The separate [report-style condition](../../docs/ambiguity_report_luna_results.md)
+uses the same cases and budgets without the audit-strategy instructions or a
+dedicated witness field. Its new runner is `budgeted_science.agents.ambiguity_report_catalog`.
 
 Generated studies are under ignored `data/`; scripted logs are under ignored
 `runs/`. Manifests pin source hashes, numerical versions, budget, and limits.
