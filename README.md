@@ -14,6 +14,11 @@ advantage. All 810 development/fresh episodes completed without model/API calls.
 See the [separate opt-in protocol](docs/claim_verification_qoi_protocol.md);
 all previous task versions and saved results are preserved.
 
+The [small 4-/2-credit follow-up](docs/claim_verification_low_budget_results.md)
+uses just 12 development claims. Budget-matched RK2 scores 12/12 at four credits
+and 11/12 at two, so reducing budget alone still leaves a strong fixed solution.
+All 96 CPU episodes completed without model/API calls or new evaluation systems.
+
 **Scientific claim verification:** a separate [predator-prey demo](demos/claim_verification/README.md)
 now provides 30 completed-study variants, three report formats, 5-credit audit
 tools, objective verdict scoring, and fully logged scripted fixtures. Numerical

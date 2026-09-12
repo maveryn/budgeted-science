@@ -90,8 +90,9 @@ def build_catalog(settings, log):
     return studies, catalog
 
 
-def run_episode(study, policy, seed, settings, backend, root):
+def run_episode(study, policy, seed, settings, backend, root, *, policy_runner=None):
     from .policies import run_policy
+    run_policy = policy_runner or run_policy
     log = RunLog(root, policy)
     start = perf_counter()
     episode = Episode(study, settings["budget"], backend, log.event)
@@ -133,7 +134,9 @@ def run_episode(study, policy, seed, settings, backend, root):
               "policy":policy, "policy_seed":seed, "seconds":perf_counter()-start,
               "tool_requests":count, "ledger":episode.ledger, "submission":episode.submission,
               "diagnostics":diagnostics, "api_expenditure":0, "path":str(log.path)}
-    log.write_json("result.json", result)
+    # Publish a complete final result atomically; interrupted temporary files
+    # must not masquerade as a readable completed result during offline review.
+    log.write_json("result.json", result, replace=True)
     log.event("episode_finished", evaluation=episode.evaluate())
     log.close()
     render_episode(log.path)

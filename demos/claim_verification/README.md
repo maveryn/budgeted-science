@@ -20,6 +20,16 @@ too easy to demonstrate an adaptive-auditing advantage. No paid calls were made.
 See the [complete revised protocol](../../docs/claim_verification_qoi_protocol.md).
 The versions and commands below remain unchanged.
 
+The [small budget sweep](../../docs/claim_verification_low_budget_results.md)
+reuses 12 balanced development claims at four and two credits. Its affordable
+fixed RK2 checks score 12/12 and 11/12 respectively; four methods produce 96
+CPU episodes, with no model calls or fresh-system evaluation.
+
+~~~powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_qoi.budget_sweep run
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_qoi.budget_sweep render PATH_TO_SWEEP
+~~~
+
 ## Preserved original versions
 
 Audit a **completed computational study**, not an unknown physical system.
