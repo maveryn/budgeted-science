@@ -360,10 +360,11 @@ scientific credits with a $2 combined model/hosting ceiling. The model writes
 Python in an isolated hosted container; local simulation functions return raw
 files, not precomputed audit results. Existing tools and catalogs are unchanged.
 All API-visible code/output is saved in `python.md` and the raw event archive.
-The [first integration test](../../docs/verification_python_results.md) is preserved
-as incomplete: hosted execution worked, but a runner item-counting error stopped
-the episode before scientific purchases. The fix is verified offline; no paid
-rerun has yet been made.
+The [integration-test report](../../docs/verification_python_results.md) preserves
+the first incomplete attempt and the separately authorized successful fresh run.
+Luna/high wrote its own analysis and correctly rejected the claim, using three
+Python executions and one five-credit simulation purchase. The CPU verifier is
+also correct; the coding interface has not made this case demonstrably harder.
 
 For the newer finite-grid forecast-support toy, use the separate
 `budgeted_science.agents.ambiguity_agent` runner. See its

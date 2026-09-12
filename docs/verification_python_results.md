@@ -1,12 +1,68 @@
-# Hosted-Python predator-prey verification: first integration test
+# Hosted-Python predator-prey verification: integration tests
 
-## Outcome
+## Latest outcome: authorized fresh episode completed
+
+The corrected runner completed one fresh Luna/high episode on the same
+development case. Luna **correctly rejected** the inaccurate claim, spending
+all five scientific credits on one generic high-accuracy simulation purchase.
+The fixed CPU verifier also correctly rejects the claim using five credits.
+
+| Method | Verdict | Correct | Scientific credits |
+|---|---|---|---:|
+| Luna/high, hosted Python | REJECT | Yes | 5/5 |
+| Fixed raw-data CPU verifier | REJECT | Yes | 5/5 |
+
+Luna used three completed Python calls across three model responses:
+
+1. Loaded the public study file.
+2. Inspected the report and original numerical configuration (Euler, step 0.16).
+3. Loaded its purchased rerun, computed both sampled maxima, their discrepancy,
+   and the neighboring samples around the new maximum.
+
+It independently selected DOP853, relative tolerance 1e-12, absolute tolerance
+1e-14, and output spacing 0.0025. The returned trajectory contained 3,201 samples.
+Its Python calculated a maximum of 28.282749553808586 at t=3.355 versus the
+original 30.10709663921399 at t=3.52, a 6.450388% discrepancy. It submitted REJECT
+against the printed claim of 30.10709664 within 5%. No helper computed that
+comparison for it, and no private reference or CPU result entered its context.
+
+The first response again included one unfinished Python call item, which the
+corrected runner preserved without treating it as a completed execution. The
+following turns proceeded successfully. There were no runner errors, invalid
+scientific requests, retries or additional model calls after submission.
+
+Runtime including container/file operations was **42.25 seconds**. Returned usage
+totaled 39,855 input tokens and 2,587 output tokens (2,309 reasoning tokens).
+Model-cost bounds are $0.00991584–$0.0245841. Including the $0.09 conservative
+hosting reserve, the combined upper bound is **$0.1145841**, below the fresh
+episode's $2 ceiling. The reserve is not an actual hosting invoice. All model
+usage was resolved; there are no unknown model reservations.
+
+The original public file and purchased trajectory were archived with matching
+SHA-256 hashes, then the explicit network-disabled container was deleted.
+Offline regeneration reproduced the transcript, Python listing and evaluation
+byte-for-byte without contacting the API or running simulations. The frozen
+source hash still matches the corrected preparation below; no code was changed.
+
+Latest local records:
+[report](../demos/claim_verification/runs/20260912T213930Z-python-live-556c24b977/report.md),
+[transcript](../demos/claim_verification/runs/20260912T213930Z-python-live-556c24b977/transcript.md),
+[Python code/output](../demos/claim_verification/runs/20260912T213930Z-python-live-556c24b977/python.md),
+[raw event log](../demos/claim_verification/runs/20260912T213930Z-python-live-556c24b977/events.jsonl).
+
+This is **one completed demonstration on one previously inspected system**, not
+a held-out performance estimate. The earlier incomplete attempt remains below;
+it is not silently discarded or merged with the new conversation. The coding
+workflow works, but this case still admits a single accurate rerun and does not
+show difficulty or an advantage over the CPU verifier.
+
+## First attempt: preserved incomplete outcome
 
 Hosted Python execution and public-file access worked. The first Luna/high
 episode ended **incomplete because of a runner bookkeeping error**, before a
 scientific purchase or verdict. It is not an accuracy result or evidence that
-the scientific task became difficult. Exactly one live episode was attempted;
-no automatic retry or additional paid model call followed the failure.
+the scientific task became difficult. That turn attempted exactly one live
+episode, with no automatic retry. The fresh run above followed separate approval.
 
 | Method | Outcome | Scientific credits |
 |---|---|---:|
@@ -40,8 +96,8 @@ report now derives that count from the archived response instead of that counter
 The corrected runner counts terminal Python calls toward the execution limit,
 retains nonterminal items unchanged in replay history, and never invents output
 or executes those items locally. Two terminal calls still fail closed. The
-installed OpenAI SDK input schema accepts these nonterminal statuses. This fix
-has offline coverage; **its next live turn has not yet been tested**.
+installed OpenAI SDK input schema accepts these nonterminal statuses. The fix has
+offline coverage and was exercised successfully in the fresh run above.
 
 ## Usage and records
 
@@ -69,7 +125,7 @@ Local ignored artifacts:
   [report](../demos/claim_verification/runs/20260912T212848Z-python-live-7ec0ae611c/report.md),
   [transcript](../demos/claim_verification/runs/20260912T212848Z-python-live-7ec0ae611c/transcript.md),
   [Python items](../demos/claim_verification/runs/20260912T212848Z-python-live-7ec0ae611c/python.md).
-- Corrected preparation (no live launch):
+- Corrected preparation (used for the separately authorized fresh run):
   `demos/claim_verification/runs/20260912T213209Z-python-prepared-9eb48f54b2/`
 - Corrected offline rehearsal:
   `demos/claim_verification/runs/20260912T213405Z-python-dry-run-ae0521b83b/`
@@ -105,5 +161,6 @@ No implementation changes were made after this corrected preparation.
 The new interface supports real agent-authored Python rather than built-in peak
 comparison, but the underlying claim remains solvable by one accurate raw-data
 rerun. Neither difficulty nor adaptive benefit follows from changing the tool
-interface. The next step is one explicitly authorized live attempt using the
-corrected runner, not a larger catalog or a new scientific redesign.
+interface. The completed fresh run confirms the coding-enabled execution loop,
+not a harder benchmark. No additional model episodes or scientific redesign
+are part of this result.

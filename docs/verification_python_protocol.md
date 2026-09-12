@@ -127,6 +127,7 @@ high-accuracy rerun can still solve this claim family. Coding can help the agent
 it need not make the task harder. Success establishes mechanics, not adaptive
 auditing, general code verification, justified confidence or baseline superiority.
 
-See the [first integration-test result](verification_python_results.md): hosted
-Python worked, but a now-fixed item-counting guard stopped the sole live attempt
-before a scientific purchase or verdict. No paid rerun has been performed.
+See the [integration-test results](verification_python_results.md): the first
+attempt stopped on a now-fixed item-counting guard. A separately authorized fresh
+Luna/high episode then completed with a correct REJECT, three Python executions,
+one five-credit simulation purchase, and a $0.115 conservative combined cost bound.

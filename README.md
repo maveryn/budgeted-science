@@ -239,8 +239,10 @@ lets Luna/high write analysis code in an OpenAI sandbox, using public predator-p
 study files and generic raw-trajectory requests. No agent code executes locally.
 Its first test is one existing development case at five scientific credits and a
 $2 combined model/hosting ceiling; this changes the interface, not claim difficulty.
-The [first integration test](docs/verification_python_results.md) executed Python
-successfully but ended before a verdict because of a now-fixed harness guard.
+The [integration tests](docs/verification_python_results.md) preserve the first
+interrupted attempt and a separately authorized successful fresh run: Luna and
+the CPU verifier both correctly reject the claim using five credits. Luna wrote
+its own analysis, but one accurate rerun still suffices for this case.
 
 - CPU-only scientific computation and training; API-hosted agents use a separate
   optional integration. Classical controls run without API credentials.
