@@ -350,6 +350,21 @@ a $2 whole-batch ceiling. Tests/dry-runs never access credentials or paid APIs.
 
 ## Records and limits
 
+### Hosted Python analysis (independent extension)
+
+See the [protocol](../../docs/verification_python_protocol.md). The
+`budgeted_science.agents.verification_python` entry point supports `--prepare`,
+`--dry-run --prepared <directory>`, explicit `--live --prepared <directory>`,
+and `--render <episode-directory>`. One Luna/high development case retains five
+scientific credits with a $2 combined model/hosting ceiling. The model writes
+Python in an isolated hosted container; local simulation functions return raw
+files, not precomputed audit results. Existing tools and catalogs are unchanged.
+All API-visible code/output is saved in `python.md` and the raw event archive.
+The [first integration test](../../docs/verification_python_results.md) is preserved
+as incomplete: hosted execution worked, but a runner item-counting error stopped
+the episode before scientific purchases. The fix is verified offline; no paid
+rerun has yet been made.
+
 For the newer finite-grid forecast-support toy, use the separate
 `budgeted_science.agents.ambiguity_agent` runner. See its
 [protocol and results](../../docs/ambiguity_luna_results.md): two claims at

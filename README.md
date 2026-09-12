@@ -234,6 +234,14 @@ with fewer credits; this remains a working demonstration, not a hard benchmark.
 
 ## Initial implementation principles
 
+The separate [hosted-Python verification prototype](docs/verification_python_protocol.md)
+lets Luna/high write analysis code in an OpenAI sandbox, using public predator-prey
+study files and generic raw-trajectory requests. No agent code executes locally.
+Its first test is one existing development case at five scientific credits and a
+$2 combined model/hosting ceiling; this changes the interface, not claim difficulty.
+The [first integration test](docs/verification_python_results.md) executed Python
+successfully but ended before a verdict because of a now-fixed harness guard.
+
 - CPU-only scientific computation and training; API-hosted agents use a separate
   optional integration. Classical controls run without API credentials.
 - Structured actions executed by trusted numerical tools. No Docker, GPU, or
