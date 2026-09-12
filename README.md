@@ -3,7 +3,9 @@
 The [three-stage study-verification pilot](docs/study_verification_protocol.md)
 adds input processing and output analysis to the transport audit, with objective
 numerical-claim scoring, CPU controls, and a logged Luna/high runner. It preserves
-earlier demos; generated runs remain local and ignored.
+earlier demos; generated runs remain local and ignored. The
+[matched results](docs/study_verification_results.md) include the completed
+12-case Luna/high evaluation and CPU comparisons.
 
 Lightweight testbeds for scientific agents making decisions under resource
 constraints. The goal is to build clear, reproducible decision problems with
