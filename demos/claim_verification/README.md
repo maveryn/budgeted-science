@@ -229,6 +229,16 @@ available run peaks with 1e-9 relative / 1e-12 absolute arithmetic tolerance.
 Other prose and numbers are explicitly ungraded; this does not establish
 diagnosis correctness or evidential sufficiency.
 
+## Three-stage transport study pilot
+
+The independent `budgeted_science.study_verification` package audits input
+normalization, simulation and exposure analysis. It uses 12 development claims
+across two systems, not the older predator-prey catalog. See the
+[protocol and commands](../../docs/study_verification_protocol.md). All claims
+are scored by final numerical error; diagnoses are not semantically graded.
+The optional `budgeted_science.agents.study_catalog` runner uses Luna/high and
+a $2 whole-batch ceiling. Tests/dry-runs never access credentials or paid APIs.
+
 ## Records and limits
 
 Generated studies are under ignored `data/`; scripted logs are under ignored

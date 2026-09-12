@@ -1,5 +1,10 @@
 # Budgeted Science
 
+The [three-stage study-verification pilot](docs/study_verification_protocol.md)
+adds input processing and output analysis to the transport audit, with objective
+numerical-claim scoring, CPU controls, and a logged Luna/high runner. It preserves
+earlier demos; generated runs remain local and ignored.
+
 Lightweight testbeds for scientific agents making decisions under resource
 constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
