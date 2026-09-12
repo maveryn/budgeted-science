@@ -223,6 +223,17 @@ private directory. [Measured results](../docs/burgers_foundation_results.md)
 describe the numerical milestone. That validator includes no API agent, trained
 bank, adaptive-allocation comparison, or model-discrepancy correction.
 
+## MMS verification CPU pilot
+
+The independent `budgeted_science.mms_verification` package implements a CPU-only
+2-D manufactured-solution verification toy, an independently assembled numerical
+kernel, separate original-value/order scoring, a grid-size credit ledger, and
+five transparent policies. It imports only SDK-independent durable logging from
+the agents package. Run `python -m budgeted_science.mms_verification.experiment cpu`;
+see the [protocol](../docs/mms_verification_protocol.md) and
+[six-study results](../docs/mms_verification_results.md). No existing numerical
+environment or model runner behavior is changed.
+
 ## Optional agent integration
 
 `budgeted_science.agents` adds a logged planning adapter, frozen first-run settings,

@@ -257,7 +257,26 @@ available run peaks with 1e-9 relative / 1e-12 absolute arithmetic tolerance.
 Other prose and numbers are explicitly ungraded; this does not establish
 diagnosis correctness or evidential sufficiency.
 
-## Three-stage transport study pilot
+## Manufactured-solution CPU pilot
+
+The separate 2-D `budgeted_science.mms_verification` toy has six development
+studies and three diagnostic families. It scores the original point-value claim
+and a finite-grid near-second-order claim separately. The study-aware CPU rule
+gets 6/6 at 10 credits; the full fixed checklist gets 6/6 at 20 credits. This is
+an executable verification illustration, not a demonstrated difficult benchmark.
+
+```powershell
+python -m budgeted_science.mms_verification.experiment validate
+python -m budgeted_science.mms_verification.experiment cpu
+python -m budgeted_science.mms_verification.experiment render <saved-run-directory>
+```
+
+See the [protocol](../../docs/mms_verification_protocol.md) and
+[results](../../docs/mms_verification_results.md). Runs are unique, local and
+ignored under this demo's `runs/` directory. No API/credential access or changes
+to previous catalogs are included.
+
+## Three-stage transport study pilot (previous experiment)
 
 The independent `budgeted_science.study_verification` package audits input
 normalization, simulation and exposure analysis. It uses 12 development claims

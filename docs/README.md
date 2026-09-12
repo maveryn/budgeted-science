@@ -51,6 +51,13 @@ API accounting bounds. The [runner protocol](claim_verification_incremental_agen
 documents the eight-credit adapter, complete logging, hard $2 whole-batch ceiling,
 and batch-funded resume restrictions. All 417 regression tests passed.
 
+The [MMS verification CPU pilot](mms_verification_results.md) introduces a separate
+2-D manufactured-solution suite with six development studies, two independently
+scored claims and five CPU controls. The study-aware rule solves all six at
+10 credits; no difficult-agent-benchmark claim is made. The
+[protocol](mms_verification_protocol.md) defines numerical assumptions, budgets,
+tools, reproducible commands and records.
+
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
 validation output stays in ignored `tmp/burgers_foundation/`.

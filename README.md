@@ -199,6 +199,15 @@ interaction traces, configuration, software versions, and source hashes under
 are not agent inputs. See [shared interfaces and accounting](shared/README.md)
 for the scientific contract and limitations.
 
+## MMS verification CPU pilot
+
+The separate [six-study MMS verification CPU pilot](docs/mms_verification_results.md)
+uses a 2-D advection-diffusion equation and scores point-value accuracy and a
+finite-grid code-order claim separately. A simple study-aware CPU rule solves
+6/6 at 10 credits; this is a working toy, not yet a difficult agent benchmark.
+See its [protocol and commands](docs/mms_verification_protocol.md). No model calls
+or changes to earlier verification experiments are included.
+
 ## Initial implementation principles
 
 - CPU-only scientific computation and training; API-hosted agents use a separate
