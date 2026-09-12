@@ -2,17 +2,16 @@
 
 ## Execution status
 
-Implementation and offline verification are complete: **412 tests passed**
-(398 root and 14 planning-pilot), and all 35 scripted rehearsal episodes
+Implementation and offline verification are complete: **417 tests passed**
+(403 root and 14 planning-pilot), and all 35 scripted rehearsal episodes
 completed. The rehearsal is saved at
-`demos/claim_verification/runs/20260912T024435Z-luna-incremental-dry-run-0a15c20821/`.
+`demos/claim_verification/runs/20260912T030543Z-luna-incremental-dry-run-2cabf0fe0f/`.
 Its predetermined ACCEPT responses are not model-performance results.
 
-The attempted live launch was blocked by the app's safety approval layer
-**before the process started or any API calls were made**. It requested
-explicit confirmation for all 35 cases, report/tool-result transmission to
-OpenAI, and the $3-per-episode/$105-total worst-case ceiling. No live results
-exist for this revision yet; do not describe the rehearsal as a Luna run.
+The initial live launch was blocked before any process or API calls. The user
+subsequently authorized all 35 cases with a reduced **$2 whole-batch ceiling**.
+The ceiling is not an expected cost. Live results will be reported separately;
+do not describe scripted rehearsals as Luna performance.
 
 ## Frozen task and model
 
@@ -30,7 +29,7 @@ not replaced. Earlier 30-study model runs are different tasks and stay separate.
 | Integration refinement | Halve the selected Euler timestep; cost 3 |
 | Sampling refinement | Bisect selected output intervals; cost 2 |
 | Claim | Original reported population maximum accurate within 5% |
-| API ceiling | $3 per episode; at most $105 across 35 episodes |
+| API ceiling | $2 total across the entire 35-case batch, not per case |
 | Other limits | 30 responses, 30 tool requests, 32,768 output tokens per response, 20 minutes per episode |
 
 Luna supports high reasoning, streaming and function calling. Its documented
@@ -96,6 +95,16 @@ time, output and request limits produce explicit incomplete outcomes. Ordinary
 episode failures remain in the denominator while untouched cases continue.
 Authentication, provenance and accounting problems halt the campaign.
 
+The campaign reserves its remaining dollar allowance durably before each
+sequential episode. That allowance becomes the episode's hard per-request
+spending ceiling. After finalization, measured upper-bound charges and unknown
+request reservations remain committed; only unused allowance becomes available
+to the next case. An unfinalized launch retains its entire reservation. If the
+remaining allowance cannot fund another full-output reservation, the campaign
+stops; it does not lower output limits, retry, or increase the ceiling. The
+scientific task and eight-credit limit are unchanged. API allowances can shrink
+between cases and are saved in each frozen prompt/manifest.
+
 Credentials are read privately from the existing file only in live mode.
 Headers, keys and client objects are not serialized. All raw files remain local
 and ignored by Git. A new campaign never overwrites or silently resumes a run.
@@ -119,13 +128,19 @@ From the repository root, using the existing editable installation and optional
 .\.venv\Scripts\python.exe -B -m budgeted_science.agents.verification_incremental_catalog --live --resume EPISODE_PATH
 ~~~
 
-An explicit resume preserves the exact case, eight-credit ledger, conversation,
+Standalone (non-batch-funded) explicit resume preserves the exact case, eight-credit ledger, conversation,
 API charges/reservations and cumulative limits. It cannot reset a ceiling or
 resume an already-submitted episode. An active or ambiguously interrupted
 process requires inspection; never relaunch it blindly. Resumed child results
 are the same sample and must be reconciled explicitly with a campaign report,
 not counted as an additional independent episode. No automatic campaign restart
 is implemented.
+
+Batch-funded episodes cannot use standalone resume: their unused dollars may
+already have funded later cases. They require an explicit reconciliation of the
+shared ledger before any additional paid work. This guard prevents a saved
+episode ceiling from bypassing the $2 total cap. Logs and offline rendering
+remain available for all incomplete cases.
 
 Verification includes numerical-contract agreement, source/catalog matching,
 private-input isolation, complete history/logging, duplicate protection,

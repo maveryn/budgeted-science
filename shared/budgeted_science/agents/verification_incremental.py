@@ -1,6 +1,8 @@
 """Opt-in eight-credit adapter; original verification defaults stay unchanged."""
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
+import json
+from pathlib import Path
 
 from ..claim_verification_incremental.environment import IncrementalEpisode
 from .verification import (VerificationConfig, VerificationInstance, VerificationEpisode,
@@ -27,6 +29,10 @@ class IncrementalConfig(VerificationConfig):
 @dataclass(frozen=True)
 class IncrementalInstance(VerificationInstance):
     comparison: dict = field(default_factory=dict)
+    batch_scope: dict = field(default_factory=dict)
+
+    def private(self):
+        return {**super().private(), 'batch_scope':deepcopy(self.batch_scope)}
 
 
 def tool_definitions(config=None):
@@ -76,6 +82,9 @@ class IncrementalAdapter:
 
 def prepare_resume(path, mode):
     from .verification_resume import prepare_resume as prepare
+    manifest=json.loads((Path(path)/'manifest.json').read_text(encoding='utf-8'))
+    if manifest['PRIVATE_harness_instance_not_agent_input'].get('batch_scope'):
+        raise ValueError('batch-funded episode cannot resume standalone: reconcile the shared batch allowance first')
     return prepare(path, mode=mode, config_type=IncrementalConfig,
                    instance_type=IncrementalInstance, episode_type=IncrementalAgentEpisode,
                    definitions=tool_definitions)

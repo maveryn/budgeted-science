@@ -1,5 +1,6 @@
 """Offline adapter, matched snapshot, logging and explicit-resume checks."""
 from copy import deepcopy
+from decimal import Decimal
 import json
 from pathlib import Path
 import tempfile
@@ -14,7 +15,7 @@ from budgeted_science.agents.verification_incremental import (
     IncrementalConfig, IncrementalInstance, IncrementalAgentEpisode, IncrementalAdapter,
     prompts, tool_definitions, prepare_resume)
 from budgeted_science.agents.verification_incremental_catalog import (
-    ROOT, CATALOG, read_catalog, render, run_catalog)
+    ROOT, CATALOG, BatchBudget, read_catalog, render, run_catalog)
 from budgeted_science.claim_verification.numerics import Backend
 from budgeted_science.claim_verification.studies import make_study
 from budgeted_science.claim_verification_incremental.environment import IncrementalEpisode
@@ -40,6 +41,35 @@ def fixture():
 
 
 class ContractTests(unittest.TestCase):
+    def test_batch_cap_reserves_before_launch_and_retains_unknown_usage(self):
+        ledger=BatchBudget()
+        self.assertEqual(ledger.reserve(0,Decimal('.04'),'3'),Decimal('2'))
+        with self.assertRaises(ValueError):
+            ledger.reserve(1,Decimal('.04'),'3')
+        self.assertEqual(ledger.status()['remaining_usd'],'0.00')
+        status={'ceiling_usd':'2','committed_upper_usd':'.11',
+                'known_cost_upper_usd':'.01','uncertain_reserved_usd':'.10'}
+        ledger.settle(0,status)
+        with self.assertRaises(ValueError):
+            ledger.reserve(0,Decimal('.04'),'3')
+        self.assertEqual(ledger.reserve(1,Decimal('.04'),'3'),Decimal('1.89'))
+        with self.assertRaises(ValueError):
+            ledger.settle(1,{**status,'ceiling_usd':'1.89','committed_upper_usd':'NaN'})
+        self.assertEqual(ledger.status()['committed_upper_usd'],'2.00')
+
+    def test_batch_cap_refuses_overspend_and_undersized_final_allowance(self):
+        for ceiling in ('3','NaN','Infinity','0','-1'):
+            with self.assertRaises(ValueError):
+                BatchBudget(ceiling)
+        ledger=BatchBudget('.05')
+        ledger.reserve(0,Decimal('.04'),'3')
+        with self.assertRaises(ValueError):
+            ledger.settle(0,{'ceiling_usd':'.05','committed_upper_usd':'.06',
+                            'known_cost_upper_usd':'.06','uncertain_reserved_usd':'0'})
+        ledger.settle(0,{'ceiling_usd':'.05','committed_upper_usd':'.02',
+                        'known_cost_upper_usd':'.02','uncertain_reserved_usd':'0'})
+        self.assertIsNone(ledger.reserve(1,Decimal('.04'),'3'))
+
     def test_frozen_configuration_and_old_defaults(self):
         c=IncrementalConfig()
         self.assertEqual((c.model,c.reasoning_effort,c.scientific_budget),('gpt-5.6-luna','high',8))
@@ -103,6 +133,11 @@ class RunnerTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(summary['overall']['attempts'],2)
             self.assertEqual(summary['overall']['audit_credits'],10)
             self.assertEqual(len(list((path/'slots').glob('*.json'))),2)
+            self.assertEqual(summary['batch_budget']['ceiling_usd'],'2.00')
+            self.assertEqual(summary['batch_budget']['committed_upper_usd'],summary['overall']['api_committed_upper_usd'])
+            slots=[json.loads(p.read_text()) for p in sorted((path/'slots').glob('*.json'))]
+            row=json.loads((path/'results/00.json').read_text())
+            self.assertEqual(Decimal(slots[1]['api_ceiling_usd']),Decimal('2')-Decimal(row['api_upper_usd']))
             original=(path/'report.md').read_bytes()
             with patch.object(Backend,'get',side_effect=AssertionError('render ran solver')):
                 self.assertEqual(render(path),summary)
@@ -145,6 +180,44 @@ class RunnerTests(unittest.IsolatedAsyncioTestCase):
     async def test_live_gateway_override_rejected(self):
         with self.assertRaises(ValueError):
             await run_catalog('unused','unused',mode='live',gateway_factory=lambda i:VerificationGateway())
+
+    async def test_tiny_batch_stops_before_unaffordable_generation(self):
+        gateways=[]
+        def gateway(index):
+            value=VerificationGateway()
+            gateways.append(value)
+            return value
+        with tempfile.TemporaryDirectory() as folder:
+            with patch('budgeted_science.agents.verification_incremental_catalog.read_catalog',return_value=fixture()):
+                path=await run_catalog('fixture',folder,mode='dry-run',batch_ceiling='.0394',gateway_factory=gateway)
+            summary=render(path)
+            self.assertEqual(summary['overall']['attempts'],1)
+            self.assertEqual(summary['overall']['incomplete'],1)
+            self.assertEqual(len(gateways[0].requests),0)
+            self.assertEqual(summary['overall']['api_committed_upper_usd'],'0')
+            row=json.loads((path/'results/00.json').read_text())
+            self.assertEqual(row['termination_reason'],'api_ceiling')
+
+    async def test_crash_preserves_slot_reservation_and_does_not_launch_again(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch('budgeted_science.agents.verification_incremental_catalog.read_catalog',return_value=fixture()), \
+                 patch('budgeted_science.agents.verification_incremental_catalog.run_episode',side_effect=OSError('launcher fixture')) as call:
+                with self.assertRaises(OSError):
+                    await run_catalog('fixture',folder,mode='dry-run')
+                self.assertEqual(call.call_count,1)
+            path=next(Path(folder).iterdir())
+            summary=render(path)
+            self.assertEqual(summary['batch_budget']['unfinalized_slot_reserved_usd'],'2.00')
+            self.assertEqual(summary['batch_budget']['remaining_usd'],'0.00')
+
+    async def test_batch_episode_standalone_resume_is_blocked(self):
+        with tempfile.TemporaryDirectory() as folder:
+            with patch('budgeted_science.agents.verification_incremental_catalog.read_catalog',return_value=fixture()):
+                path=await run_catalog('fixture',folder,mode='dry-run',
+                    gateway_factory=lambda i:VerificationGateway(fail_turn=1))
+            row=json.loads((path/'results/00.json').read_text())
+            with self.assertRaisesRegex(ValueError,'batch-funded'):
+                prepare_resume(path/row['run'],'dry-run')
 
 
 if __name__=='__main__':
