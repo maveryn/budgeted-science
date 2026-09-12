@@ -27,6 +27,27 @@ abstentions, incomplete episodes or retries. Terra remains a one-case result.
 
 ## Run
 
+### Separate incremental-check CPU calibration
+
+The [incremental pilot](../../docs/claim_verification_incremental_results.md)
+keeps the peak claim and 5% tolerance but uses 30 new all-Euler studies and
+8 credits. Integration checks halve the current timestep (3 credits);
+sampling checks bisect current output intervals (2 credits). It does not
+replace the original task described below. Four numerical policies scored
+29/30 each, and same-evidence extrapolation gave 30/30: this is a retained
+development finding, not a successful difficulty increase.
+
+~~~powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_incremental run
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_incremental render PATH_TO_INCREMENTAL_RUN
+~~~
+
+These commands require no OpenAI SDK, credentials or paid calls. The existing
+model adapter still implements the original five-credit instant refinements;
+it has not been connected to the incremental environment.
+
+### Original five-credit task
+
 The optional model runner supports `--inspect`, `--dry-run`, `--live`,
 `--render PATH`, and explicit `--resume PATH` with live/dry mode preserved.
 Its defaults are GPT-5.6 Terra, high reasoning, 5 audit credits, and a cumulative

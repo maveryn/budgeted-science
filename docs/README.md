@@ -33,6 +33,12 @@ The subsequent [Luna/high evaluation](claim_verification_luna_catalog_results.md
 completed all 30 studies with 30/30 correct verdicts, matching the fixed
 numerical verifier at the same 5-credit budget. All raw transcripts remain local.
 
+The separate [incremental-check CPU calibration](claim_verification_incremental_results.md)
+retains a negative design result: four policies each scored 29/30 on 30 new
+all-Euler studies at 8 credits, and numerical extrapolation gave 30/30.
+Incremental tools alone did not create a challenging allocation problem.
+The original model evaluations and five-credit task are unchanged.
+
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
 validation output stays in ignored `tmp/burgers_foundation/`.

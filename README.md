@@ -21,6 +21,13 @@ cost upper bound of USD 0.208. All 30 episodes completed without retry. These
 variants share six development systems and do not establish general verification
 performance or an adaptive-auditing advantage.
 
+A separate [incremental-check CPU calibration](docs/claim_verification_incremental_results.md)
+uses 30 new all-Euler studies and an 8-credit budget. Each check now halves
+the timestep or output spacing. All four policies scored 29/30; same-evidence
+extrapolation gave 30/30. This revision is still too easy to establish an
+allocation challenge. No new model calls were made; original results and
+model-tool contracts remain unchanged.
+
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
 new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget
