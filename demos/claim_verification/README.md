@@ -1,5 +1,15 @@
 # Scientific claim verification: predator-prey toy
 
+## Reconstruction diagnostics and forecast ambiguity
+
+The [latest CPU follow-up](../../docs/verification_reconstruction_and_ambiguity.md)
+keeps original verdict scores intact and evaluates their cited check forecasts.
+It also provides two matched forecast-support cases on one system, with 125
+public parameter candidates (not 125 studies), bounded-error observations and
+mechanically checked evidence. Its finite-grid acceptance does not establish
+continuous identifiability. Commands, resources, results and limitations are
+in the linked report; no new model/API calls are included.
+
 ## Numerical fitting and forecast audit (CPU only)
 
 The separate `budgeted_science.fit_prediction_verification` package replaces

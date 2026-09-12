@@ -1,5 +1,11 @@
 # Numerical fitting and forecast verification: CPU pilot
 
+**Later diagnostic:** [reconstruction rescoring](verification_reconstruction_and_ambiguity.md)
+shows 8/10 accurate checks for adaptive residual versus 6/10 for fixed splitting
+at four credits, despite both getting 10/10 verdicts. Thus, the verdict-only
+result below does not establish that accurate full reconstruction is always
+cheap. The original protocol, scores and logs remain unchanged.
+
 **Outcome:** implemented and tested, but still not a compelling adaptive-audit
 challenge. Fixed-split, full-recompute and adaptive-residual controls each get
 10/10 verdicts at the smallest tested budget of four credits. No paid model run

@@ -1,5 +1,12 @@
 # Budgeted Science
 
+The [verification follow-up](docs/verification_reconstruction_and_ambiguity.md)
+re-scores the saved pilot using its cited forecasts: at four credits, correct
+verdict plus accurate reconstruction is 8/10 for adaptive residual versus 6/10
+for fixed splitting. It also adds a separate two-case, finite-grid forecast
+ambiguity demonstration with checkable evidence. These are CPU diagnostics,
+not new model evaluations; original results are preserved.
+
 The new [numerical fitting-and-forecast verification CPU pilot](docs/fit_prediction_verification_results.md)
 uses ten development studies from two predator-prey systems, with actual
 RHS-work accounting for both stages. Fixed-split and adaptive controls both

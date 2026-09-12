@@ -7,6 +7,12 @@ records, and submission; only a deterministic backend cache may be shared.
 
 ## Completed-study claim verification
 
+`budgeted_science.verification_diagnostics` provides immutable post-hoc forecast
+rescoring and a separate finite-universe ambiguity toy with actual work costs,
+checked rejection witnesses and exhaustive-grid acceptance. See the
+[follow-up report and commands](../docs/verification_reconstruction_and_ambiguity.md).
+It does not change the original claim semantics or earlier tool interfaces.
+
 `budgeted_science.fit_prediction_verification` adds an independent CPU-only
 fit-then-forecast audit: bounded numerical parameter fitting, actual RHS-call
 metering, independent reference checks, ten development studies and six
