@@ -28,6 +28,13 @@ extrapolation gave 30/30. This revision is still too easy to establish an
 allocation challenge. No new model calls were made; original results and
 model-tool contracts remain unchanged.
 
+The [severity-recalibrated follow-up](docs/claim_verification_recalibrated_results.md)
+adds coarser integration and balanced error families, with extrapolation as
+the actual estimator. All four CPU policies scored 35/35 on six fresh systems
+(one additional requested study could not be generated). This removes the
+single-sampling-check shortcut but still does not establish an allocation
+challenge. No new model calls were made.
+
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
 new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget

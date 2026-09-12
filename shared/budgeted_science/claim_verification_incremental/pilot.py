@@ -110,7 +110,7 @@ def commission(log, backend):
     return studies, failures, cells
 
 
-def evaluate_policy(log, study, policy, index, backend):
+def evaluate_policy(log, study, policy, index, backend, *, estimator="last_run"):
     prefix = f"episodes/{index:03d}"
     def record(kind, **data):
         if kind == "numerical_artifact":
@@ -130,7 +130,7 @@ def evaluate_policy(log, study, policy, index, backend):
     try:
         # Substream based only on fixed case order, never observations or labels.
         seed = 10000 + index // len(POLICIES)
-        diagnostics = run_policy(call, policy, seed)
+        diagnostics = run_policy(call, policy, seed, estimator=estimator)
     except Exception as exc:
         episode.abort("CPU policy failure")
         log.event("policy_failure", episode=index, error=log.redactor.error(exc))

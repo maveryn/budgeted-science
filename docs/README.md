@@ -39,6 +39,12 @@ all-Euler studies at 8 credits, and numerical extrapolation gave 30/30.
 Incremental tools alone did not create a challenging allocation problem.
 The original model evaluations and five-credit task are unchanged.
 
+The [severity-recalibrated follow-up](claim_verification_recalibrated_results.md)
+adds balanced integration/sampling/mixed cases and makes extrapolation the
+submitted estimator. All four CPU policies score 35/35 on fresh systems;
+one requested mixed-invalid study remains an explicit commissioning failure.
+No new model evaluation or adaptive-allocation advantage is claimed.
+
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only
 validation output stays in ignored `tmp/burgers_foundation/`.

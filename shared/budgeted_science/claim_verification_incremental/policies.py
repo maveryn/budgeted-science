@@ -40,7 +40,9 @@ def convergence_estimate(records):
             "certified": False}
 
 
-def run_policy(call, policy, seed=0):
+def run_policy(call, policy, seed=0, *, estimator="last_run"):
+    if estimator not in ("last_run", "extrapolation"):
+        raise ValueError("unknown estimator")
     schedules = {"fixed_IIS": ["I", "I", "S"], "fixed_ISS": ["I", "S", "S"],
                  "random": random_schedule(seed), "adaptive_change": ["I", "S"]}
     if policy not in schedules:
@@ -79,14 +81,21 @@ def run_policy(call, policy, seed=0):
         executed.append(action)
     estimate = convergence_estimate(records)
     checked = records[-1]["q"]
+    alternate = None if failure or estimate is None else (
+        "ACCEPT" if abs(reported - estimate["q"]) / abs(estimate["q"]) <= .05 else "REJECT")
     verdict = "ABSTAIN" if failure else ("ACCEPT" if abs(reported - checked) / abs(checked) <= .05 else "REJECT")
+    justification = f"Reported Q={reported:.10g}; {run_id} Q={checked:.17g}. Compare their relative difference with 0.05. This is not a certified bound."
+    if estimator == "extrapolation":
+        verdict = alternate or "ABSTAIN"
+        justification = (f"Reported Q={reported:.10g}. Extrapolation unavailable; abstaining."
+                         if estimate is None else
+                         f"Reported Q={reported:.10g}; extrapolated peak={estimate['q']:.17g}. "
+                         "Compare relative difference with 0.05. Extrapolation assumptions are not certified.")
     evidence = [analysis["id"], *[r["run_id"] for r in records]]
     call("submit", {"verdict": verdict,
          "diagnosis": "Budgeted incremental numerical comparison; residual numerical error remains possible.",
          "evidence_ids": evidence,
-         "justification": f"Reported Q={reported:.10g}; {run_id} Q={checked:.17g}. Compare their relative difference with 0.05. This is not a certified bound."})
-    alternate = None if failure or estimate is None else (
-        "ACCEPT" if abs(reported - estimate["q"]) / abs(estimate["q"]) <= .05 else "REJECT")
+         "justification": justification})
     return {"policy": policy, "planned_initial_actions": schedules[policy], "actions": executed,
             "records": records, "observed_changes": changes, "failure": failure,
             "last_run_q": checked, "extrapolation": estimate, "extrapolated_verdict": alternate}

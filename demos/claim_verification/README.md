@@ -46,6 +46,20 @@ These commands require no OpenAI SDK, credentials or paid calls. The existing
 model adapter still implements the original five-credit instant refinements;
 it has not been connected to the incremental environment.
 
+The [severity-recalibrated follow-up](../../docs/claim_verification_recalibrated_results.md)
+selects valid/invalid integration, sampling and mixed-error studies. It retains
+36 development studies and 35 fresh studies, with one explicit commissioning
+failure. With extrapolation as their actual submitted estimator, all four
+classical policies score 35/35 fresh. The code remains CPU-only:
+
+~~~powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_incremental.recalibrated run
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_incremental.recalibrated render PATH_TO_RECALIBRATED_RUN
+~~~
+
+Each run freezes its rules and creates a unique ignored directory. Earlier
+catalogs, raw results and default commands retain their original behavior.
+
 ### Original five-credit task
 
 The optional model runner supports `--inspect`, `--dry-run`, `--live`,
