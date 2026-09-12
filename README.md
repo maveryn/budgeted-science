@@ -35,11 +35,12 @@ the actual estimator. All four CPU policies scored 35/35 on six fresh systems
 single-sampling-check shortcut but still does not establish an allocation
 challenge. No new model calls were made.
 
-An opt-in [logged Luna/high runner](docs/claim_verification_incremental_agent_protocol.md)
-now supports the recalibrated eight-credit tools, saved CPU comparisons and
-explicit same-episode resume. All 35 cases pass offline rehearsal; the live
-batch is pending explicit scope/data-transfer/spending approval. No new Luna
-performance results are reported yet.
+The [recalibrated Luna/high evaluation](docs/claim_verification_incremental_luna_results.md)
+scored **35/35**, matching all four classical policies. All episodes completed;
+API accounting bounds were **$0.143–$0.396 total**, under a hard $2 batch ceiling.
+Luna used 279 audit credits across the independent episodes. This revision still
+does not establish an allocation challenge. The [logged runner protocol](docs/claim_verification_incremental_agent_protocol.md)
+documents safeguards, complete local records, and restrictions on batch-funded resume.
 
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The

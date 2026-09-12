@@ -10,8 +10,11 @@ Its predetermined ACCEPT responses are not model-performance results.
 
 The initial live launch was blocked before any process or API calls. The user
 subsequently authorized all 35 cases with a reduced **$2 whole-batch ceiling**.
-The ceiling is not an expected cost. Live results will be reported separately;
-do not describe scripted rehearsals as Luna performance.
+The [completed live evaluation](claim_verification_incremental_luna_results.md)
+scored **35/35**, matching all four saved CPU baselines. Recorded API accounting
+bounds were **$0.14324472–$0.39635295**; no usage was unresolved. No retries or
+limit increases were needed. The ceiling was not an expected cost, and scripted
+rehearsals are not model-performance results.
 
 ## Frozen task and model
 

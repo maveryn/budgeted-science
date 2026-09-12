@@ -45,10 +45,11 @@ submitted estimator. All four CPU policies score 35/35 on fresh systems;
 one requested mixed-invalid study remains an explicit commissioning failure.
 No new model evaluation or adaptive-allocation advantage is claimed.
 
-The [incremental Luna runner protocol](claim_verification_incremental_agent_protocol.md)
-documents the completed eight-credit adapter, 35-case offline rehearsal,
-complete logging and explicit resume. Live execution is awaiting explicit
-scope/data-transfer/spending approval; no new model scores are available.
+The [incremental Luna results](claim_verification_incremental_luna_results.md)
+record 35/35 correct, matching all four CPU policies, with $0.143–$0.396 total
+API accounting bounds. The [runner protocol](claim_verification_incremental_agent_protocol.md)
+documents the eight-credit adapter, complete logging, hard $2 whole-batch ceiling,
+and batch-funded resume restrictions. All 417 regression tests passed.
 
 Do not copy credentials, hidden test instances, personal application materials,
 or internal reviewer discussions into this folder. Detailed evaluator-only

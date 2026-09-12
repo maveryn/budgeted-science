@@ -62,11 +62,13 @@ catalogs, raw results and default commands retain their original behavior.
 
 For model evaluation of this revised task, use the separate
 [incremental Luna protocol](../../docs/claim_verification_incremental_agent_protocol.md).
-The adapter and 35-case offline rehearsal are verified; the first live batch
-awaits explicit scope/data-transfer/spending approval. It preserves eight
-scientific credits and supports explicit same-episode resume without resetting
-API usage or purchased evidence. The older model commands below still use the
-original five-credit task.
+The [completed live batch](../../docs/claim_verification_incremental_luna_results.md)
+scored 35/35, matching all four saved CPU policies. It used eight scientific
+credits per case at most and $0.143–$0.396 in total API accounting bounds, below
+the new $2 whole-batch cap. Complete local transcripts and artifacts are linked
+from the results report. Standalone resume is blocked for batch-funded episodes
+until their shared allowance is reconciled. The older model commands below
+still use the original five-credit task.
 
 ### Original five-credit task
 
