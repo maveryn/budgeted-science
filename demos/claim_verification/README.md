@@ -1,5 +1,28 @@
 # Scientific claim verification: predator-prey toy
 
+## Alternative-tool menu experiment
+
+The [matched-menu protocol](../../docs/claim_verification_alternatives_protocol.md)
+retains the original five-credit peak claim and adds three genuine numerical
+alternatives: incremental integration tightening, output bisection and Radau
+cross-checking. Five existing studies receive original and expanded menus, with
+independent budgets. The original successful two-check route remains available.
+
+```powershell
+python -m budgeted_science.agents.verification_alternatives_catalog --cpu
+python -m budgeted_science.agents.verification_alternatives_catalog --dry-run --prepared PATH_TO_CPU_RUN
+python -m budgeted_science.agents.verification_alternatives_catalog --live --prepared PATH_TO_CPU_RUN
+python -m budgeted_science.agents.verification_alternatives_catalog --render PATH_TO_SAVED_RUN
+```
+
+The optional live comparison is Luna/high with ten fresh slots and a **$2 total
+batch ceiling**. Explicit live mode is required; old commands remain unchanged.
+
+The [completed comparison](../../docs/claim_verification_alternatives_results.md)
+scored 5/5 with each menu. Luna used added tools on three of five expanded-menu
+cases, but accuracy and scientific expenditure were unchanged. Total API upper
+bound: $0.073. Full transcripts and CPU diagnostics are linked in the report.
+
 ## Reconstruction diagnostics and forecast ambiguity
 
 The [latest CPU follow-up](../../docs/verification_reconstruction_and_ambiguity.md)

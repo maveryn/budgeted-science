@@ -66,6 +66,12 @@ cost upper bound of USD 0.208. All 30 episodes completed without retry. These
 variants share six development systems and do not establish general verification
 performance or an adaptive-auditing advantage.
 
+The [five-case alternative-tool comparison](docs/claim_verification_alternatives_results.md)
+keeps that original peak claim and adds three genuine numerical choices.
+Luna/high scores 5/5 with both the original and expanded menus, spending five
+credits each; added tools are used on three cases. The entire ten-episode API
+upper bound is $0.073. The fixed verifier also scores 5/5 in both conditions.
+
 A separate [incremental-check CPU calibration](docs/claim_verification_incremental_results.md)
 uses 30 new all-Euler studies and an 8-credit budget. Each check now halves
 the timestep or output spacing. All four policies scored 29/30; same-evidence
