@@ -10,7 +10,11 @@ adds mesh, timestep, scheme and output choices with work-based audit costs.
 It uses 12 development claims across three systems. Balanced, space-focused,
 output-focused and randomized CPU checks score 12/12; time-focused checks score
 9/12. The implementation works, but this catalog still does not demonstrate
-an adaptive-auditing challenge. No model/API calls were made.
+an adaptive-auditing challenge. That CPU pilot made no model/API calls.
+The subsequent [Luna/high evaluation](docs/transport_verification_luna_results.md)
+also scored 12/12, with mean expenditure 3.663 of four audit credits and an API
+accounting upper bound of $0.1601 for the entire batch. All episodes completed;
+correct verdicts do not establish that their explanations were fully accurate.
 
 **Claim-specific verification revision:** the [earlier CPU pilot](docs/claim_verification_qoi_results.md)
 adds peak-height, peak-time, and cumulative-population claims with configurable

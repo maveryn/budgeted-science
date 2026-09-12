@@ -14,6 +14,12 @@ only SDK-independent logging. The [CPU report](../docs/transport_verification_re
 documents the setup, commands and negative difficulty result: several fixed
 rules score 12/12. No previous environment or model interface was changed.
 
+`budgeted_science.agents.transport_catalog` adds a separately logged Luna/high
+adapter for these same twelve claims, with a $2 whole-batch API cap. The
+[completed live run](../docs/transport_verification_luna_results.md) scored 12/12.
+See its [protocol](../docs/transport_verification_agent_protocol.md) for offline
+rehearsal, exact tools, spending protection and report regeneration.
+
 `budgeted_science.claim_verification_qoi` is a separate opt-in CPU revision with
 peak height, peak time, cumulative population, Euler/RK2 checks, work-proxy
 accounting, and independently checked references. Its five CPU policies receive

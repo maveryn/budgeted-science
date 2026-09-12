@@ -5,9 +5,11 @@
 The independent `budgeted_science.transport_verification` module adds 12 claims
 across three 1-D transport systems, general reruns, a four-credit work budget
 and five CPU controls. See [setup, results and commands](../../docs/transport_verification_results.md).
-Several fixed rules still score 12/12, so this catalog does not yet establish
-adaptive-auditing value. No LLM calls were made. The earlier demos below remain
-unchanged.
+Several fixed rules score 12/12. The [subsequent Luna/high run](../../docs/transport_verification_luna_results.md)
+also scored 12/12 under the same four-credit limit; total API upper bound was
+$0.1601. This catalog does not establish adaptive-auditing value. The
+[runner protocol](../../docs/transport_verification_agent_protocol.md) documents
+the $2 whole-batch cap and complete logs. Earlier demos below remain unchanged.
 
 ## Claim-specific revision (CPU only)
 
