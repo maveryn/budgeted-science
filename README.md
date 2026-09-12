@@ -1,5 +1,12 @@
 # Budgeted Science
 
+The [four-study CPU heat-workflow audit](docs/heat_workflow_results.md) tests a
+correct study, premature iteration stopping, incorrect spatial extraction, and
+a mismatch between stated and executed boundary conditions. It is an independent
+small NumPy/SciPy implementation inspired by SimulCost's steady heat problem,
+not execution of the SimulCost package. No model calls or artificial credit cap
+are involved; an inexpensive independent-reconstruction control remains available.
+
 The [verification follow-up](docs/verification_reconstruction_and_ambiguity.md)
 re-scores the saved pilot using its cited forecasts: at four credits, correct
 verdict plus accurate reconstruction is 8/10 for adaptive residual versus 6/10

@@ -1,5 +1,11 @@
 # Shared CPU foundation
 
+`budgeted_science.heat_workflow` is a separate four-study CPU workflow-audit
+prototype. It includes weighted Jacobi, independent sparse assembly, a harmonic
+series reference, inspectable study scripts, two classical controls, and offline
+report regeneration. See [results and commands](../docs/heat_workflow_results.md).
+It uses no model transport and does not change earlier environments.
+
 `budgeted_science` is installable from the repository root with `pip install -e .`.
 It uses Python 3.10+, NumPy, SciPy, and standard-library tests. Shared code never
 imports a demo. Planning and inference each own an episode ledger, purchased

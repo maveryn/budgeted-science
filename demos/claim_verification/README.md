@@ -1,5 +1,25 @@
 # Scientific claim verification: predator-prey toy
 
+## Small CPU heat-workflow audit
+
+The [four-study implementation](../../docs/heat_workflow_results.md) is separate
+from the predator-prey, transport and MMS demos. It tests the complete study
+workflow using a tiny heat-plate problem, including incorrect coordinate
+extraction and boundary configuration. It contains no agent/API runner.
+
+```powershell
+python -m budgeted_science.heat_workflow.experiment validate
+python -m budgeted_science.heat_workflow.experiment run
+python -m budgeted_science.heat_workflow.experiment render PATH_TO_RUN
+```
+
+Each run creates a unique ignored directory here under `runs/`, with four public
+study folders, private evaluation records, eight independent CPU-control traces,
+numerical arrays, source hashes, and a report. Each public `analysis.py` can be
+executed on its neighboring `trajectory.npz`. These are repository-authored
+scripts, not untrusted agent code. No scientific budget cap is imposed; this
+prototype measures workflow errors and records computational work/runtime.
+
 ## MMS alternative-tool comparison
 
 The [MMS menu protocol](../../docs/mms_alternatives_protocol.md) adds affine
