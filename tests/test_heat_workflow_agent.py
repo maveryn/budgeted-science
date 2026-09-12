@@ -11,7 +11,7 @@ from unittest.mock import patch
 import numpy as np
 
 from budgeted_science.agents import heat_workflow_agent as agent
-from budgeted_science.agents.hosted_python import FakeHostedGateway, REQUEST_RESERVE, CONTAINER_RESERVE
+from budgeted_science.agents.hosted_python import FakeHostedGateway, CONTAINER_RESERVE
 from budgeted_science.agents.records import RunLog, read_events
 from budgeted_science.agents.spending import ApiLimit, AccountingUnavailable
 
@@ -29,8 +29,9 @@ def prepared(root):
 
 
 class HeatAdapterTests(unittest.TestCase):
-    def test_only_submit_and_no_prescribed_solver(self):
-        self.assertEqual([t["name"] for t in agent.tools()], ["submit"])
+    def test_control_tools_only_and_no_prescribed_solver(self):
+        self.assertEqual([t["name"] for t in agent.tools()], ["submit", "continue_audit"])
+        self.assertEqual(agent.CONFIG.max_hosted_tool_calls, 2)
         self.assertIsNone(agent.CONFIG.scientific_budget)
         text = json.dumps(agent.prompts({"path": "study.json"}))
         for forbidden in ("premature_stopping", "spatial_extraction", "boundary_mismatch", "0.312029", "Fourier"):
@@ -88,13 +89,14 @@ class HeatAdapterTests(unittest.TestCase):
         money.start_container()
         with self.assertRaises(ApiLimit):
             money.reserve("one", 100)
-        money = agent.CampaignBudget("0.5", live=True)
+        money = agent.CampaignBudget("0.4", live=True)
         money.start_container()
         money.reserve("one", 100)
         with self.assertRaises(AccountingUnavailable):
             money.settle("one", None)
-        self.assertEqual(money.committed, Decimal("0.5")+CONTAINER_RESERVE+REQUEST_RESERVE)
-        self.assertEqual(money.status()["prior_episode_upper_usd"], "0.5")
+        self.assertEqual(money.committed, Decimal("0.4")+CONTAINER_RESERVE+money.request_reserve)
+        self.assertEqual(money.status()["prior_episode_upper_usd"], "0.4")
+        self.assertEqual(money.request_reserve, Decimal("1.4419824"))
 
     def test_container_cannot_cross_total_ceiling(self):
         money = agent.CampaignBudget("1.99", live=True)
@@ -104,7 +106,7 @@ class HeatAdapterTests(unittest.TestCase):
 
     def test_four_isolated_offline_episodes_and_report_regeneration(self):
         instances = []
-        class Fake(FakeHostedGateway):
+        class Fake(agent.ContinuationFixture):
             def __init__(self):
                 super().__init__()
                 instances.append(self)
@@ -113,11 +115,19 @@ class HeatAdapterTests(unittest.TestCase):
                 path = asyncio.run(agent.campaign(frozen, "dry-run", root=root, gateway_factory=Fake))
             result = agent.read_json(path/"summary.json")
             self.assertEqual((result["completed"], result["correct"]), (4, 0))
+            self.assertTrue(all(r["code_calls"] == 3 for r in result["results"]))
             self.assertEqual(len(instances), 4)
             for gateway in instances:
                 self.assertEqual(len(gateway.requests), 2)
                 self.assertEqual(len(gateway.requests[0]["input"]), 2)
                 self.assertEqual(gateway.requests[0]["reasoning"]["effort"], "high")
+                self.assertEqual(gateway.requests[0]["max_tool_calls"], 2)
+                history = gateway.requests[1]["input"]
+                self.assertTrue(any(i.get("type") == "function_call_output" and
+                                    json.loads(i["output"]).get("status") == "continue" for i in history))
+                self.assertEqual(sum(i.get("type") == "code_interpreter_call" for i in history), 2)
+                self.assertEqual(gateway.requests[0]["tools"][-1]["container"],
+                                 gateway.requests[1]["tools"][-1]["container"])
                 self.assertNotIn("PRIVATE_MARKER", json.dumps(gateway.requests))
             before = (path/"report.md").read_bytes()
             with patch.object(agent.transport, "run", side_effect=AssertionError("renderer must not run")):
@@ -137,7 +147,8 @@ class HeatAdapterTests(unittest.TestCase):
             path = asyncio.run(agent.campaign(frozen, "dry-run", root=root, gateway_factory=Broken))
             result = agent.read_json(path/"summary.json")
             self.assertEqual(len(result["results"]), 1)
-            self.assertEqual(Decimal(result["committed_upper_usd"]), REQUEST_RESERVE+CONTAINER_RESERVE)
+            self.assertEqual(Decimal(result["committed_upper_usd"]),
+                             agent.CampaignBudget(0, True).request_reserve+CONTAINER_RESERVE)
             self.assertEqual(result["completed"], 0)
             episode = path/result["results"][0]["relative_path"]
             self.assertIn("partial code", (episode/"transcript.md").read_text())
@@ -156,6 +167,86 @@ class HeatAdapterTests(unittest.TestCase):
             (frozen/"manifest.json").write_text(json.dumps(manifest))
             with self.assertRaises(ValueError):
                 asyncio.run(agent.campaign(frozen, "dry-run", root=root))
+
+    def test_continue_is_free_nonterminal_and_deduplicated(self):
+        with tempfile.TemporaryDirectory() as root:
+            log = RunLog(root, "test")
+            episode = agent.PythonEpisode({"private": {"truth": {"verdict": "ACCEPT"}}}, log)
+            call = {"name": "continue_audit", "call_id": "continue-1", "arguments": "{}"}
+            first = episode.execute(call)
+            self.assertEqual(first["status"], "continue")
+            self.assertEqual(episode.execute(call), first)
+            self.assertIsNone(episode.submission)
+            log.close()
+            events, _ = read_events(log.path)
+            self.assertEqual(sum(e["kind"] == "audit_continuation_requested" for e in events), 1)
+
+    def test_correct_submit_with_two_completed_calls_is_accepted(self):
+        # Shape of the captured fourth failure: two completed, two nonterminal
+        # CI items and a final REJECT. Opaque contents below are synthetic.
+        class CapturedShape(FakeHostedGateway):
+            async def stream(self, body, metadata):
+                async for event in super().stream(body, metadata):
+                    if event["type"] == "response.completed":
+                        first = event["response"]["output"][0]
+                        event["response"]["output"] = [first,
+                            {**first, "id": "ci_two", "code": "print('second')"},
+                            {**first, "id": "ci_pending", "status": "interpreting", "outputs": []},
+                            {**first, "id": "ci_pending2", "status": "interpreting", "outputs": []},
+                            {"type": "function_call", "call_id": "reject", "id": "fc",
+                             "name": "submit", "arguments": json.dumps({"verdict": "REJECT", "diagnosis": "fixture",
+                             "evidence_ids": [], "justification": "fixture"})}]
+                    yield event
+        with tempfile.TemporaryDirectory() as root, prepared(root) as frozen:
+            path = asyncio.run(agent.campaign(frozen, "dry-run", root=root, gateway_factory=CapturedShape))
+            result = agent.read_json(path/"summary.json")
+            self.assertEqual(result["completed"], 4)
+            self.assertEqual(result["correct"], 3)
+            self.assertTrue(all(r["code_calls"] == 2 for r in result["results"]))
+
+    def test_three_completed_calls_stop_but_are_logged_and_counted(self):
+        class Excess(agent.ContinuationFixture):
+            async def stream(self, body, metadata):
+                async for event in super().stream(body, metadata):
+                    if event["type"] == "response.completed":
+                        event["response"]["output"].append({**event["response"]["output"][0], "id": "ci_three"})
+                    yield event
+        with tempfile.TemporaryDirectory() as root, prepared(root) as frozen:
+            path = asyncio.run(agent.campaign(frozen, "dry-run", root=root, gateway_factory=Excess))
+            result = agent.read_json(path/"summary.json")
+            self.assertEqual(result["status"], "halted_hosted_tool_limit_violation")
+            self.assertEqual(len(result["results"]), 1)
+            self.assertEqual(result["results"][0]["code_calls"], 3)
+            self.assertFalse(result["results"][0]["evaluation"]["completed"])
+            episode = path/result["results"][0]["relative_path"]
+            self.assertEqual(len(list((episode/"code").glob("*.json"))), 3)
+
+    def test_genuine_final_abstention_not_forced_to_continue(self):
+        class Abstain(FakeHostedGateway):
+            def __init__(self):
+                super().__init__()
+                self.index = 1  # Its first response is a final submit, without code.
+        with tempfile.TemporaryDirectory() as root, prepared(root) as frozen:
+            path = asyncio.run(agent.campaign(frozen, "dry-run", root=root, gateway_factory=Abstain))
+            rows = agent.read_json(path/"summary.json")["results"]
+            self.assertTrue(all(r["model_responses"] == 1 and r["evaluation"]["verdict"] == "ABSTAIN" for r in rows))
+
+    def test_old_protocol_rejected_without_rewriting_it(self):
+        with tempfile.TemporaryDirectory() as root, prepared(root) as frozen:
+            path = frozen/"cases/study-0/manifest.json"
+            manifest = agent.read_json(path)
+            manifest["version"] = "heat-python-1"
+            path.write_text(json.dumps(manifest))
+            with self.assertRaises(ValueError):
+                agent.load_prepared(path.parent)
+            self.assertEqual(agent.read_json(path)["version"], "heat-python-1")
+
+    def test_mismatched_spending_and_call_allowance_fails_before_network(self):
+        from budgeted_science.agents.hosted_python import HostedBudget
+        with tempfile.TemporaryDirectory() as root, prepared(root) as frozen:
+            with self.assertRaises(ValueError):
+                asyncio.run(agent.transport.run(frozen/"cases/study-0", "dry-run", root=root,
+                            protocol=agent, money=HostedBudget(), gateway=FakeHostedGateway()))
 
 
 if __name__ == "__main__":

@@ -377,9 +377,11 @@ with `prepare`, `dry-run <prepared>`, explicit `live <prepared>`, and
 `render <campaign>` commands. Four isolated Luna/high episodes share a $2 total
 model/hosting ceiling, with no scientific-credit cap. The
 [first attempt and complete logs](../../docs/heat_workflow_luna_results.md) record
-three abstentions and one tool-limit interruption. Fix the continuation
-interface before treating a rerun as a scientific evaluation; do not retry old
-attempts or reuse their outcomes as evidence of task difficulty.
+three abstentions and one tool-limit interruption. The
+[separately authorized revised run](../../docs/heat_workflow_luna_continuation_results.md)
+uses two Python calls per response and `continue_audit` to preserve the session
+across responses. It completed all four claims correctly, with a $0.394 total
+upper bound. Old attempts are preserved and are not evidence of task difficulty.
 
 See the [protocol](../../docs/verification_python_protocol.md). The
 `budgeted_science.agents.verification_python` entry point supports `--prepare`,

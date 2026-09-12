@@ -12,6 +12,11 @@ ended with three abstentions and one tool-limit interruption across those four
 studies. Its combined model/hosting accounting bound was $0.380. This exposed an
 interface failure before scientific auditing, not a harder benchmark.
 
+After an explicit continuation fix, the [fresh Luna/high rerun](docs/heat_workflow_luna_continuation_results.md)
+completed all four studies with correct verdicts (4/4), matching independent
+reconstruction, at a $0.394 combined upper bound. The interaction now works;
+these four development studies still do not establish a difficult benchmark.
+
 The [verification follow-up](docs/verification_reconstruction_and_ambiguity.md)
 re-scores the saved pilot using its cited forecasts: at four credits, correct
 verdict plus accurate reconstruction is 8/10 for adaptive residual versus 6/10

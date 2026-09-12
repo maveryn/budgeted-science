@@ -26,7 +26,13 @@ REQUEST_RESERVE = (Decimal(MAX_BILLED_INPUT)*Decimal("0.50")
 
 
 class HostedBudget:
-    def __init__(self, live=True):
+    def __init__(self, live=True, *, max_tool_calls=MAX_TOOL_CALLS):
+        if type(max_tool_calls) is not int or not 1 <= max_tool_calls <= 2:
+            raise ValueError("supported hosted-call allowance is 1 or 2")
+        self.max_tool_calls = max_tool_calls
+        self.max_billed_input = 922000 * (max_tool_calls + 1)
+        self.request_reserve = (Decimal(self.max_billed_input)*Decimal("0.50")
+                                + Decimal(MAX_OUTPUT)*Decimal("1.80"))/1_000_000
         self.live, self.container_attempted = live, False
         self.known, self.pending, self.measured = Decimal(0), {}, []
 
@@ -40,9 +46,9 @@ class HostedBudget:
             raise AccountingUnavailable("invalid_or_excessive_input_count")
         if request_id in self.pending or any(r["request_id"] == request_id for r in self.measured):
             raise AccountingUnavailable("duplicate_generation")
-        if self.committed + REQUEST_RESERVE > Decimal("2.00"):
+        if self.committed + self.request_reserve > Decimal("2.00"):
             raise ApiLimit("api_ceiling")
-        self.pending[request_id] = REQUEST_RESERVE
+        self.pending[request_id] = self.request_reserve
 
     @property
     def committed(self):
@@ -71,11 +77,13 @@ class HostedBudget:
             "standard_cost_lower_usd": str(lower), "conservative_cost_upper_usd": str(upper)})
         self.known += upper
         del self.pending[request_id]
-        if inputs > MAX_BILLED_INPUT or outputs > MAX_OUTPUT or self.committed > 2:
+        if inputs > self.max_billed_input or outputs > MAX_OUTPUT or self.committed > 2:
             raise AccountingUnavailable("usage_exceeded_reservation")
 
     def status(self):
         return {"ceiling_usd": "2.00", "known_model_upper_usd": str(self.known),
+            "max_hosted_tool_calls": self.max_tool_calls,
+            "maximum_request_reserve_usd": str(self.request_reserve),
             "unknown_model_reserved_usd": str(sum(self.pending.values(), Decimal(0))),
             "container_upper_reserved_usd": str(CONTAINER_RESERVE if self.container_attempted else 0),
             "committed_upper_usd": str(self.committed), "measured_responses": deepcopy(self.measured),
@@ -94,7 +102,7 @@ def replay_hosted(item, container_id):
     return deepcopy({key: item[key] for key in fields})
 
 
-def hosted_activity(output):
+def hosted_activity(output, max_tool_calls=MAX_TOOL_CALLS):
     """A final response may retain a nonterminal item for an over-limit attempt.
 
     Count terminal executions, not every emitted call item. Preserve nonterminal
@@ -103,7 +111,7 @@ def hosted_activity(output):
     items = [item for item in output if item.get("type") == "code_interpreter_call"]
     terminal = [item for item in items if item.get("status") in ("completed", "failed", "incomplete")]
     pending = [item for item in items if item.get("status") in ("interpreting", "in_progress")]
-    if len(terminal) > MAX_TOOL_CALLS:
+    if len(terminal) > max_tool_calls:
         raise StopEpisode("hosted_tool_limit_violation")
     return items, terminal, pending
 

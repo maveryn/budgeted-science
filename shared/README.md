@@ -10,6 +10,9 @@ The separate `budgeted_science.agents.heat_workflow_agent` adapter reuses the
 hosted-Python transport with four isolated episodes and a $2 combined ceiling.
 The [first live attempt](../docs/heat_workflow_luna_results.md) failed at the
 tool-limit/continuation interface; it is not a scientific-performance result.
+The [revised two-call/continuation interaction](../docs/heat_workflow_luna_continuation_results.md)
+completed a fresh four-case Luna/high run with 4/4 correct verdicts. Historical
+one-call defaults remain unchanged for the older predator-prey adapter.
 
 `budgeted_science` is installable from the repository root with `pip install -e .`.
 It uses Python 3.10+, NumPy, SciPy, and standard-library tests. Shared code never

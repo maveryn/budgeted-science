@@ -195,7 +195,11 @@ async def run(prepared, mode, root=RUNS, gateway=None, *, protocol=None, money=N
         raise ValueError("explicit execution mode required")
     frozen, study, comparison = protocol.load_prepared(prepared)
     log = RunLog(root, getattr(protocol, "RUN_LABEL", "python")+"-"+mode)
-    money = money if money is not None else HostedBudget(live=mode == "live")
+    max_tool_calls = getattr(config, "max_hosted_tool_calls", MAX_TOOL_CALLS)
+    money = money if money is not None else HostedBudget(live=mode == "live", max_tool_calls=max_tool_calls)
+    if money.max_tool_calls != max_tool_calls:
+        log.close()
+        raise ValueError("hosted tool allowance and spending reservation must match")
     episode = protocol.PythonEpisode(study, log)
     manifest = {**frozen, "mode": mode, "started_utc": utc_now(), "prepared": str(prepared),
                 "termination_reason": "running", "public_configuration": config.public()}
@@ -254,7 +258,7 @@ async def run(prepared, mode, root=RUNS, gateway=None, *, protocol=None, money=N
         for index in range(1, config.max_responses+1):
             request_id = f"generation-{index:03d}"
             body = generation_body(config, history, definitions)
-            body.update(max_tool_calls=MAX_TOOL_CALLS,
+            body.update(max_tool_calls=max_tool_calls,
                         include=["reasoning.encrypted_content", "code_interpreter_call.outputs"])
             count_body = count_payload(body)
             log.write_json(f"api/{request_id}-count-request.json", count_body)
@@ -287,14 +291,17 @@ async def run(prepared, mode, root=RUNS, gateway=None, *, protocol=None, money=N
                 raise StopEpisode("malformed_model_output")
             if any(c.get("type") == "refusal" for i in output for c in (i.get("content") or [])):
                 raise StopEpisode("refusal")
-            hosted, terminal, pending = hosted_activity(output)
-            code_calls += len(terminal)
+            # Save and count returned terminal executions even when a guard stops
+            # the episode. Never silently report zero for already executed calls.
+            returned_hosted = [i for i in output if i.get("type") == "code_interpreter_call"]
+            code_calls += sum(i.get("status") in ("completed", "failed", "incomplete") for i in returned_hosted)
+            for item_index, item in enumerate(returned_hosted):
+                log.write_json(f"code/{request_id}-{item_index:02d}.json", item)
+            hosted, terminal, pending = hosted_activity(output, max_tool_calls=max_tool_calls)
             if pending:
                 log.event("hosted_nonterminal_items", request_id=request_id,
                           items=pending, note="Preserved as returned; no execution or output inferred.")
             history.extend(replay_hosted(item, container_id) for item in output)
-            for item_index, item in enumerate(hosted):
-                log.write_json(f"code/{request_id}-{item_index:02d}.json", item)
             calls = [i for i in output if i.get("type") == "function_call"]
             if not calls and not hosted:
                 raise StopEpisode("no_submission")
