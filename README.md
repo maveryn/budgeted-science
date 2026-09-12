@@ -207,6 +207,15 @@ for the scientific contract and limitations.
 
 ## MMS verification CPU pilot
 
+The [matched MMS menu protocol](docs/mms_alternatives_protocol.md) adds an
+affine manufactured test, an alternative algebraic solver, and free Richardson
+extrapolation. It compares six original-menu and six expanded-menu Luna/high
+episodes at ten scientific credits, with a **$2 total batch API ceiling**.
+Existing MMS commands, cases, claims, and saved results remain unchanged.
+The [completed matched comparison](docs/mms_alternatives_results.md) scored
+6/6 with both menus. Luna used only the free Richardson addition (five cases),
+not the two paid alternatives; the task remained easy. API upper bound: $0.268.
+
 The separate [six-study MMS verification CPU pilot](docs/mms_verification_results.md)
 uses a 2-D advection-diffusion equation and scores point-value accuracy and a
 finite-grid code-order claim separately. A simple study-aware CPU rule solves

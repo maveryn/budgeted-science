@@ -1,5 +1,29 @@
 # Scientific claim verification: predator-prey toy
 
+## MMS alternative-tool comparison
+
+The [MMS menu protocol](../../docs/mms_alternatives_protocol.md) adds affine
+manufactured tests, same-operator ILU-GMRES checks, and Richardson extrapolation
+to the existing 2-D toy. It preserves both claims and the ten-credit limit.
+Six cases receive each menu in fresh Luna/high episodes, with **$2 total**.
+
+```powershell
+python -m budgeted_science.agents.mms_alternatives_catalog --cpu
+python -m budgeted_science.agents.mms_alternatives_catalog --dry-run --prepared PATH_TO_CPU_RUN
+python -m budgeted_science.agents.mms_alternatives_catalog --live --prepared PATH_TO_CPU_RUN
+python -m budgeted_science.agents.mms_alternatives_catalog --render PATH_TO_SAVED_BATCH
+```
+
+CPU/dry-run commands never read credentials or call the API. Live mode requires
+explicit authorization. The original complete CPU route remains available;
+adding alternative checks is not assumed to make the task difficult.
+
+The [completed MMS comparison](../../docs/mms_alternatives_results.md) scored
+both claims correctly on 6/6 studies with either menu. Richardson was used on
+five expanded-menu cases; neither new paid check was called. The full batch's
+API upper bound was $0.268. All twelve transcripts and CPU diagnostics are
+linked in the report.
+
 ## Alternative-tool menu experiment
 
 The [matched-menu protocol](../../docs/claim_verification_alternatives_protocol.md)
