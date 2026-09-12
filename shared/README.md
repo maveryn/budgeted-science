@@ -7,6 +7,13 @@ records, and submission; only a deterministic backend cache may be shared.
 
 ## Completed-study claim verification
 
+`budgeted_science.fit_prediction_verification` adds an independent CPU-only
+fit-then-forecast audit: bounded numerical parameter fitting, actual RHS-call
+metering, independent reference checks, ten development studies and six
+classical controls. [Results and commands](../docs/fit_prediction_verification_results.md)
+retain the negative finding: fixed-split and adaptive policies both score
+10/10 even at four credits. Earlier packages and agent interfaces are unchanged.
+
 `budgeted_science.transport_verification` is an independent, opt-in linear
 transport PDE toy with finite differences, analytic image/Fourier reference
 checks, work-accounted general reruns and 12 development claims. It reuses

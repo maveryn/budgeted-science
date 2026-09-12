@@ -1,5 +1,11 @@
 # Budgeted Science
 
+The new [numerical fitting-and-forecast verification CPU pilot](docs/fit_prediction_verification_results.md)
+uses ten development studies from two predator-prey systems, with actual
+RHS-work accounting for both stages. Fixed-split and adaptive controls both
+score 10/10 at four credits: this remains a mechanics demonstration, not an
+established adaptive-auditing challenge. No new model/API calls were made.
+
 The [three-stage study-verification pilot](docs/study_verification_protocol.md)
 adds input processing and output analysis to the transport audit, with objective
 numerical-claim scoring, CPU controls, and a logged Luna/high runner. It preserves

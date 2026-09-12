@@ -1,5 +1,23 @@
 # Scientific claim verification: predator-prey toy
 
+## Numerical fitting and forecast audit (CPU only)
+
+The separate `budgeted_science.fit_prediction_verification` package replaces
+the earlier trivial preprocessing stage with numerical parameter fitting.
+Both fitting and forecasting consume metered RHS work. Ten development studies
+share two systems; six controls run at three caps. Fixed-split and adaptive
+controls both score 10/10 at four credits, so no further paid run was launched.
+See the [full setup, results, limitations and traces](../../docs/fit_prediction_verification_results.md).
+
+```powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.fit_prediction_verification.experiment cpu
+.\.venv\Scripts\python.exe -B -m budgeted_science.fit_prediction_verification.experiment render --path PATH_TO_RUN
+```
+
+Run these commands from the repository root. The second command regenerates
+saved reports and policy transcripts offline. There is no model adapter for
+this revision. Original studies, old runners and saved results remain unchanged.
+
 ## Small transport PDE experiment
 
 The independent `budgeted_science.transport_verification` module adds 12 claims
