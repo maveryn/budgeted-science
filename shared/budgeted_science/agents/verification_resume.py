@@ -12,7 +12,8 @@ from .spending import ApiBudget, pricing_for_model
 from .verification import VerificationConfig, VerificationInstance, VerificationEpisode, tool_definitions
 
 
-def prepare_resume(parent, *, mode):
+def prepare_resume(parent, *, mode, config_type=VerificationConfig, instance_type=VerificationInstance,
+                   episode_type=VerificationEpisode, definitions=tool_definitions):
     from .runner import replay_output_item
     parent = Path(parent).resolve()
     manifest = read_json(parent, "manifest.json")
@@ -20,7 +21,7 @@ def prepare_resume(parent, *, mode):
         raise ValueError("active/unfinalized attempt requires manual audit")
     if manifest["mode"] != mode or (parent / "resume_claim.json").exists():
         raise ValueError("mode changed or this attempt already has a continuation")
-    config = VerificationConfig(**manifest["public_configuration"])
+    config = config_type(**manifest["public_configuration"])
     if manifest["pricing"] != pricing_for_model(config.model):
         raise ValueError("pricing changed")
     for name in ("numpy", "scipy"):
@@ -28,19 +29,20 @@ def prepare_resume(parent, *, mode):
             raise ValueError("numerical dependency changed")
     repo = Path(__file__).resolve().parents[3]
     for relative, expected in manifest["source_hashes"].items():
-        if ("/claim_verification/" in relative or relative.startswith("shared/budgeted_science/agents/")
+        if ("/claim_verification/" in relative or "/claim_verification_incremental/" in relative
+                or relative.startswith("shared/budgeted_science/agents/")
                 or relative.endswith("resource_planning/environment.py")):
             if hashlib.sha256((repo / relative).read_bytes()).hexdigest() != expected:
                 raise ValueError("saved implementation changed; resume requires review")
     messages, tools = read_json(parent, "prompts.json"), read_json(parent, "tools.json")
     if (digest(messages) != manifest["prompt_hash"] or digest(tools) != manifest["tool_schema_hash"]
-            or tools != tool_definitions(config)):
+            or tools != definitions(config)):
         raise ValueError("frozen prompt or tools changed")
     study = read_json(parent, "private/verification-study.json")
     private = manifest["PRIVATE_harness_instance_not_agent_input"]
     if digest(study) != private["study_hash"] or study["case_id"] != private["case_id"]:
         raise ValueError("private case identity changed")
-    instance = VerificationInstance(study, private["catalog_path"], private["catalog_digest"], private["selection"])
+    instance = instance_type(study, private["catalog_path"], private["catalog_digest"], private["selection"])
     events, torn = read_events(parent)
     if torn:
         raise ValueError("torn event log requires manual audit")
@@ -55,7 +57,7 @@ def prepare_resume(parent, *, mode):
            and e.get("role") == "agent" for e in events):
         raise ValueError("uncheckpointed tool execution cannot be repeated")
     # Restoration performs validation but no solver calls or writes.
-    restored = VerificationEpisode.restore(config, instance, None, None, saved)
+    restored = episode_type.restore(config, instance, None, None, saved)
     if restored.budget_status() != final["evaluation"]["scientific_status"]:
         raise ValueError("checkpoint and final budget disagree")
     if saved["request_count"] >= config.max_tool_requests:
@@ -100,7 +102,7 @@ def prepare_resume(parent, *, mode):
         raise ValueError("original response or active-time limit exhausted")
     message = {"role": "user", "content":
                f"Continue the SAME interrupted audit with its purchased evidence and history. "
-               f"Remaining audit credits: {restored.environment.remaining:g} of 5. "
+               f"Remaining audit credits: {restored.environment.remaining:g} of {config.scientific_budget}. "
                f"Cumulative API ceiling remains USD {config.api_ceiling_usd}, including earlier "
                "usage and uncertain reservations. Do not repurchase or start over. "
                "Submission is allowed at any spend; there is no full-budget requirement."}

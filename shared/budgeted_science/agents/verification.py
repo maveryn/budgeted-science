@@ -125,11 +125,13 @@ Original report:
 
 
 class VerificationEpisode:
+    environment_class = Episode
+
     def __init__(self, config, instance, log, deadline=None, *, archive=True):
         self.config, self.instance, self.log, self.deadline = config, instance, log, deadline
         self.executed, self.request_count, self.parent_call = {}, 0, None
         self.schemas = {t["name"]: t["parameters"] for t in tool_definitions(config)}
-        self.environment = Episode(instance.study, credits=5, log=self._record)
+        self.environment = self.environment_class(instance.study, credits=config.scientific_budget, log=self._record)
         if archive:
             log.write_json("private/verification-study.json", instance.study)
             for key, value in self.environment.artifacts.items():
@@ -224,7 +226,7 @@ class VerificationEpisode:
                 raise ValueError("invalid or interrupted scientific purchase")
         keys = {cache_key(instance.study["private"]["theta"], run["config"]): key
                 for key, run in env["runs"].items()}
-        if keys != env["keys"] or sum(e["charge"] for e in env["ledger"]) > 5:
+        if keys != env["keys"] or sum(e["charge"] for e in env["ledger"]) > config.scientific_budget:
             raise ValueError("cache or ledger mismatch")
         if not 0 <= saved["request_count"] <= config.max_tool_requests:
             raise ValueError("invalid request count")

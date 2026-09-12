@@ -35,6 +35,12 @@ the actual estimator. All four CPU policies scored 35/35 on six fresh systems
 single-sampling-check shortcut but still does not establish an allocation
 challenge. No new model calls were made.
 
+An opt-in [logged Luna/high runner](docs/claim_verification_incremental_agent_protocol.md)
+now supports the recalibrated eight-credit tools, saved CPU comparisons and
+explicit same-episode resume. All 35 cases pass offline rehearsal; the live
+batch is pending explicit scope/data-transfer/spending approval. No new Luna
+performance results are reported yet.
+
 **Harder planning toy (v2):** doubled parameter-range widths, noisy observations,
 5% parameter tolerance, and a paid-data-only local least-squares baseline. The
 new baseline passed 28/40 fresh cases, versus 0/40 for each GP control. The budget

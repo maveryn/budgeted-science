@@ -60,6 +60,14 @@ classical policies score 35/35 fresh. The code remains CPU-only:
 Each run freezes its rules and creates a unique ignored directory. Earlier
 catalogs, raw results and default commands retain their original behavior.
 
+For model evaluation of this revised task, use the separate
+[incremental Luna protocol](../../docs/claim_verification_incremental_agent_protocol.md).
+The adapter and 35-case offline rehearsal are verified; the first live batch
+awaits explicit scope/data-transfer/spending approval. It preserves eight
+scientific credits and supports explicit same-episode resume without resetting
+API usage or purchased evidence. The older model commands below still use the
+original five-credit task.
+
 ### Original five-credit task
 
 The optional model runner supports `--inspect`, `--dry-run`, `--live`,

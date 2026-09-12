@@ -7,10 +7,12 @@ from .reporting import _write, regenerate as generic_regenerate
 
 def write_report(path, manifest, events, finished, status):
     c = manifest["public_configuration"]
+    incremental = c['task_variant'] == 'claim_verification_incremental'
     report = ["# Claim verification agent evaluation", "",
               f"Mode: {manifest['mode']}. Model: {c['model']}. Reasoning: {c['reasoning_effort']}.",
-              f"Termination: {status}. Scientific budget: 5. API ceiling: USD {c['api_ceiling_usd']}.", "",
-              "One development case, not evidence of general verification ability. "
+              f"Termination: {status}. Scientific budget: {c['scientific_budget']}. API ceiling: USD {c['api_ceiling_usd']}.", "",
+              ("One recalibrated study, not evidence of general verification ability. " if incremental else
+               "One development case, not evidence of general verification ability. ") +
               "The original claim is scored; explanation quality is not semantically graded.", ""]
     if manifest["mode"] == "dry-run":
         report += ["**Scripted offline fixture: actual API cost is zero; token accounting below is synthetic.**", ""]
@@ -20,7 +22,8 @@ def write_report(path, manifest, events, finished, status):
                    f"| Model / scripted fake | {e['verdict']} | {e['correct']} | {e['spent']:g} |"]
         if b:
             be = b["evaluation"]
-            report.append(f"| Fixed two-check verifier | {be['verdict']} | {be['correct']} | {be['spent']:g} |")
+            label = 'Saved fixed IIS + extrapolation' if incremental else 'Fixed two-check verifier'
+            report.append(f"| {label} | {be['verdict']} | {be['correct']} | {be['spent']:g} |")
         report += ["", "## Actual submission", "", "~~~json",
                    json_text(next((x["output"]["result"]["submission"] for x in reversed(events)
                                    if x["kind"] == "tool_result" and x.get("role") == "agent"
