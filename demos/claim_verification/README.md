@@ -372,6 +372,15 @@ a $2 whole-batch ceiling. Tests/dry-runs never access credentials or paid APIs.
 
 ### Hosted Python analysis (independent extension)
 
+The heat-workflow counterpart uses `budgeted_science.agents.heat_workflow_agent`
+with `prepare`, `dry-run <prepared>`, explicit `live <prepared>`, and
+`render <campaign>` commands. Four isolated Luna/high episodes share a $2 total
+model/hosting ceiling, with no scientific-credit cap. The
+[first attempt and complete logs](../../docs/heat_workflow_luna_results.md) record
+three abstentions and one tool-limit interruption. Fix the continuation
+interface before treating a rerun as a scientific evaluation; do not retry old
+attempts or reuse their outcomes as evidence of task difficulty.
+
 See the [protocol](../../docs/verification_python_protocol.md). The
 `budgeted_science.agents.verification_python` entry point supports `--prepare`,
 `--dry-run --prepared <directory>`, explicit `--live --prepared <directory>`,

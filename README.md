@@ -7,6 +7,11 @@ small NumPy/SciPy implementation inspired by SimulCost's steady heat problem,
 not execution of the SimulCost package. No model calls or artificial credit cap
 are involved; an inexpensive independent-reconstruction control remains available.
 
+The subsequent [Luna/high hosted-Python attempt](docs/heat_workflow_luna_results.md)
+ended with three abstentions and one tool-limit interruption across those four
+studies. Its combined model/hosting accounting bound was $0.380. This exposed an
+interface failure before scientific auditing, not a harder benchmark.
+
 The [verification follow-up](docs/verification_reconstruction_and_ambiguity.md)
 re-scores the saved pilot using its cited forecasts: at four credits, correct
 verdict plus accurate reconstruction is 8/10 for adaptive residual versus 6/10

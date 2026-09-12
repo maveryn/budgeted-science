@@ -3,6 +3,7 @@ import argparse
 import asyncio
 from copy import deepcopy
 import json
+import sys
 from pathlib import Path
 import time
 
@@ -186,15 +187,18 @@ def load_prepared(path):
     return manifest, study, comparison
 
 
-async def run(prepared, mode, root=RUNS, gateway=None):
+async def run(prepared, mode, root=RUNS, gateway=None, *, protocol=None, money=None):
+    # Optional task adapter preserves the original predator-prey defaults.
+    protocol = protocol or sys.modules[__name__]
+    config = protocol.CONFIG
     if mode not in ("live", "dry-run"):
         raise ValueError("explicit execution mode required")
-    frozen, study, comparison = load_prepared(prepared)
-    log = RunLog(root, "python-"+mode)
-    money = HostedBudget(live=mode == "live")
-    episode = PythonEpisode(study, log)
+    frozen, study, comparison = protocol.load_prepared(prepared)
+    log = RunLog(root, getattr(protocol, "RUN_LABEL", "python")+"-"+mode)
+    money = money if money is not None else HostedBudget(live=mode == "live")
+    episode = protocol.PythonEpisode(study, log)
     manifest = {**frozen, "mode": mode, "started_utc": utc_now(), "prepared": str(prepared),
-                "termination_reason": "running", "public_configuration": CONFIG.public()}
+                "termination_reason": "running", "public_configuration": config.public()}
     log.write_json("manifest.json", manifest)
     log.write_json("private/study.json", study)
     reason, responses, code_calls = "internal_error", 0, 0
@@ -202,7 +206,7 @@ async def run(prepared, mode, root=RUNS, gateway=None):
     history, output_sequences = [], []
 
     def remaining():
-        seconds = CONFIG.deadline_seconds - (time.monotonic()-start)
+        seconds = config.deadline_seconds - (time.monotonic()-start)
         if seconds <= 0:
             raise StopEpisode("deadline")
         return seconds
@@ -239,17 +243,17 @@ async def run(prepared, mode, root=RUNS, gateway=None):
         money.start_container()
         log.event("api_budget", budget=money.status())
         container_id = await asyncio.wait_for(gateway.start(), remaining())
-        file = await asyncio.wait_for(gateway.upload("study.json", public_study(study)), remaining())
-        definitions = tools() + [{"type": "code_interpreter", "container": container_id}]
-        history = prompts(file)
+        file = await asyncio.wait_for(gateway.upload("study.json", protocol.public_study(study)), remaining())
+        definitions = protocol.tools() + [{"type": "code_interpreter", "container": container_id}]
+        history = protocol.prompts(file)
         log.write_json("prompts.json", history)
         log.write_json("tools.json", definitions)
         log.event("prompt_frozen", messages=history, tool_schema_hash=digest(definitions))
         manifest.update(prompt_hash=digest(history), tool_schema_hash=digest(definitions), container_id=container_id)
         log.write_json("manifest.json", manifest, replace=True)
-        for index in range(1, CONFIG.max_responses+1):
+        for index in range(1, config.max_responses+1):
             request_id = f"generation-{index:03d}"
-            body = generation_body(CONFIG, history, definitions)
+            body = generation_body(config, history, definitions)
             body.update(max_tool_calls=MAX_TOOL_CALLS,
                         include=["reasoning.encrypted_content", "code_interpreter_call.outputs"])
             count_body = count_payload(body)
@@ -344,7 +348,7 @@ async def run(prepared, mode, root=RUNS, gateway=None):
         manifest.update(termination_reason=reason, ended_utc=utc_now())
         log.write_json("manifest.json", manifest, replace=True)
         log.close()
-        render(log.path)
+        protocol.render(log.path)
     return log.path, reason
 
 

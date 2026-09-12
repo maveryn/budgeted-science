@@ -6,6 +6,11 @@ series reference, inspectable study scripts, two classical controls, and offline
 report regeneration. See [results and commands](../docs/heat_workflow_results.md).
 It uses no model transport and does not change earlier environments.
 
+The separate `budgeted_science.agents.heat_workflow_agent` adapter reuses the
+hosted-Python transport with four isolated episodes and a $2 combined ceiling.
+The [first live attempt](../docs/heat_workflow_luna_results.md) failed at the
+tool-limit/continuation interface; it is not a scientific-performance result.
+
 `budgeted_science` is installable from the repository root with `pip install -e .`.
 It uses Python 3.10+, NumPy, SciPy, and standard-library tests. Shared code never
 imports a demo. Planning and inference each own an episode ledger, purchased
