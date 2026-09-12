@@ -223,6 +223,10 @@ proposal appendix; readers should not need to inspect code to understand results
 
 ## Logged planning episode
 
+The separate [finite-grid support audit](docs/ambiguity_luna_results.md) runs
+Luna/high on the two frozen ambiguity claims at two scientific budgets, with a
+$2 whole-batch API cap and complete logs. Its dry-run is entirely offline.
+
 The dry-run uses a scripted fake model, does not read credentials, and makes no
 network calls. After installing the numerical package:
 

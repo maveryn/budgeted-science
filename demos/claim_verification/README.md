@@ -269,6 +269,12 @@ a $2 whole-batch ceiling. Tests/dry-runs never access credentials or paid APIs.
 
 ## Records and limits
 
+For the newer finite-grid forecast-support toy, use the separate
+`budgeted_science.agents.ambiguity_agent` runner. See its
+[protocol and results](../../docs/ambiguity_luna_results.md): two claims at
+32/256 credits, Luna/high, $2 total API cap, and sequential agent-selected batches
+of candidate checks. This does not alter the older catalogs below.
+
 Generated studies are under ignored `data/`; scripted logs are under ignored
 `runs/`. Manifests pin source hashes, numerical versions, budget, and limits.
 Public artifacts are separate from private study/reference/evaluation records.
