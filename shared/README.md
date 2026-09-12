@@ -7,6 +7,14 @@ records, and submission; only a deterministic backend cache may be shared.
 
 ## Completed-study claim verification
 
+`budgeted_science.claim_verification_qoi` is a separate opt-in CPU revision with
+peak height, peak time, cumulative population, Euler/RK2 checks, work-proxy
+accounting, and independently checked references. Its five CPU policies receive
+structured claims and have no private-reference or model/API access. See the
+[protocol](../docs/claim_verification_qoi_protocol.md) and
+[results](../docs/claim_verification_qoi_results.md). Earlier verification
+packages, model tools, and saved experiments are unchanged.
+
 `budgeted_science.claim_verification` reuses the existing predator-prey RHS
 through an internal adapter without refactoring the frozen planning code.
 It owns separate study generation, independently checked peak references,

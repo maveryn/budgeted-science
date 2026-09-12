@@ -5,6 +5,15 @@ constraints. The goal is to build clear, reproducible decision problems with
 objective evaluation, beginning with small CPU-based demonstrations and later
 adapting them to domain-specific scientific applications.
 
+**Claim-specific verification revision:** the [new CPU pilot](docs/claim_verification_qoi_results.md)
+adds peak-height, peak-time, and cumulative-population claims with configurable
+Euler/RK2 checks. On 108 claims sharing six fresh systems, fixed RK2 scored
+106/108, randomized checks 105/108, fixed Euler 99/108, and an adaptive heuristic
+96/108. The setup remains easy for fixed RK2 and does not show an adaptive
+advantage. All 810 development/fresh episodes completed without model/API calls.
+See the [separate opt-in protocol](docs/claim_verification_qoi_protocol.md);
+all previous task versions and saved results are preserved.
+
 **Scientific claim verification:** a separate [predator-prey demo](demos/claim_verification/README.md)
 now provides 30 completed-study variants, three report formats, 5-credit audit
 tools, objective verdict scoring, and fully logged scripted fixtures. Numerical

@@ -1,5 +1,27 @@
 # Scientific claim verification: predator-prey toy
 
+## Claim-specific revision (CPU only)
+
+The separate `budgeted_science.claim_verification_qoi` package adds peak height,
+peak time, and cumulative population at two tolerances each, with configurable
+Euler/RK2 integration and output grids. It has an 8-credit work-proxy budget,
+not the previous flat-check prices. There is no model adapter for this revision.
+
+The [810-episode CPU pilot](../../docs/claim_verification_qoi_results.md) generated
+54 development and 108 fresh claims. Fixed RK2 scored 106/108 fresh, randomized
+checks 105/108, fixed Euler 99/108, and the adaptive heuristic 96/108. It remains
+too easy to demonstrate an adaptive-auditing advantage. No paid calls were made.
+
+~~~powershell
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_qoi run
+.\.venv\Scripts\python.exe -B -m budgeted_science.claim_verification_qoi render PATH_TO_QOI_RUN
+~~~
+
+See the [complete revised protocol](../../docs/claim_verification_qoi_protocol.md).
+The versions and commands below remain unchanged.
+
+## Preserved original versions
+
 Audit a **completed computational study**, not an unknown physical system.
 Every report claims that the maximum of species A on [0,8] is accurate within
 5%. This is numerical solution verification, not experimental validation.
