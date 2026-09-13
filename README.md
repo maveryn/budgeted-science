@@ -14,6 +14,13 @@ verdicts at 18 credits, versus Sol and the fixed control at 5/6 plus one
 abstention at 20 credits. Luna's C6 explanation has the wrong error direction,
 so verdict accuracy must not be mistaken for six soundly verified claims.
 
+At [12 credits](docs/multi_claim_twelve_results.md), Luna and Sol each score
+6/6 using one high plus four low simulations; the unchanged fixed control
+gets 4/6 and abstains twice, spending 8 credits. Both models again give the
+wrong error direction for C6 despite the correct rejection. Complete logs
+and the distinction between verdict accuracy and explanation quality are
+preserved in the report.
+
 The [costed heat-tool extension](docs/heat_costed_tools_protocol.md) provides
 four paid numerical services, free artifact/field analysis, and eight scientific
 credits per case. It compares Luna/high and Sol/high on the same four original

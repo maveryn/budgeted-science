@@ -101,8 +101,8 @@ class Audit:
     def __init__(self, study, log=None, *, budget=32):
         if study["version"] != VERSION:
             raise ValueError("wrong study version")
-        if type(budget) is not int or budget not in (20, 32):
-            raise ValueError("supported audit budgets are 20 and 32")
+        if type(budget) is not int or budget not in (12, 20, 32):
+            raise ValueError("supported audit budgets are 12, 20 and 32")
         self._study = deepcopy(study)
         self.public = deepcopy(study["public"])
         self.public["environment"]["budget"] = float(budget)

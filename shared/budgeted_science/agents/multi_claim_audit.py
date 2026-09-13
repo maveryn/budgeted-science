@@ -1,4 +1,4 @@
-"""Logged multi-claim episodes: original Luna/32 and matched Luna/Sol/20."""
+"""Logged multi-claim episodes: Luna/32 and matched Luna/Sol at 20 or 12."""
 import argparse
 import asyncio
 from copy import deepcopy
@@ -32,7 +32,7 @@ class Config:
 
     def __post_init__(self):
         allowed = ((self.scientific_budget == 32 and self.model == "gpt-5.6-luna")
-                   or (self.scientific_budget == 20 and self.model in ("gpt-5.6-luna", "gpt-5.6-sol")))
+                   or (self.scientific_budget in (12, 20) and self.model in ("gpt-5.6-luna", "gpt-5.6-sol")))
         if not allowed or type(self.scientific_budget) is not int or asdict(self) != {
                            "model": self.model, "reasoning_effort": "high", "scientific_budget": self.scientific_budget,
                            "api_ceiling_usd": "1.00", "max_responses": 30, "max_output_tokens": 32768,
@@ -359,7 +359,7 @@ def main():
     parser.add_argument("command", choices=("prepare", "dry-run", "live", "render"))
     parser.add_argument("directory", nargs="?")
     parser.add_argument("--model", choices=("gpt-5.6-luna", "gpt-5.6-sol"))
-    parser.add_argument("--budget", type=int, choices=(20, 32))
+    parser.add_argument("--budget", type=int, choices=(12, 20, 32))
     args = parser.parse_args()
     if args.command != "prepare" and (args.model is not None or args.budget is not None):
         parser.error("model and budget are frozen by prepare, not overridden during execution")

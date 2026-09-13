@@ -49,3 +49,22 @@ saved results and logs are not overwritten.
 The [completed 20-credit comparison](../../docs/multi_claim_twenty_results.md)
 reports purchases, verdicts, abstentions, API usage, and the important
 qualification to Luna's C6 explanation.
+
+## Matched 12-credit follow-up
+
+```powershell
+.\.venv\Scripts\python.exe -m budgeted_science.agents.multi_claim_audit prepare --budget 12 --model gpt-5.6-luna
+.\.venv\Scripts\python.exe -m budgeted_science.agents.multi_claim_audit prepare --budget 12 --model gpt-5.6-sol
+```
+
+Use the printed preparation directory with `dry-run` and, only when explicitly
+authorized, `live`. Model, high reasoning, $1 API ceiling, tools, study and
+pricing follow the same safeguards as above. The fixed control buys one
+high simulation, cannot afford either target measurement, and abstains on
+C5/C6 with four credits unused. No fallback or forced expenditure is added.
+
+The [completed 12-credit comparison](../../docs/multi_claim_twelve_results.md)
+records both models at 6/6 using one high plus four low simulations, but
+both have the wrong error direction in their C6 explanation. The fixed
+control gets four correct and two abstentions. The report preserves that
+qualification, all purchases, API accounting and links to full transcripts.
