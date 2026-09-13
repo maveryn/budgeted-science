@@ -1,4 +1,17 @@
-# Paired predator–prey claim audit (CPU only)
+# Paired predator–prey claim audit
+
+The corrected follow-up now has a separate
+[logged Luna/high adapter](../../docs/paired_claim_followup_luna_protocol.md).
+It imports the six frozen v2 studies and CPU comparisons, gives the model all
+32 credits with no forced initialization, and preserves every episode's
+transcript, numerical artifacts and API records. The CPU-only commands below
+retain their original behavior; paid execution requires an explicit `live`
+command. No older results are replaced or pooled with the new evaluation.
+
+The [completed six-study Luna run](../../docs/paired_claim_followup_luna_results.md)
+returned **29/36 correct, four wrong and three abstentions**, using an average
+of 30.17/32 credits. All specified-model claims were correct; target inference
+accounted for the errors and abstentions. Total API upper bound was $0.18630.
 
 The opt-in [follow-up variant](../../docs/paired_claim_followup_results.md)
 changes the target quantities and claim thresholds to test evidence-conditioned

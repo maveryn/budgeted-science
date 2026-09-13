@@ -1,5 +1,13 @@
 # Budgeted Science
 
+The [six-study Luna/high follow-up](docs/paired_claim_followup_luna_results.md)
+completed at **32 credits per study**: **29/36 correct, four wrong, three
+abstentions**, versus 33 correct and three abstentions for the saved
+measurement-first adaptive CPU policy. All 18 specified-model claims were
+correct; errors and abstentions were confined to target claims. Total API
+cost upper bound: **$0.18630**. Logs and numerical artifacts are retained.
+This is an engineered development pilot, not a general performance estimate.
+
 The [evidence-conditioned CPU follow-up](docs/paired_claim_followup_results.md)
 now tests whether a target measurement changes which high-fidelity calculation
 is worth buying. At 32 credits the measurement-first adaptive policy gets
@@ -7,7 +15,8 @@ is worth buying. At 32 credits the measurement-first adaptive policy gets
 policy gets 30 correct and six abstentions; a fixed intervention-label guess
 gets **34 correct and two wrong**. Adaptation wins under the declared wrong-answer
 penalty, not raw correct count. The corrected v2 report includes the cheap control
-that invalidated v1, an overfitting check, and limitations. No agents were run.
+that invalidated v1, an overfitting check, and limitations. That initial
+commissioning comparison was CPU-only; the separate Luna evaluation is above.
 
 The [paired claim-audit CPU extension](demos/paired_claim_audit/README.md)
 uses six studies with identical early evidence within each pair but opposite
