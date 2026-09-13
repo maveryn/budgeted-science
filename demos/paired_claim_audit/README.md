@@ -1,5 +1,11 @@
 # Paired predator–prey claim audit
 
+A [matched Sol/Terra extension](../../docs/target_three_models_protocol.md)
+is prepared for these same six three-target-claim studies at high reasoning
+and 32 credits each. Its offline rehearsal passed; the proposed API ceiling
+is awaiting approval before paid execution. Earlier Luna and CPU results are
+imported unchanged.
+
 The separate [three-target-claim variant](../../docs/target_three_claims_protocol.md)
 now has [CPU and Luna/high results](../../docs/target_three_claims_results.md):
 Luna 8 correct, 5 wrong, 2 abstentions and 3 unsubmitted claims; CPU 12 correct
