@@ -1,5 +1,12 @@
 # Budgeted Science
 
+The [matched six-study Sol/high run](docs/paired_claim_followup_sol_results.md)
+completed with **29/36 correct, four wrong and three abstentions**, matching
+Luna's aggregate counts but with different per-study outcomes. Sol spent all
+32 scientific credits per study; total API upper bound was **$4.276000**.
+Both models got all specified-model claims correct; their errors and abstentions
+concerned unknown-target claims. Earlier results and complete logs are preserved.
+
 The [six-study Luna/high follow-up](docs/paired_claim_followup_luna_results.md)
 completed at **32 credits per study**: **29/36 correct, four wrong, three
 abstentions**, versus 33 correct and three abstentions for the saved
@@ -16,7 +23,7 @@ policy gets 30 correct and six abstentions; a fixed intervention-label guess
 gets **34 correct and two wrong**. Adaptation wins under the declared wrong-answer
 penalty, not raw correct count. The corrected v2 report includes the cheap control
 that invalidated v1, an overfitting check, and limitations. That initial
-commissioning comparison was CPU-only; the separate Luna evaluation is above.
+commissioning comparison was CPU-only; separate Sol and Luna evaluations are above.
 
 The [paired claim-audit CPU extension](demos/paired_claim_audit/README.md)
 uses six studies with identical early evidence within each pair but opposite

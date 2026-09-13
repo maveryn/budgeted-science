@@ -1,4 +1,4 @@
-# Matched Sol/high evaluation: ready for live execution
+# Matched Sol/high evaluation protocol
 
 The separate Sol adapter preserves the existing Luna implementation, six frozen
 v2 studies, seven tool schemas, scientific accounting and evaluator. It imports
@@ -69,17 +69,20 @@ No full historical-repository test run is claimed.
 The six-study rehearsal completed with scripted all-abstain submissions. These
 are transport fixtures, not Sol performance results; API expenditure was zero.
 
-- Prepared proposed $3-cap campaign:
+- Prepared $3-cap campaign, subsequently approved and executed:
   `demos/paired_claim_audit/runs/20260913T055416Z-followup-sol-prepared-893986f50d`
 - Offline rehearsal:
   `campaigns/20260913T055439Z-dry-run-1f7a8fae7e` under that prepared directory.
 - Imported Luna campaign:
   `demos/paired_claim_audit/runs/20260913T051751Z-followup-luna-prepared-db46c28d52/campaigns/20260913T051840Z-live-e24616a723`
 
-At this checkpoint **no paid Sol episode has been launched**. The proposed
-$3-per-episode cap is pending user approval. The scientific settings are not
-pending redesign. Once authorized, use the frozen preparation above rather
-than generating another copy or rerunning Luna.
+Following explicit user approval of the $3-per-episode cap, all six live Sol
+episodes completed in `campaigns/20260913T060154Z-live-ca5baf1a19` under the
+prepared directory above. Sol returned 29 correct, four wrong and three
+abstentions, using 32 scientific credits per episode and a total API cost upper
+bound of $4.276000. See the [completed results](paired_claim_followup_sol_results.md).
+The existing live-attempt marker prevents repeating this campaign; no additional
+paid execution is authorized by this documentation.
 
 The six engineered development studies and the CPU two-fit assumption retain
 the limitations documented in the [Luna results](paired_claim_followup_luna_results.md).

@@ -13,9 +13,12 @@ returned **29/36 correct, four wrong and three abstentions**, using an average
 of 30.17/32 credits. All specified-model claims were correct; target inference
 accounted for the errors and abstentions. Total API upper bound was $0.18630.
 
-A separate [matched Sol/high adapter](../../docs/paired_claim_followup_sol_protocol.md)
-is offline-verified and ready. It preserves Luna's frozen science and records;
-the proposed larger API-dollar cap needs approval before paid execution.
+The [matched Sol/high run](../../docs/paired_claim_followup_sol_results.md)
+also completed all six studies: **29 correct, four wrong and three abstentions**,
+with different per-study outcomes from Luna. Sol spent 32 credits each; its total
+API upper bound was $4.276000 under the approved $18 campaign ceiling. The
+[adapter protocol](../../docs/paired_claim_followup_sol_protocol.md) and complete
+local records preserve the unchanged scientific setup and earlier results.
 
 The opt-in [follow-up variant](../../docs/paired_claim_followup_results.md)
 changes the target quantities and claim thresholds to test evidence-conditioned
