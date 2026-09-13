@@ -1,5 +1,14 @@
 # Budgeted Science
 
+The [multi-claim predator-prey audit](demos/multi_claim_audit/README.md) reuses the
+planning environment and its 32-credit budget with 1/8/12-credit resources.
+One short study has four numerical-accuracy and two simulated-target-accuracy
+claims, with reusable evidence, a fixed CPU control, and a logged Luna/high
+runner. See the [protocol](docs/multi_claim_audit_protocol.md); one solve may
+inform several claims, intentionally. The [completed comparison](docs/multi_claim_audit_results.md)
+scores both Luna/high and the fixed CPU control 6/6 at 32 credits; Luna's API
+accounting upper bound is $0.00518. This is a small mechanics demonstration.
+
 The [costed heat-tool extension](docs/heat_costed_tools_protocol.md) provides
 four paid numerical services, free artifact/field analysis, and eight scientific
 credits per case. It compares Luna/high and Sol/high on the same four original

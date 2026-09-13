@@ -1,5 +1,13 @@
 # Shared CPU foundation
 
+`budgeted_science.multi_claim_audit` wraps the unchanged resource-planning
+environment for one six-claim predator-prey study. Its matched fixed control
+and Luna/high adapter use independent 32-credit ledgers, with the same 1/8/12
+resource prices and noisy observations. See the
+[protocol](../docs/multi_claim_audit_protocol.md) and
+[runner commands](../demos/multi_claim_audit/README.md). Four numerical claims
+can reuse one trajectory; two target claims use simulated measurements.
+
 `budgeted_science.heat_workflow.costed` and the `agents.heat_tools` adapter add
 an independent [multi-tool credit protocol](../docs/heat_costed_tools_protocol.md)
 for the heat studies. It preserves the hosted-Python runner and all older menus.
