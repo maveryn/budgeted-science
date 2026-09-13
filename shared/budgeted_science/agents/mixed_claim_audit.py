@@ -121,6 +121,15 @@ class Episode(legacy.Episode):
         log.write_json("public/study.json", instance.study["public"])
         self.environment = Audit(instance.study, self._event, budget=config.scientific_budget)
 
+    def checkpoint(self):
+        from .mixed_claim_resume import checkpoint
+        return checkpoint(self)
+
+    @staticmethod
+    def restore(config, instance, log, deadline, saved):
+        from .mixed_claim_resume import restore
+        return restore(config, instance, log, deadline, saved)
+
 
 def run_cpu(study, root, config=None):
     config = config or Config()
@@ -196,6 +205,7 @@ class SolFake(legacy.Fake):
 
 class Adapter:
     create_episode = staticmethod(Episode)
+    restore_episode = staticmethod(Episode.restore)
     prompts = staticmethod(prompts)
     tool_definitions = staticmethod(tool_definitions)
     regenerate = staticmethod(regenerate)

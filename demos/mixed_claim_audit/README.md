@@ -34,16 +34,19 @@ $1 API ceiling. The default model remains Luna.
 
 Full logs and artifacts are saved in unique ignored `runs/` directories.
 No auto-retries, model substitutions or limit increases. Source/input
-mismatches prevent launch. Inspection checkpoints are not crash-resume
-support. Rendering uses saved logs only. No arbitrary Python or extra
+mismatches prevent launch. Explicit continuation of finalized unsubmitted
+Sol attempts is supported below; ambiguous crashes require manual inspection.
+Rendering uses saved logs only. No arbitrary Python or extra
 scientific tools are exposed to the model.
 
 ## Matched Sol follow-up
 
-The [recorded Sol attempt](../../docs/mixed_claim_sol_results.md) ended at the
+The [initial Sol segment](../../docs/mixed_claim_sol_results.md) ended at the
 API reservation ceiling before submission, after 31/32 scientific credits.
-No verdict accuracy is available. All partial logs were preserved, with no
-automatic retry or limit increase.
+With explicit approval, the [same episode subsequently completed](../../docs/mixed_claim_sol_resumed_results.md):
+**5/6 correct, one wrong, 32 credits**, with cumulative API upper bound $0.80116
+under the revised $1.50 ceiling. It missed the same recovery claim as Luna.
+All original logs remain preserved; the continuation is not another sample.
 
 ```powershell
 .\.venv\Scripts\python.exe -m budgeted_science.agents.mixed_claim_audit prepare --model gpt-5.6-sol
@@ -59,3 +62,38 @@ Offline Sol rehearsals use a fixed synthetic token-usage fixture, not a
 tokenizer or spending estimate. The older byte-count fixture is retained
 in a test for API-ceiling termination. All live counting still uses the
 API's token-count endpoint and the unchanged reservation rules.
+
+## Explicit continuation of the same Sol episode
+
+```powershell
+.\.venv\Scripts\python.exe -m budgeted_science.agents.mixed_claim_resume check <parent-episode-directory> --api-ceiling-usd 1.50
+# Only after explicit approval of this cumulative ceiling:
+.\.venv\Scripts\python.exe -m budgeted_science.agents.mixed_claim_resume live <parent-episode-directory> --api-ceiling-usd 1.50
+```
+
+`check` is read-only and never accesses credentials or the API. `dry-run`
+continuation accepts only an offline parent; it cannot turn a live attempt
+into a synthetic result. The original fresh-run command retains its $1 ceiling.
+Continuation accepts only Sol/high with 32 credits, preserves all cumulative
+limits, and permits a ceiling no higher than $1.50. An omitted ceiling keeps
+the previous allowance. Never increase it without owner approval.
+
+The child contains the earlier conversation, encrypted reasoning items,
+tool responses, API archives, observations, numerical trajectories and paid
+purchase state. Prior API usage and uncertain reservations remain charged;
+response and tool counts and active runtime remain cumulative. No solver or
+observation acquisition runs during restoration. Earlier inspection-only
+checkpoints can migrate from complete finalized logs; incomplete or inconsistent
+tool activity fails closed. An exclusive parent marker prevents two children
+from spending the same remainder. Continue a child explicitly if necessary,
+never restart its parent. Submitted episodes cannot resume.
+
+Only an operational continuation notice is appended to the original frozen
+prompt; claims, tools, evidence, prices and scoring do not change. There is
+still no full-budget requirement. The prior report remains an immutable
+historical record, and the child result is the same sample, not another trial.
+Offline `render` on the child regenerates its cumulative report/transcript.
+
+The replay follows [official OpenAI documentation](https://developers.openai.com/api/docs/guides/reasoning#preserve-reasoning-without-stored-responses):
+preserve replayable output, including opaque encrypted reasoning and assistant
+phase. No raw private reasoning is available or claimed.
