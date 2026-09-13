@@ -1,5 +1,12 @@
 # Budgeted Science
 
+The [matched Sol/Terra three-target-claim evaluation](docs/target_three_models_results.md)
+completed all 12 episodes: **Sol 14/18 correct, four wrong; Terra 16/18 correct,
+two wrong**, with no abstentions. Both used high reasoning and a 32-credit cap;
+Sol spent 192 credits total and Terra 191. New API cost upper bound: **$4.563797**.
+The six-study development comparison preserves Luna's 8 correct, 5 wrong,
+2 abstentions and 3 unsubmitted claims, and the CPU baseline's 12/18 correct.
+
 The [three-target-claim variant](docs/target_three_claims_results.md) replaces
 specified-model checks with parameter-accuracy, target-abundance and recovery
 claims, retaining six worlds and 32 credits. Luna/high returned **8 correct,

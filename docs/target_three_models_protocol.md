@@ -1,5 +1,9 @@
 # Three target claims: matched Sol/Terra extension
 
+The [completed matched results](target_three_models_results.md) are Sol 14/18
+and Terra 16/18 correct, with all 12 episodes submitted. The new API cost upper
+bound was $4.563797; no retry or limit increase occurred.
+
 Add six independent episodes each for `gpt-5.6-sol` and `gpt-5.6-terra`, both
 at **high** reasoning, to the [three-target-claim experiment](target_three_claims_protocol.md).
 Import the six Luna attempts and CPU comparisons unchanged, including Luna's
@@ -26,12 +30,11 @@ only the disclosed API ceiling changes if the approved cap differs.
 
 ## Limits and approval
 
-The prepared configuration proposes **$3 per episode**, **$18 per model**, and
-**$36 maximum new API expenditure**. At this checkpoint the increase is awaiting
-approval; no paid Sol/Terra episode has started. Preparation/rehearsal does not
-authorize spending. If $1 is selected instead, create a new preparation with
-`--api-ceiling 1.00` ($12 total); never edit a frozen manifest or transfer unused
-allowances between episodes.
+The user approved **$3 per episode**, **$18 per model**, and **$36 maximum new
+API expenditure** on 2026-09-13. The live campaign started at 09:45 UTC in
+`campaigns/20260913T094518Z-live-0262ddc444` beneath the frozen preparation below.
+Preparation/rehearsal alone does not authorize spending. Never edit a frozen
+manifest or transfer unused allowances between episodes.
 
 Other limits: 30 responses, 32,768 output tokens per response, 60 tool requests,
 20-minute episode deadline. Preserve standard-tier streaming Responses API,

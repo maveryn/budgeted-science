@@ -1,10 +1,13 @@
 # Paired predator–prey claim audit
 
-A [matched Sol/Terra extension](../../docs/target_three_models_protocol.md)
-is prepared for these same six three-target-claim studies at high reasoning
-and 32 credits each. Its offline rehearsal passed; the proposed API ceiling
-is awaiting approval before paid execution. Earlier Luna and CPU results are
-imported unchanged.
+The [matched Sol/Terra results](../../docs/target_three_models_results.md)
+on the same six three-target-claim studies are **Sol 14/18 correct, four wrong**
+and **Terra 16/18 correct, two wrong**. All 12 episodes submitted, with no
+abstentions. Both used high reasoning and a 32-credit cap; Sol spent 192 credits
+total and Terra 191. Combined API cost upper bound: **$4.563797**, below the
+approved $36 cap. Earlier Luna and CPU results are imported unchanged.
+The [protocol](../../docs/target_three_models_protocol.md) and complete local
+logs preserve frozen inputs and independent episode histories.
 
 The separate [three-target-claim variant](../../docs/target_three_claims_protocol.md)
 now has [CPU and Luna/high results](../../docs/target_three_claims_results.md):
