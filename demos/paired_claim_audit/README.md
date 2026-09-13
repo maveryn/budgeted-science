@@ -1,5 +1,13 @@
 # Paired predator–prey claim audit
 
+The separate [three-target-claim variant](../../docs/target_three_claims_protocol.md)
+now has [CPU and Luna/high results](../../docs/target_three_claims_results.md):
+Luna 8 correct, 5 wrong, 2 abstentions and 3 unsubmitted claims; CPU 12 correct
+and 6 wrong. All investigators spent 32 credits per study. The alternative fit
+and specified-model claims are removed; each report contains an actual early
+conditional calibration. One empty final API response is retained as incomplete,
+not a scientific wrong answer. No older catalog, code behavior or result changed.
+
 The corrected follow-up now has a separate
 [logged Luna/high adapter](../../docs/paired_claim_followup_luna_protocol.md).
 It imports the six frozen v2 studies and CPU comparisons, gives the model all

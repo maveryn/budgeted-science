@@ -1,5 +1,15 @@
 # Budgeted Science
 
+The [three-target-claim variant](docs/target_three_claims_results.md) replaces
+specified-model checks with parameter-accuracy, target-abundance and recovery
+claims, retaining six worlds and 32 credits. Luna/high returned **8 correct,
+5 wrong and 2 abstentions**, with three further claims unsubmitted after an
+empty final API message. The continuous local-fitting CPU control got **12/18
+correct, 6 wrong**. Both spent 32 credits per study; Luna's total API upper
+bound was **$0.25270**. Reports contain one actual conditional fit, not a
+two-candidate set. This is a separate development variant, not an isolated
+claim-count comparison; earlier experiments are preserved.
+
 The [matched six-study Sol/high run](docs/paired_claim_followup_sol_results.md)
 completed with **29/36 correct, four wrong and three abstentions**, matching
 Luna's aggregate counts but with different per-study outcomes. Sol spent all

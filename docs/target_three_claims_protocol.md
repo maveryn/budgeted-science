@@ -1,5 +1,8 @@
 # Three target-dependent claims: development protocol
 
+The [completed CPU and Luna results](target_three_claims_results.md) preserve
+all six attempts, including one Luna no-submission outcome.
+
 This separate variant preserves the six-claim catalogs, runners, results and
 proposal documents. It reuses the six frozen predator-prey worlds from
 `paired-claim-followup-v2`, with three claims per study, all about the unknown
@@ -24,8 +27,8 @@ Every study has these three claim types in a deterministic shuffled order:
 
 1. Every reported parameter estimate is within 5% of its true target value:
    `max(abs(reported_theta-target_theta)/abs(target_theta)) <= 0.05`.
-2. Target trapezoidal prey abundance on 0,0.5,...,8 exceeds the existing threshold.
-3. Target late recovery `x(8)/x(6)-1` exceeds the existing threshold.
+2. Target trapezoidal prey abundance on 0,0.5,...,8 meets or exceeds the existing threshold.
+3. Target late recovery `x(8)/x(6)-1` meets or exceeds the existing threshold.
 
 The integral/recovery thresholds remain 126/0.05, 142/0.05 and 130/-0.40 across
 the three pairs. They are inherited development choices, not new held-out
