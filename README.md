@@ -8,6 +8,13 @@ using 27 credits; the fixed classical baseline got 4/6 and abstained twice,
 using 32. Luna's fitted target trajectory missed an actual recovery. A 52-credit
 CPU-only complete-evidence diagnostic got 6/6; it is not a matched competitor.
 
+At [24 credits](docs/mixed_claim_luna_24_results.md), a fresh Luna/high episode
+again got **5/6 correct and 1 wrong**, spending 23 credits. It made the same
+recovery error, using two high and seven low simulations with no paid target
+measurements. The unchanged CPU control got 3/6 and abstained three times,
+spending 20/24 credits. This is one episode per condition, not a budget-effect
+estimate.
+
 After an [initial API-ceiling interruption](docs/mixed_claim_sol_results.md),
 the same [Sol/high episode completed through explicit continuation](docs/mixed_claim_sol_resumed_results.md):
 **5/6 correct, 1 wrong, 32/32 credits**. Like Luna, it rejected the true recovery

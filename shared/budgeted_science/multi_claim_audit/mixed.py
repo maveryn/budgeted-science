@@ -139,8 +139,8 @@ def build_study():
 class Audit(original.Audit):
     """Reuse original purchase/scoring mechanics, with a separate study version."""
     def __init__(self, study, log=None, *, budget=32):
-        if study["version"] != VERSION or type(budget) is not int or budget not in (32, 52):
-            raise ValueError("mixed study requires 32 credits (or 52 for the CPU diagnostic)")
+        if study["version"] != VERSION or type(budget) is not int or budget not in (24, 32, 52):
+            raise ValueError("mixed study requires 24/32 credits (or 52 for the CPU diagnostic)")
         self._study = deepcopy(study)
         self.public = deepcopy(study["public"])
         self.public["environment"]["budget"] = float(budget)

@@ -33,7 +33,7 @@ class Config:
 
     def __post_init__(self):
         allowed = (self.model in ("gpt-5.6-luna", "gpt-5.6-sol") and self.scientific_budget == 32
-                   or self.model == "gpt-5.6-luna" and self.scientific_budget == 52)
+                   or self.model == "gpt-5.6-luna" and self.scientific_budget in (24, 52))
         if not allowed or type(self.scientific_budget) is not int or asdict(self) != {
             "model": self.model, "reasoning_effort": "high", "scientific_budget": self.scientific_budget,
             "api_ceiling_usd": "1.00", "max_responses": 30, "max_output_tokens": 32768,
@@ -160,7 +160,7 @@ def run_cpu(study, root, config=None):
 
 def write_report(path, manifest, events, finished, status):
     lines = ["# Mixed-claim predator-prey audit", "", f"Mode: {manifest['mode']}; termination: {status}.", "",
-             "One development system, six heterogeneous claims, 32 scientific credits and 1/8/12 prices.", ""]
+             f"One development system, six heterogeneous claims, {manifest['public_configuration']['scientific_budget']} scientific credits and 1/8/12 prices.", ""]
     if finished:
         data = {k: finished[k] for k in ("termination_reason", "evaluation", "fixed_policy", "api_budget", "model_responses", "elapsed_seconds")}
         _write(path/"evaluation.json", json_text(data)+"\n")
@@ -229,11 +229,12 @@ def validate(root=RUNS):
 
 def prepare(root=RUNS, config=None):
     config = config or Config()
-    if config.scientific_budget != 32:
-        raise ValueError("model preparations require 32 credits; 52 is CPU-only")
+    if config.scientific_budget not in (24, 32):
+        raise ValueError("model preparations require 24/32 credits; 52 is CPU-only")
     log = RunLog(root, "mixed-prepared")
     try:
         study = build_study()
+        study["public"]["environment"]["budget"] = float(config.scientific_budget)
         comparison = run_cpu(study, log.path/"cpu", config)
         payload = {"study": study, "comparisons": comparison}
         episode = Episode(config, Instance(**payload), log)
@@ -253,8 +254,8 @@ def load_prepared(path):
     path = Path(path).resolve()
     manifest, payload = read_json(path/"manifest.json"), read_json(path/"payload.json")
     config = Config(**manifest["configuration"])
-    if (config.scientific_budget != 32 or manifest["version"] != VERSION or payload["study"]["version"] != VERSION
-            or payload["study"]["public"]["environment"]["budget"] != 32
+    if (config.scientific_budget not in (24, 32) or manifest["version"] != VERSION or payload["study"]["version"] != VERSION
+            or payload["study"]["public"]["environment"]["budget"] != config.scientific_budget
             or manifest["source_manifest_hash"] != provenance(ROOT)["source_manifest_hash"]
             or manifest["payload_hash"] != digest(payload)
             or manifest["tools_hash"] != digest(tool_definitions())
@@ -270,7 +271,7 @@ async def run(prepared, mode, root=RUNS, gateway=None):
     payload, frozen = load_prepared(prepared)
     config = Config(**frozen["configuration"])
     class PublicEpisode:
-        environment = Audit(payload["study"], budget=32)
+        environment = Audit(payload["study"], budget=config.scientific_budget)
     if digest(prompts(config, PublicEpisode())) != frozen["prompt_hash"]:
         raise ValueError("agent evidence changed since preparation")
     if mode == "live":
@@ -286,13 +287,16 @@ def main():
     parser.add_argument("command", choices=("validate", "prepare", "dry-run", "live", "render"))
     parser.add_argument("directory", nargs="?")
     parser.add_argument("--model", choices=("gpt-5.6-luna", "gpt-5.6-sol"))
+    parser.add_argument("--budget", type=int, choices=(24, 32))
     args = parser.parse_args()
     if args.model is not None and args.command != "prepare":
         parser.error("model is selected by prepare and cannot be overridden at launch")
+    if args.budget is not None and args.command != "prepare":
+        parser.error("budget is selected by prepare and cannot be overridden at launch")
     if args.command == "validate":
         print(validate())
     elif args.command == "prepare":
-        print(prepare(config=Config(model=args.model or "gpt-5.6-luna")))
+        print(prepare(config=Config(model=args.model or "gpt-5.6-luna", scientific_budget=args.budget or 32)))
     elif not args.directory:
         parser.error("directory required")
     elif args.command == "render":

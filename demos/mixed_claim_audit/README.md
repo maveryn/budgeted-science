@@ -13,6 +13,11 @@ baseline gets four correct and two abstentions at 32 credits. Full
 transcripts, resource purchases, the 52-credit CPU-only diagnostic and
 the explanation/error qualifications are linked there.
 
+The [24-credit Luna follow-up](../../docs/mixed_claim_luna_24_results.md) scored
+5/6 correct, one wrong and no abstentions at 23 credits. It again missed C6
+(target recovery). The matched fixed control scored 3/6 with three abstentions
+at 20 credits. Full logs and the budget-only comparison are linked in that report.
+
 From the repository root:
 
 ```powershell
@@ -29,8 +34,21 @@ latter is a complete-evidence diagnostic, not a matched agent comparison.
 sources, prompts, schemas and configuration. `dry-run` is a fake-model test
 with zero real API spending. Only `live` accesses credentials or the API;
 invoke it only after explicit owner authorization. It is locked to one
-attempt with the prepared model, high reasoning, 32 scientific credits and a
-$1 API ceiling. The default model remains Luna.
+attempt with the prepared model, high reasoning, the frozen scientific budget
+and a $1 API ceiling. The default remains Luna with 32 scientific credits.
+
+For the explicitly requested lower-budget Luna condition, use:
+
+```powershell
+.\.venv\Scripts\python.exe -m budgeted_science.agents.mixed_claim_audit prepare --model gpt-5.6-luna --budget 24
+```
+
+Then use the new preparation directory with `dry-run` and, when authorized,
+`live`. This keeps the same six claims, order, target, noise stream, tools and
+1/8/12 prices. The prompt changes only in its budget/accounting fields.
+Model and budget cannot be overridden at launch; Sol remains restricted to
+the existing 32-credit condition. The fixed CPU control is independently run
+at the selected budget without changing its acquisition policy.
 
 Full logs and artifacts are saved in unique ignored `runs/` directories.
 No auto-retries, model substitutions or limit increases. Source/input
