@@ -1,5 +1,13 @@
 # Budgeted Science
 
+The [paired claim-audit CPU extension](demos/paired_claim_audit/README.md)
+uses six studies with identical early evidence within each pair but opposite
+target verdicts. At 24 and 32 credits, adaptive and fixed measurement-first
+policies all get **36/36** claims correct; simulation-first gets 18 correct
+and abstains on 18. The [results](docs/paired_claim_audit_results.md) demonstrate
+the value of target evidence, **not an adaptive-allocation accuracy advantage**.
+No new agent/API run was made.
+
 The [mixed six-claim study](demos/mixed_claim_audit/README.md) adds cumulative
 abundance, intervention, recovery and population-composition claims alongside
 simple checks, with shuffled presentation and shared evidence. At the planning
