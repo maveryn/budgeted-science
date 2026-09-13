@@ -1,5 +1,13 @@
 # Budgeted Science
 
+The [mixed six-claim study](demos/mixed_claim_audit/README.md) adds cumulative
+abundance, intervention, recovery and population-composition claims alongside
+simple checks, with shuffled presentation and shared evidence. At the planning
+toy's **32 credits and 1/8/12 prices**, [Luna/high got 5/6 correct and 1 wrong](docs/mixed_claim_audit_results.md)
+using 27 credits; the fixed classical baseline got 4/6 and abstained twice,
+using 32. Luna's fitted target trajectory missed an actual recovery. A 52-credit
+CPU-only complete-evidence diagnostic got 6/6; it is not a matched competitor.
+
 The [multi-claim predator-prey audit](demos/multi_claim_audit/README.md) reuses the
 planning environment and its 32-credit budget with 1/8/12-credit resources.
 One short study has four numerical-accuracy and two simulated-target-accuracy
