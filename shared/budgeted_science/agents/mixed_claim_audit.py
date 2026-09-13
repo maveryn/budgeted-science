@@ -1,4 +1,4 @@
-"""Frozen mixed-claim study, CPU control and one explicitly authorized Luna run."""
+"""Frozen mixed-claim study with matched, explicitly authorized Luna/Sol runs."""
 import argparse
 import asyncio
 from copy import deepcopy
@@ -32,8 +32,10 @@ class Config:
     task_variant: str = VERSION
 
     def __post_init__(self):
-        if type(self.scientific_budget) is not int or self.scientific_budget not in (32, 52) or asdict(self) != {
-            "model": "gpt-5.6-luna", "reasoning_effort": "high", "scientific_budget": self.scientific_budget,
+        allowed = (self.model in ("gpt-5.6-luna", "gpt-5.6-sol") and self.scientific_budget == 32
+                   or self.model == "gpt-5.6-luna" and self.scientific_budget == 52)
+        if not allowed or type(self.scientific_budget) is not int or asdict(self) != {
+            "model": self.model, "reasoning_effort": "high", "scientific_budget": self.scientific_budget,
             "api_ceiling_usd": "1.00", "max_responses": 30, "max_output_tokens": 32768,
             "max_tool_requests": 60, "deadline_seconds": 1200.0, "task_variant": VERSION}:
             raise ValueError("frozen mixed-claim settings; 52 credits is CPU-only")
@@ -154,7 +156,8 @@ def write_report(path, manifest, events, finished, status):
         data = {k: finished[k] for k in ("termination_reason", "evaluation", "fixed_policy", "api_budget", "model_responses", "elapsed_seconds")}
         _write(path/"evaluation.json", json_text(data)+"\n")
         lines += ["| Investigator | Correct / 6 | Wrong | Abstained | Credits |", "|---|---:|---:|---:|---:|"]
-        for name, r in (("Luna/high" if manifest["mode"] == "live" else "Scripted offline fixture", data["evaluation"]),
+        model_label = {"gpt-5.6-luna": "Luna/high", "gpt-5.6-sol": "Sol/high"}[manifest["public_configuration"]["model"]]
+        for name, r in ((model_label if manifest["mode"] == "live" else "Scripted offline fixture", data["evaluation"]),
                         ("Fixed shared-evidence control", data["fixed_policy"])):
             lines.append(f"| {name} | {r['correct']} | {r['wrong']} | {r['abstained']} | {r['scientific_status']['spent']:g} |")
         lines += ["", "| ID | Quantity | Reference | Truth | Model/fixture | CPU |", "|---|---|---:|---|---|---|"]
@@ -178,12 +181,25 @@ def regenerate(path):
     return generic_regenerate(path, report_writer=write_report)
 
 
+class SolFake(legacy.Fake):
+    """Fixed synthetic usage for the offline Sol logging rehearsal, not a tokenizer.
+
+    The legacy fixture counts JSON bytes as tokens, exaggerating this longer
+    task's input enough to hit Sol's ceiling. Live requests always use the API
+    token-count endpoint; this fixture is never a fallback for live counting.
+    """
+    async def count(self, body, metadata):
+        self.input_tokens = 1024
+        metadata({"request_id": "offline-sol-fixed-usage"})
+        return {"object": "response.input_tokens", "input_tokens": self.input_tokens}
+
+
 class Adapter:
     create_episode = staticmethod(Episode)
     prompts = staticmethod(prompts)
     tool_definitions = staticmethod(tool_definitions)
     regenerate = staticmethod(regenerate)
-    scripted_gateway = staticmethod(lambda config: legacy.Fake())
+    scripted_gateway = staticmethod(lambda config: SolFake() if config.model == "gpt-5.6-sol" else legacy.Fake())
     run_comparisons = staticmethod(legacy.Adapter.run_comparisons)
 
 
@@ -201,8 +217,10 @@ def validate(root=RUNS):
     return log.path
 
 
-def prepare(root=RUNS):
-    config = Config()
+def prepare(root=RUNS, config=None):
+    config = config or Config()
+    if config.scientific_budget != 32:
+        raise ValueError("model preparations require 32 credits; 52 is CPU-only")
     log = RunLog(root, "mixed-prepared")
     try:
         study = build_study()
@@ -257,11 +275,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("validate", "prepare", "dry-run", "live", "render"))
     parser.add_argument("directory", nargs="?")
+    parser.add_argument("--model", choices=("gpt-5.6-luna", "gpt-5.6-sol"))
     args = parser.parse_args()
+    if args.model is not None and args.command != "prepare":
+        parser.error("model is selected by prepare and cannot be overridden at launch")
     if args.command == "validate":
         print(validate())
     elif args.command == "prepare":
-        print(prepare())
+        print(prepare(config=Config(model=args.model or "gpt-5.6-luna")))
     elif not args.directory:
         parser.error("directory required")
     elif args.command == "render":

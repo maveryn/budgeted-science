@@ -29,10 +29,33 @@ latter is a complete-evidence diagnostic, not a matched agent comparison.
 sources, prompts, schemas and configuration. `dry-run` is a fake-model test
 with zero real API spending. Only `live` accesses credentials or the API;
 invoke it only after explicit owner authorization. It is locked to one
-Luna/high attempt, 32 scientific credits and a $1 API ceiling.
+attempt with the prepared model, high reasoning, 32 scientific credits and a
+$1 API ceiling. The default model remains Luna.
 
 Full logs and artifacts are saved in unique ignored `runs/` directories.
 No auto-retries, model substitutions or limit increases. Source/input
 mismatches prevent launch. Inspection checkpoints are not crash-resume
 support. Rendering uses saved logs only. No arbitrary Python or extra
 scientific tools are exposed to the model.
+
+## Matched Sol follow-up
+
+The [recorded Sol attempt](../../docs/mixed_claim_sol_results.md) ended at the
+API reservation ceiling before submission, after 31/32 scientific credits.
+No verdict accuracy is available. All partial logs were preserved, with no
+automatic retry or limit increase.
+
+```powershell
+.\.venv\Scripts\python.exe -m budgeted_science.agents.mixed_claim_audit prepare --model gpt-5.6-sol
+```
+
+Use the printed directory with `dry-run` and, when authorized, `live`. The
+scientific study, shuffled order, prompts, tools, prices and limits are
+identical to Luna's. Model selection is frozen at preparation and cannot
+be overridden at launch. Sol uses its existing model-specific conservative
+API prices; the $1 ceiling is unchanged. Earlier Luna logs remain untouched.
+
+Offline Sol rehearsals use a fixed synthetic token-usage fixture, not a
+tokenizer or spending estimate. The older byte-count fixture is retained
+in a test for API-ceiling termination. All live counting still uses the
+API's token-count endpoint and the unchanged reservation rules.

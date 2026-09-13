@@ -8,6 +8,11 @@ using 27 credits; the fixed classical baseline got 4/6 and abstained twice,
 using 32. Luna's fitted target trajectory missed an actual recovery. A 52-credit
 CPU-only complete-evidence diagnostic got 6/6; it is not a matched competitor.
 
+The [matched Sol/high attempt](docs/mixed_claim_sol_results.md) stopped at its
+unchanged $1 API reservation ceiling after spending 31/32 scientific credits,
+before submitting verdicts. Its recorded API upper bound was $0.3466; no
+accuracy result, automatic retry or limit increase is claimed.
+
 The [multi-claim predator-prey audit](demos/multi_claim_audit/README.md) reuses the
 planning environment and its 32-credit budget with 1/8/12-credit resources.
 One short study has four numerical-accuracy and two simulated-target-accuracy

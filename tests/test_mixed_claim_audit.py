@@ -202,7 +202,7 @@ class MixedClaims(unittest.TestCase):
         self.assertIsNone(self.episode.submission)
 
     def test_model_config_frozen(self):
-        for kwargs in ({'model':'gpt-5.6-sol'},{'reasoning_effort':'low'},{'api_ceiling_usd':'2'}, {'scientific_budget':40}):
+        for kwargs in ({'model':'gpt-5.6-terra'},{'reasoning_effort':'low'},{'api_ceiling_usd':'2'}, {'scientific_budget':40}):
             with self.assertRaises(ValueError): a.Config(**kwargs)
         self.assertEqual(a.Config().scientific_budget,32)
 
