@@ -1,5 +1,29 @@
 # Paired predator–prey claim audit (CPU only)
 
+The opt-in [follow-up variant](../../docs/paired_claim_followup_results.md)
+changes the target quantities and claim thresholds to test evidence-conditioned
+computation. Its measurement-first adaptive policy gets 33/36 correct with no
+wrong verdicts at 32 credits, versus 30/36 and no wrong verdicts for the best
+uncertainty-aware fixed policy. A fixed intervention-label guess instead gets
+34 correct and two wrong: the adaptive advantage is under the wrong-answer
+penalty, not raw correct count. The corrected v2 report preserves the cheap
+bypass that invalidated intermediate v1 and its subsequent construction fix.
+The original variant below is preserved.
+
+Run the new CPU variant with:
+
+```powershell
+.venv\Scripts\python.exe -m budgeted_science.paired_claim_audit.followup prepare
+.venv\Scripts\python.exe -m budgeted_science.paired_claim_audit.followup run <prepared-directory>
+.venv\Scripts\python.exe -m budgeted_science.paired_claim_audit.followup render <pilot-directory>
+```
+
+It compares two adaptive policies, 98 fixed acquisition/estimation policies,
+and three blanket controls on the same six development studies. Logs remain
+local and ignored. There is no API transport, credential access or automatic
+agent run. The fixed measurement/follow-up search is restricted to the stated
+menu, and all methods use the same approximate two-fit estimator.
+
 Six development studies, arranged as three pairs, reuse the planning toy's
 predator–prey dynamics and **1/8/12-credit** simulation/measurement prices.
 Within each pair the report and free early evidence are identical, but three

@@ -1,5 +1,14 @@
 # Budgeted Science
 
+The [evidence-conditioned CPU follow-up](docs/paired_claim_followup_results.md)
+now tests whether a target measurement changes which high-fidelity calculation
+is worth buying. At 32 credits the measurement-first adaptive policy gets
+**33/36 correct, zero wrong, three abstentions**. An uncertainty-aware fixed
+policy gets 30 correct and six abstentions; a fixed intervention-label guess
+gets **34 correct and two wrong**. Adaptation wins under the declared wrong-answer
+penalty, not raw correct count. The corrected v2 report includes the cheap control
+that invalidated v1, an overfitting check, and limitations. No agents were run.
+
 The [paired claim-audit CPU extension](demos/paired_claim_audit/README.md)
 uses six studies with identical early evidence within each pair but opposite
 target verdicts. At 24 and 32 credits, adaptive and fixed measurement-first
