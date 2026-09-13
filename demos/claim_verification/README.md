@@ -370,6 +370,22 @@ a $2 whole-batch ceiling. Tests/dry-runs never access credentials or paid APIs.
 
 ## Records and limits
 
+### Costed heat-tool comparison
+
+See the [eight-credit multi-tool protocol](../../docs/heat_costed_tools_protocol.md).
+`python -m budgeted_science.agents.heat_tools prepare` freezes the same four
+heat studies and same-budget CPU controls. Use `dry-run <prepared-directory>`
+for a credential-free eight-slot rehearsal, explicit `live <prepared-directory>`
+for the authorized Luna/high and Sol/high comparison, and `render <campaign>`
+for offline reporting. Four numerical services have disclosed prices; reading,
+field integration and submission are free. There is no hosted Python in this
+extension. Each model batch has a $3 API ceiling, separate from tool credits.
+An attempted live campaign is not automatically restarted.
+The [completed Luna/Sol comparison](../../docs/heat_costed_tools_results.md)
+reports 4/4 for both, with 4.80 and 5.06 mean scientific credits respectively.
+All paid model jobs were matrix solves; the alternative menu did not establish
+a harder task. All original hosted-Python results remain separate.
+
 ### Hosted Python analysis (independent extension)
 
 The heat-workflow counterpart uses `budgeted_science.agents.heat_workflow_agent`

@@ -1,5 +1,13 @@
 # Budgeted Science
 
+The [costed heat-tool extension](docs/heat_costed_tools_protocol.md) provides
+four paid numerical services, free artifact/field analysis, and eight scientific
+credits per case. It compares Luna/high and Sol/high on the same four original
+heat studies, without hosted Python. Fixed CPU controls use the same tariffs.
+The [completed comparison](docs/heat_costed_tools_results.md) scores both models
+4/4: Luna averages 4.80 credits and Sol 5.06. Both use only the matrix-solve
+service for paid work; the larger menu has not removed the cheap fixed route.
+
 The [four-study CPU heat-workflow audit](docs/heat_workflow_results.md) tests a
 correct study, premature iteration stopping, incorrect spatial extraction, and
 a mismatch between stated and executed boundary conditions. It is an independent

@@ -1,5 +1,10 @@
 # Shared CPU foundation
 
+`budgeted_science.heat_workflow.costed` and the `agents.heat_tools` adapter add
+an independent [multi-tool credit protocol](../docs/heat_costed_tools_protocol.md)
+for the heat studies. It preserves the hosted-Python runner and all older menus.
+See [Luna/Sol results and cost traces](../docs/heat_costed_tools_results.md).
+
 `budgeted_science.heat_workflow` is a separate four-study CPU workflow-audit
 prototype. It includes weighted Jacobi, independent sparse assembly, a harmonic
 series reference, inspectable study scripts, two classical controls, and offline
