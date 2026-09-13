@@ -27,3 +27,25 @@ Unique ignored `runs/` directories contain complete logs, numerical artifacts,
 transcripts and reports. Rendering uses saved logs only. Inspection checkpoints
 are not crash-resume support. No arbitrary Python, hosted sandbox or physical
 experiments are included. Earlier demos and results are preserved.
+
+## Matched 20-credit follow-up
+
+Prepare each requested model explicitly, then use the printed preparation
+directory for its dry-run/live commands:
+
+```powershell
+.\.venv\Scripts\python.exe -m budgeted_science.agents.multi_claim_audit prepare --budget 20 --model gpt-5.6-luna
+.\.venv\Scripts\python.exe -m budgeted_science.agents.multi_claim_audit prepare --budget 20 --model gpt-5.6-sol
+```
+
+Each model keeps high reasoning and its own $1 API ceiling. Prompts and tools
+are identical across models; only the scientific allowance changes from the
+original study. Model and budget cannot be overridden after preparation.
+The fixed control retains its acquisition order, so the unaffordable second
+target measurement is not executed or charged, and its C6 verdict is ABSTAIN.
+Default commands still prepare the original Luna/32 configuration. Previously
+saved results and logs are not overwritten.
+
+The [completed 20-credit comparison](../../docs/multi_claim_twenty_results.md)
+reports purchases, verdicts, abstentions, API usage, and the important
+qualification to Luna's C6 explanation.

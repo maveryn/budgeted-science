@@ -9,6 +9,11 @@ inform several claims, intentionally. The [completed comparison](docs/multi_clai
 scores both Luna/high and the fixed CPU control 6/6 at 32 credits; Luna's API
 accounting upper bound is $0.00518. This is a small mechanics demonstration.
 
+The [20-credit follow-up](docs/multi_claim_twenty_results.md) gives Luna 6/6
+verdicts at 18 credits, versus Sol and the fixed control at 5/6 plus one
+abstention at 20 credits. Luna's C6 explanation has the wrong error direction,
+so verdict accuracy must not be mistaken for six soundly verified claims.
+
 The [costed heat-tool extension](docs/heat_costed_tools_protocol.md) provides
 four paid numerical services, free artifact/field analysis, and eight scientific
 credits per case. It compares Luna/high and Sol/high on the same four original

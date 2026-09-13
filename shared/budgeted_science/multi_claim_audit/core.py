@@ -98,13 +98,16 @@ class Audit:
     that exact low simulation is free. Its existing paid-service equivalents
     are not preloaded into the underlying environment's purchase history.
     """
-    def __init__(self, study, log=None):
+    def __init__(self, study, log=None, *, budget=32):
         if study["version"] != VERSION:
             raise ValueError("wrong study version")
+        if type(budget) is not int or budget not in (20, 32):
+            raise ValueError("supported audit budgets are 20 and 32")
         self._study = deepcopy(study)
         self.public = deepcopy(study["public"])
+        self.public["environment"]["budget"] = float(budget)
         self._environment = PlanningEnvironment(study["private"]["target_parameters"],
-            harder_config(budget=32), log=log, noise_seed=study["private"]["noise_seed"])
+            harder_config(budget=budget), log=log, noise_seed=study["private"]["noise_seed"])
         self._tools = self._environment.tools
         self.submission = None
 
