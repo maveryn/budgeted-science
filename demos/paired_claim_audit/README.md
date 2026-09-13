@@ -13,6 +13,10 @@ returned **29/36 correct, four wrong and three abstentions**, using an average
 of 30.17/32 credits. All specified-model claims were correct; target inference
 accounted for the errors and abstentions. Total API upper bound was $0.18630.
 
+A separate [matched Sol/high adapter](../../docs/paired_claim_followup_sol_protocol.md)
+is offline-verified and ready. It preserves Luna's frozen science and records;
+the proposed larger API-dollar cap needs approval before paid execution.
+
 The opt-in [follow-up variant](../../docs/paired_claim_followup_results.md)
 changes the target quantities and claim thresholds to test evidence-conditioned
 computation. Its measurement-first adaptive policy gets 33/36 correct with no
