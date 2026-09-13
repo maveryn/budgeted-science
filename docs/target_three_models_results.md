@@ -1,5 +1,9 @@
 # Three target claims: Sol, Terra, Luna and CPU results
 
+A subsequent [explicit Luna retry](target_three_luna_retry_results.md) filled
+the missing study with 2/3 correct. Its retry-inclusive result is 10/18 correct,
+6 wrong and 2 abstentions. The first-attempt comparison below remains unchanged.
+
 ## Matched setup
 
 On 2026-09-13, six independent **Sol/high** and six **Terra/high** episodes

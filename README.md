@@ -1,5 +1,11 @@
 # Budgeted Science
 
+One [explicit Luna retry of incomplete study 4](docs/target_three_luna_retry_results.md)
+submitted **2/3 correct, one wrong**, using 32 credits and an API upper bound
+of $0.05644530. The labelled retry-inclusive six-study view is **10/18 correct,
+6 wrong and 2 abstentions**. The original 5/6 first-attempt completion record
+is preserved: obtaining six submitted studies took seven attempts.
+
 The [matched Sol/Terra three-target-claim evaluation](docs/target_three_models_results.md)
 completed all 12 episodes: **Sol 14/18 correct, four wrong; Terra 16/18 correct,
 two wrong**, with no abstentions. Both used high reasoning and a 32-credit cap;

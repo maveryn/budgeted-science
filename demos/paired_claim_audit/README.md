@@ -1,5 +1,11 @@
 # Paired predator–prey claim audit
 
+The [authorized Luna retry](../../docs/target_three_luna_retry_results.md) of
+the incomplete fourth study submitted 2/3 correct and one wrong. Its separately
+labelled retry-inclusive six-study result is **10/18 correct, 6 wrong and
+2 abstentions**. The original failed attempt and primary results are preserved;
+there were seven Luna attempts in total. No other method or study was rerun.
+
 The [matched Sol/Terra results](../../docs/target_three_models_results.md)
 on the same six three-target-claim studies are **Sol 14/18 correct, four wrong**
 and **Terra 16/18 correct, two wrong**. All 12 episodes submitted, with no
