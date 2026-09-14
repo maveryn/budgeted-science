@@ -1,5 +1,11 @@
 # Budgeted Science
 
+The same adaptive numerical investigator now has a
+[verification output adapter](docs/adaptive_target_three_results.md).
+It obtained **15/18 correct claims** on the six existing 32-credit studies,
+versus 12/18 for the previous numerical control. No LLMs were rerun, and the
+shared planning policy and proposal documents remain unchanged.
+
 The main planning task now includes a CPU-only
 [adaptive multifidelity design baseline](docs/adaptive_multifidelity_design_results.md).
 On the five saved 32-credit systems it passed **3/5**, versus **1/5** for

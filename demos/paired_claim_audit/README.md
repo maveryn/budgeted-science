@@ -1,5 +1,22 @@
 # Paired predator–prey claim audit
 
+The [shared adaptive multifidelity baseline](../../docs/adaptive_target_three_results.md)
+reuses the planning investigator unchanged and converts its fitted parameters
+and GP-predicted trajectory into the existing three claim verdicts. It got
+**15/18 correct, 3 wrong, no abstentions**, spending 32 credits on each of the
+six saved studies. Final predictions do not invoke an unpaid physical solver.
+The previous numerical and model results remain preserved.
+
+~~~powershell
+python -m budgeted_science.paired_claim_audit.adaptive_target_three_pilot run
+python -m budgeted_science.paired_claim_audit.adaptive_target_three_pilot render <RUN_DIRECTORY>
+~~~
+
+The run command creates a new CPU-only six-study comparison with the original
+frozen catalog. It checks saved scientific-source and tool-schema hashes,
+imports model results, and never calls an API. The render command uses saved
+logs only; partial campaigns are explicitly marked and retain partial logs.
+
 The [authorized Luna retry](../../docs/target_three_luna_retry_results.md) of
 the incomplete fourth study submitted 2/3 correct and one wrong. Its separately
 labelled retry-inclusive six-study result is **10/18 correct, 6 wrong and
