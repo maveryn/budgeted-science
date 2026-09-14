@@ -1,5 +1,11 @@
 # Budgeted Science
 
+The main planning task now includes a CPU-only
+[adaptive multifidelity design baseline](docs/adaptive_multifidelity_design_results.md).
+On the five saved 32-credit systems it passed **3/5**, versus **1/5** for
+local fitting and **0/5** for adaptive GP. Sol also passed 3/5 but had a lower
+mean error. All earlier methods and runs are preserved; no LLMs were rerun.
+
 One [explicit Luna retry of incomplete study 4](docs/target_three_luna_retry_results.md)
 submitted **2/3 correct, one wrong**, using 32 credits and an API upper bound
 of $0.05644530. The labelled retry-inclusive six-study view is **10/18 correct,

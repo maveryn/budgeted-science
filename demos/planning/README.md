@@ -1,5 +1,28 @@
 # Resource-rational scientific project planning
 
+## Adaptive multifidelity design baseline
+
+The new adaptive_multifidelity_design CPU policy replans after each
+purchase using a learned low/high forward approximation, a continuous
+parameter fit, and cost-normalized local covariance-reduction scores.
+It uses only the metered public services and existing 32-credit task.
+On the same five systems it passed **3/5**, versus **1/5** for saved local
+fitting. See the [full results, limitations, and acquisition traces](../../docs/adaptive_multifidelity_design_results.md).
+Equal aggregate resource counts in these runs are not evidence of a fixed
+schedule: purchased locations and ordering are evidence-dependent.
+
+~~~powershell
+python -m budgeted_science.resource_planning.adaptive_design_pilot development
+python -m budgeted_science.resource_planning.adaptive_design_pilot pilot --freeze <DEVELOPMENT_DIR>
+python -m budgeted_science.resource_planning.adaptive_design_pilot render --run <PILOT_DIR>
+~~~
+
+These commands are entirely CPU-only. The pilot command verifies the development
+source freeze and imports saved agent comparisons; it never starts an API call.
+Every invocation creates a unique ignored run directory. The render command
+reads logs only. No existing baselines, verification tasks, or frozen
+experiments change.
+
 ## Harder predator-prey toy (v2)
 
 The new CPU setup uses wider parameter ranges, Gaussian noise on all noninitial
