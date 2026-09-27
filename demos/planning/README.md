@@ -1,5 +1,14 @@
 # Resource-rational scientific project planning
 
+For a fresh clone, start with the [portable finalized pilot](../../docs/predator_prey_release.md):
+
+~~~bash
+python -m budgeted_science.demo_release cpu --task planning
+~~~
+
+It includes frozen cases and needs no historical runs or API credentials.
+The older campaign commands below preserve their original archive dependencies.
+
 ## Adaptive multifidelity design baseline
 
 The new adaptive_multifidelity_design CPU policy replans after each

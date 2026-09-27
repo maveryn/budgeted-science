@@ -1,0 +1,3 @@
+# Keep portable bundle hashes stable across Windows/POSIX checkouts.
+/examples/predator_prey/*.json text eol=lf
+/results/predator_prey/*.json text eol=lf

@@ -1,5 +1,14 @@
 # Paired predator–prey claim audit
 
+For a fresh clone, start with the [portable finalized pilot](../../docs/predator_prey_release.md):
+
+~~~bash
+python -m budgeted_science.demo_release cpu --task verification
+~~~
+
+It includes frozen cases and needs no historical runs or API credentials.
+The older campaign commands below preserve their original archive dependencies.
+
 The [shared adaptive multifidelity baseline](../../docs/adaptive_target_three_results.md)
 reuses the planning investigator unchanged and converts its fitted parameters
 and GP-predicted trajectory into the existing three claim verdicts. It got

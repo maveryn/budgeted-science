@@ -1,0 +1,1551 @@
+{
+  "schema_version": 1,
+  "planning": [
+    {
+      "case_id": "6000",
+      "method": "adaptive_multifidelity_design",
+      "theta_hat": [
+        1.0741239128436955,
+        0.1142182007793962,
+        1.3379223992713656
+      ],
+      "relative_errors": [
+        0.018397310925843284,
+        0.036939190915293366,
+        0.026607612984294527
+      ],
+      "max_relative_error": 0.036939190915293366,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 1.4858204000047408,
+      "source_episode": "demos/planning/runs/adaptive_multifidelity_design/20260914T030431Z-pilot-c80fc4e963/episodes/20260914T030431Z-6000-e1a1e87c19"
+    },
+    {
+      "case_id": "6020",
+      "method": "adaptive_multifidelity_design",
+      "theta_hat": [
+        0.9423079729482537,
+        0.06800100641015455,
+        1.6484545138207194
+      ],
+      "relative_errors": [
+        0.006462097857553791,
+        0.000282448768697562,
+        0.024098323174908825
+      ],
+      "max_relative_error": 0.024098323174908825,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 2.0461610999773256,
+      "source_episode": "demos/planning/runs/adaptive_multifidelity_design/20260914T030431Z-pilot-c80fc4e963/episodes/20260914T030432Z-6020-3c7b08bfb6"
+    },
+    {
+      "case_id": "6021",
+      "method": "adaptive_multifidelity_design",
+      "theta_hat": [
+        0.8814436736099074,
+        0.09365270579508031,
+        1.5408501033700488
+      ],
+      "relative_errors": [
+        0.17863756421209515,
+        0.729164970951344,
+        0.3779916646845505
+      ],
+      "max_relative_error": 0.729164970951344,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 1.7855938999564387,
+      "source_episode": "demos/planning/runs/adaptive_multifidelity_design/20260914T030431Z-pilot-c80fc4e963/episodes/20260914T030434Z-6021-b8d928341d"
+    },
+    {
+      "case_id": "6022",
+      "method": "adaptive_multifidelity_design",
+      "theta_hat": [
+        1.1801462817652992,
+        0.10678555227977629,
+        0.9953310865003142
+      ],
+      "relative_errors": [
+        0.0322144951199978,
+        0.0701551795666623,
+        0.10602880455217616
+      ],
+      "max_relative_error": 0.10602880455217616,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 1.4120818999945186,
+      "source_episode": "demos/planning/runs/adaptive_multifidelity_design/20260914T030431Z-pilot-c80fc4e963/episodes/20260914T030436Z-6022-72d5523df6"
+    },
+    {
+      "case_id": "6023",
+      "method": "adaptive_multifidelity_design",
+      "theta_hat": [
+        0.9501798102083868,
+        0.11075421111134995,
+        0.8442592308995043
+      ],
+      "relative_errors": [
+        0.004402869042118971,
+        0.0006107258393556857,
+        0.008123346975785343
+      ],
+      "max_relative_error": 0.008123346975785343,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 1.4274343000142835,
+      "source_episode": "demos/planning/runs/adaptive_multifidelity_design/20260914T030431Z-pilot-c80fc4e963/episodes/20260914T030438Z-6023-880c053602"
+    },
+    {
+      "case_id": "6000",
+      "method": "gpt-5.6-sol",
+      "theta_hat": [
+        1.077,
+        0.115,
+        1.345
+      ],
+      "relative_errors": [
+        0.015768959715259108,
+        0.03034724510631765,
+        0.021458373632788463
+      ],
+      "max_relative_error": 0.03034724510631765,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 254.8546556000074,
+      "source_episode": "demos/planning/runs/resource_agent_v2/20260911T134140Z-live-084f45e206"
+    },
+    {
+      "case_id": "6000",
+      "method": "gpt-5.6-luna",
+      "theta_hat": [
+        1.0,
+        0.1,
+        1.2
+      ],
+      "relative_errors": [
+        0.0861364528461087,
+        0.15682369139679794,
+        0.12695170881735776
+      ],
+      "max_relative_error": 0.15682369139679794,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 3,
+        "measurement": 0
+      },
+      "elapsed_seconds": 82.03241739999794,
+      "source_episode": "demos/planning/runs/resource_agent_v2/20260911T141328Z-live-c76209f003"
+    },
+    {
+      "case_id": "6020",
+      "method": "gpt-5.6-sol",
+      "theta_hat": [
+        0.95,
+        0.07,
+        1.7
+      ],
+      "relative_errors": [
+        0.0016481173158400001,
+        0.02910577770127045,
+        0.006417123853431377
+      ],
+      "max_relative_error": 0.02910577770127045,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "elapsed_seconds": 197.54161179999937,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6020-gpt-5.6-sol/20260911T144832Z-live-492e9d80fa"
+    },
+    {
+      "case_id": "6020",
+      "method": "gpt-5.6-luna",
+      "theta_hat": [
+        0.9978550404067528,
+        0.08003034760377889,
+        1.6290263501592654
+      ],
+      "relative_errors": [
+        0.05210486587110043,
+        0.17656704443556961,
+        0.035599991759564256
+      ],
+      "max_relative_error": 0.17656704443556961,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 16,
+        "high": 2,
+        "measurement": 0
+      },
+      "elapsed_seconds": 143.0762029000034,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6020-gpt-5.6-luna/20260911T145150Z-live-3f92632184"
+    },
+    {
+      "case_id": "6021",
+      "method": "gpt-5.6-sol",
+      "theta_hat": [
+        0.7136,
+        0.04863,
+        1.0595
+      ],
+      "relative_errors": [
+        0.0457974899551228,
+        0.10211571760288458,
+        0.05248267463518889
+      ],
+      "max_relative_error": 0.10211571760288458,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 278.60902770000394,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6021-gpt-5.6-sol/20260911T145604Z-live-038c5b7bd5"
+    },
+    {
+      "case_id": "6021",
+      "method": "gpt-5.6-luna",
+      "theta_hat": [
+        0.88,
+        0.084,
+        1.43
+      ],
+      "relative_errors": [
+        0.1767071312212611,
+        0.5509413884712667,
+        0.2788577397561866
+      ],
+      "max_relative_error": 0.5509413884712667,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 3,
+        "measurement": 0
+      },
+      "elapsed_seconds": 109.40663130000758,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6021-gpt-5.6-luna/20260911T145414Z-live-fe9db0ab4c"
+    },
+    {
+      "case_id": "6022",
+      "method": "gpt-5.6-sol",
+      "theta_hat": [
+        1.1566,
+        0.105,
+        1.0
+      ],
+      "relative_errors": [
+        0.05152375409778335,
+        0.08570303696419679,
+        0.10183535149985327
+      ],
+      "max_relative_error": 0.10183535149985327,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "elapsed_seconds": 280.4274544999935,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6022-gpt-5.6-sol/20260911T150043Z-live-4f992f0b86"
+    },
+    {
+      "case_id": "6022",
+      "method": "gpt-5.6-luna",
+      "theta_hat": [
+        1.1,
+        0.09,
+        0.8
+      ],
+      "relative_errors": [
+        0.0979388980698268,
+        0.2163168888264544,
+        0.2814682811998826
+      ],
+      "max_relative_error": 0.2814682811998826,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 3,
+        "measurement": 0
+      },
+      "elapsed_seconds": 73.04554250001092,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6022-gpt-5.6-luna/20260911T150524Z-live-c722a4c5bc"
+    },
+    {
+      "case_id": "6023",
+      "method": "gpt-5.6-sol",
+      "theta_hat": [
+        0.955,
+        0.111,
+        0.84
+      ],
+      "relative_errors": [
+        0.0006477193577229827,
+        0.0028313095608009705,
+        0.003037432658477655
+      ],
+      "max_relative_error": 0.003037432658477655,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "elapsed_seconds": 172.04720380000072,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6023-gpt-5.6-sol/20260911T150841Z-live-1ecafa09a4"
+    },
+    {
+      "case_id": "6023",
+      "method": "gpt-5.6-luna",
+      "theta_hat": [
+        1.0,
+        0.12,
+        0.94
+      ],
+      "relative_errors": [
+        0.04779865901332254,
+        0.08414195628194694,
+        0.12244665083210593
+      ],
+      "max_relative_error": 0.12244665083210593,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 3,
+        "measurement": 0
+      },
+      "elapsed_seconds": 122.26876370000537,
+      "source_episode": "demos/planning/runs/resource_five_case/20260911T144803Z-prepared-24ca583c0a/episodes/6023-gpt-5.6-luna/20260911T150638Z-live-364f4639ed"
+    },
+    {
+      "case_id": "6000",
+      "method": "gpt-5.6-terra",
+      "theta_hat": [
+        1.0341325869827511,
+        0.08600515708594846,
+        1.08213654329253
+      ],
+      "relative_errors": [
+        0.05494392583251302,
+        0.2748248912743146,
+        0.2127021167101377
+      ],
+      "max_relative_error": 0.2748248912743146,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "elapsed_seconds": 105.34171930000593,
+      "source_episode": "demos/planning/runs/resource_terra_five_case/20260911T200237Z-prepared-cabe9f2088/episodes/6000-gpt-5.6-terra/20260911T200304Z-live-1eda39dedb"
+    },
+    {
+      "case_id": "6020",
+      "method": "gpt-5.6-terra",
+      "theta_hat": [
+        0.75,
+        0.06,
+        1.6
+      ],
+      "relative_errors": [
+        0.20922517054012627,
+        0.11790933339891116,
+        0.052783883432064506
+      ],
+      "max_relative_error": 0.20922517054012627,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 162.23333099999581,
+      "source_episode": "demos/planning/runs/resource_terra_five_case/20260911T200237Z-prepared-cabe9f2088/episodes/6020-gpt-5.6-terra/20260911T200450Z-live-4cae43dd82"
+    },
+    {
+      "case_id": "6021",
+      "method": "gpt-5.6-terra",
+      "theta_hat": [
+        0.9188260549927861,
+        0.06970950447096957,
+        1.5951981222106701
+      ],
+      "relative_errors": [
+        0.22862405825217053,
+        0.2870875673077324,
+        0.4265954300934621
+      ],
+      "max_relative_error": 0.4265954300934621,
+      "success": false,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 121.91914430000179,
+      "source_episode": "demos/planning/runs/resource_terra_five_case/20260911T200237Z-prepared-cabe9f2088/episodes/6021-gpt-5.6-terra/20260911T200734Z-live-f8ecd21133"
+    },
+    {
+      "case_id": "6022",
+      "method": "gpt-5.6-terra",
+      "theta_hat": [
+        1.2,
+        0.115,
+        1.1
+      ],
+      "relative_errors": [
+        0.01593334334890207,
+        0.0013728642773083624,
+        0.01201888664983853
+      ],
+      "max_relative_error": 0.01593334334890207,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 0,
+        "measurement": 2
+      },
+      "elapsed_seconds": 151.00756420000107,
+      "source_episode": "demos/planning/runs/resource_terra_five_case/20260911T200237Z-prepared-cabe9f2088/episodes/6022-gpt-5.6-terra/20260911T200937Z-live-dc5d013ee4"
+    },
+    {
+      "case_id": "6023",
+      "method": "gpt-5.6-terra",
+      "theta_hat": [
+        0.963,
+        0.1124,
+        0.875
+      ],
+      "relative_errors": [
+        0.00903010862982957,
+        0.015479632384090338,
+        0.0448306590192476
+      ],
+      "max_relative_error": 0.0448306590192476,
+      "success": true,
+      "completed": true,
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "elapsed_seconds": 96.82381469999382,
+      "source_episode": "demos/planning/runs/resource_terra_five_case/20260911T200237Z-prepared-cabe9f2088/episodes/6023-gpt-5.6-terra/20260911T201208Z-live-d71001174e"
+    }
+  ],
+  "verification": [
+    {
+      "case_id": "007f3916057d",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 126.24610679714617
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8525990119420359
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.008111246197645845
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033437Z-007f3916057d-7579db9a05"
+    },
+    {
+      "case_id": "046a179e0513",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 123.94914413913347
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": -0.029500079488878783
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033439Z-046a179e0513-ba2ec891b7"
+    },
+    {
+      "case_id": "9e34a4196499",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.006398911903866544
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8886854264341044
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 148.09569787410086
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033441Z-9e34a4196499-df85ffcc13"
+    },
+    {
+      "case_id": "255c174d83fd",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": -0.07494802233288833
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 138.94834783954423
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033443Z-255c174d83fd-9ef5a658e7"
+    },
+    {
+      "case_id": "c1755e3c74d5",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.01669236134410188
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 129.28336237418767
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 1.1006399036704377
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033445Z-c1755e3c74d5-87355b6209"
+    },
+    {
+      "case_id": "7f7aab8b1763",
+      "method": "adaptive_multifidelity_design",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 126.70165387605712
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": -0.32687156649428706
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 12,
+        "high": 1,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260914T033437Z-adaptive-target-three-cpu-77c1fae6be/episodes/20260914T033448Z-7f7aab8b1763-fa09a50eb2"
+    },
+    {
+      "case_id": "007f3916057d",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 126.24610679714617
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8525990119420359
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.008111246197645845
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T094518Z-live-926b585df8"
+    },
+    {
+      "case_id": "007f3916057d",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 126.24610679714617
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8525990119420359
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.008111246197645845
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T094851Z-live-e0edc308e0"
+    },
+    {
+      "case_id": "046a179e0513",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 123.94914413913347
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": -0.029500079488878783
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T094949Z-live-5532e82668"
+    },
+    {
+      "case_id": "046a179e0513",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 1,
+      "total": 3,
+      "wrong": 2,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 123.94914413913347
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": -0.029500079488878783
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T095124Z-live-b1d1722c7b"
+    },
+    {
+      "case_id": "9e34a4196499",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.006398911903866544
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8886854264341044
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 148.09569787410086
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T095422Z-live-89f6953761"
+    },
+    {
+      "case_id": "9e34a4196499",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.006398911903866544
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8886854264341044
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 148.09569787410086
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T095838Z-live-2fd8a4df82"
+    },
+    {
+      "case_id": "255c174d83fd",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": -0.07494802233288833
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 138.94834783954423
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T095928Z-live-ae68179665"
+    },
+    {
+      "case_id": "255c174d83fd",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 1,
+      "total": 3,
+      "wrong": 2,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": -0.07494802233288833
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 138.94834783954423
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 4,
+        "high": 2,
+        "measurement": 1
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T100120Z-live-33f09369aa"
+    },
+    {
+      "case_id": "c1755e3c74d5",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.01669236134410188
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 129.28336237418767
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 1.1006399036704377
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T100400Z-live-512092bad4"
+    },
+    {
+      "case_id": "c1755e3c74d5",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.01669236134410188
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 129.28336237418767
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 1.1006399036704377
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T100921Z-live-dc501d3a80"
+    },
+    {
+      "case_id": "7f7aab8b1763",
+      "method": "gpt-5.6-terra",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 126.70165387605712
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "REJECT",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": -0.32687156649428706
+        }
+      ],
+      "scientific_credits": 31.0,
+      "purchases": {
+        "low": 7,
+        "high": 0,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T101139Z-live-ce8aeb7c48"
+    },
+    {
+      "case_id": "7f7aab8b1763",
+      "method": "gpt-5.6-sol",
+      "completed": true,
+      "correct": 3,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 126.70165387605712
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": -0.32687156649428706
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T093320Z-target-three-models-prepared-e30c1fbe8c/campaigns/20260913T094518Z-live-0262ddc444/episodes/20260913T101417Z-live-b90357e48a"
+    },
+    {
+      "case_id": "007f3916057d",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 1,
+      "total": 3,
+      "wrong": 0,
+      "abstained": 2,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "ABSTAIN",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 126.24610679714617
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8525990119420359
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "ABSTAIN",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 0.008111246197645845
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T085926Z-target-three-prepared-cdb738cbfa/campaigns/20260913T090154Z-live-bb54d711bb/episodes/20260913T090154Z-live-07eb50d965"
+    },
+    {
+      "case_id": "046a179e0513",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 123.94914413913347
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": -0.029500079488878783
+        },
+        {
+          "id": "C3",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 0,
+        "high": 1,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T085926Z-target-three-prepared-cdb738cbfa/campaigns/20260913T090154Z-live-bb54d711bb/episodes/20260913T090506Z-live-ae13eb0f2f"
+    },
+    {
+      "case_id": "9e34a4196499",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 1,
+      "total": 3,
+      "wrong": 2,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 0.006398911903866544
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 0.8886854264341044
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 148.09569787410086
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 0,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T085926Z-target-three-prepared-cdb738cbfa/campaigns/20260913T090154Z-live-bb54d711bb/episodes/20260913T090657Z-live-49b51d7804"
+    },
+    {
+      "case_id": "255c174d83fd",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_late_recovery",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": -0.07494802233288833
+        },
+        {
+          "id": "C3",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 138.94834783954423
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 0,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T105527Z-target-three-luna-case4-retry-live-90354c03ce/episodes/20260913T105527Z-live-805dc3fe67"
+    },
+    {
+      "case_id": "c1755e3c74d5",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "ACCEPT",
+          "correct": false,
+          "reference_value": 0.01669236134410188
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 129.28336237418767
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": 1.1006399036704377
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 0,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T085926Z-target-three-prepared-cdb738cbfa/campaigns/20260913T090154Z-live-bb54d711bb/episodes/20260913T091334Z-live-f5478cbbb3"
+    },
+    {
+      "case_id": "7f7aab8b1763",
+      "method": "gpt-5.6-luna",
+      "completed": true,
+      "correct": 2,
+      "total": 3,
+      "wrong": 1,
+      "abstained": 0,
+      "incomplete_claims": 0,
+      "claims": [
+        {
+          "id": "C1",
+          "kind": "target_parameter_accuracy",
+          "verdict": "REJECT",
+          "truth": "REJECT",
+          "correct": true,
+          "reference_value": 0.3333333333333333
+        },
+        {
+          "id": "C2",
+          "kind": "target_integral",
+          "verdict": "ACCEPT",
+          "truth": "REJECT",
+          "correct": false,
+          "reference_value": 126.70165387605712
+        },
+        {
+          "id": "C3",
+          "kind": "target_late_recovery",
+          "verdict": "ACCEPT",
+          "truth": "ACCEPT",
+          "correct": true,
+          "reference_value": -0.32687156649428706
+        }
+      ],
+      "scientific_credits": 32.0,
+      "purchases": {
+        "low": 8,
+        "high": 0,
+        "measurement": 2
+      },
+      "source_episode": "demos/paired_claim_audit/runs/20260913T085926Z-target-three-prepared-cdb738cbfa/campaigns/20260913T090154Z-live-bb54d711bb/episodes/20260913T091647Z-live-5bbf3563ef"
+    }
+  ],
+  "model_reasoning": "high",
+  "verification_luna": {
+    "view": "five original completed episodes plus one authorized retry; not first-attempt performance",
+    "attempts": 7,
+    "first_attempt_completed": "5/6",
+    "first_attempt_counts": {
+      "correct": 8,
+      "wrong": 5,
+      "abstained": 2,
+      "unsubmitted": 3
+    }
+  }
+}

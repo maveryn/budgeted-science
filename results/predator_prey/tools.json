@@ -1,0 +1,354 @@
+{
+  "planning": [
+    {
+      "type": "function",
+      "name": "simulate_low",
+      "description": "Purchase a low-accuracy candidate trajectory for 1 credit. Returns x,y at all 16 times. Exact repeat is free.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "theta": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "theta"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "simulate_high",
+      "description": "Purchase a high-accuracy candidate trajectory for 8 credits. Returns x,y at all 16 times. Exact repeat is free.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "theta": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "theta"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "measure_target",
+      "description": "Purchase one noisy scalar from the fixed target for 12 credits. Existing observations are free. No candidate parameters accepted.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "type": "string",
+            "enum": [
+              "x",
+              "y"
+            ]
+          },
+          "time": {
+            "type": "number",
+            "enum": [
+              0.5,
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0,
+              3.5,
+              4.0,
+              4.5,
+              5.0,
+              5.5,
+              6.0,
+              6.5,
+              7.0,
+              7.5,
+              8.0
+            ]
+          }
+        },
+        "required": [
+          "variable",
+          "time"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "get_status",
+      "description": "Free budget, purchase inventory, and submission status; no new evidence.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "evidence",
+      "description": "Retrieve all already available observations and purchased trajectories for free.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "compare_cached_candidates",
+      "description": "Free residual comparisons of purchased candidates against available target observations. Residuals are not parameter errors.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "fit_purchased",
+      "description": "Free approximate GP parameter fit using only purchased simulations and available observations. Requires at least one successful simulation; returns no acquisition recommendations.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "submit",
+      "description": "Submit a three-parameter estimate within the public bounds and end the episode. No private score is returned.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "theta_hat": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "theta_hat"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ],
+  "verification": [
+    {
+      "type": "function",
+      "name": "simulate_low",
+      "description": "Explicit Euler step 0.1 at candidate theta; both populations on the half-unit grid. New trajectory costs 1 credit. The supplied original and exact purchased repeats are free. Returns predictions, not true errors or verdicts.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "theta": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "theta"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "simulate_high",
+      "description": "DOP853 at candidate theta, rtol=1e-10, atol=1e-12; both populations on the half-unit grid. New trajectory costs 8 credits; exact repeats are free. This integrates the candidate model, not the unknown target.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "theta": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "theta"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "measure_target",
+      "description": "Observe one scalar of the fixed target at a half-unit time from 0.5 through 8. New location costs 12 credits; retrieval of an existing observation is free and is NOT an independent replicate. Additive Gaussian noise has std 0.1 for x, 0.05 for y. Cannot select target parameters.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "variable": {
+            "type": "string",
+            "enum": [
+              "x",
+              "y"
+            ]
+          },
+          "time": {
+            "type": "number",
+            "enum": [
+              0.5,
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0,
+              3.5,
+              4.0,
+              4.5,
+              5.0,
+              5.5,
+              6.0,
+              6.5,
+              7.0,
+              7.5,
+              8.0
+            ]
+          }
+        },
+        "required": [
+          "variable",
+          "time"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "evidence",
+      "description": "Free original report, original trajectory, all purchased simulations, and available target observations.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "get_status",
+      "description": "Free budget ledger. No private reference, true error, or verdict.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "compare_cached_candidates",
+      "description": "Free numerical comparison of purchased candidate predictions with available target observations. Uses only purchased evidence; does not grade the study's claims.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "type": "function",
+      "name": "submit",
+      "description": "End the investigation with ACCEPT, REJECT or ABSTAIN for every claim ID. Apply each claim's own formula, comparator and tolerance. Cite purchased/original/report evidence IDs and explain the numerical quantities supporting your verdicts. No more purchases after submission.",
+      "strict": true,
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "verdicts": {
+            "type": "object",
+            "properties": {
+              "C1": {
+                "type": "string",
+                "enum": [
+                  "ACCEPT",
+                  "REJECT",
+                  "ABSTAIN"
+                ]
+              },
+              "C2": {
+                "type": "string",
+                "enum": [
+                  "ACCEPT",
+                  "REJECT",
+                  "ABSTAIN"
+                ]
+              },
+              "C3": {
+                "type": "string",
+                "enum": [
+                  "ACCEPT",
+                  "REJECT",
+                  "ABSTAIN"
+                ]
+              }
+            },
+            "required": [
+              "C1",
+              "C2",
+              "C3"
+            ],
+            "additionalProperties": false
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "verdicts",
+          "evidence_ids",
+          "explanation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
